@@ -1,0 +1,17 @@
+﻿@page
+@model Mobicon.Pages.SegmentModel
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+
+<ul class="list-group">
+    @{
+        foreach (var config in Model.Configs)
+        {
+            <li class="list-group-item list-group-item-action">
+                <a href="/Config?id=@config.Id">@config.Name</a> 
+            </li>
+        }
+    }
+</ul>

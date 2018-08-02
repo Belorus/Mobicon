@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - Mobicon</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/styles/bootstrap.css"/>
+        <link rel="stylesheet" href="~/css/site.css"/>
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.1.1/css/bootstrap.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"/>
+    </environment>
+    
+</head>
+<body style="width: 1900px; margin: auto;">
+
+<ul class="nav nav-pills nav-fill">
+    <li class="nav-item">
+        <a class="nav-link" href="/Segments">Segments</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/Snapshots">Snapshots</a>
+    </li>
+    
+</ul>
+
+<div>
+    @RenderBody()
+    <hr/>
+    <footer>
+        <p>Bingo Blitz Configuration</p>
+    </footer>
+</div>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.1.1/bootstrap.js">
+</script>
+
+@RenderSection("Scripts", false)
+</body>
+</html>

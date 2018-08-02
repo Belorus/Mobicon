@@ -1,0 +1,28 @@
+﻿@page
+@model Mobicon.Pages.SegmentsModel
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<ul class="list-group">
+    @{
+        foreach (var segment in Model.Segments)
+        {
+            <li class="list-group-item list-group-item-action">
+                <a href="/Segment?id=@segment.Id">@segment.Name</a> 
+                <span>with @segment.Configs.Count configs</span>
+            </li>
+        }
+    }
+</ul>
+
+<hr/>
+
+<form method="post">
+<div class="input-group">
+    <input type="text" name="segmentName" class="form-control">
+    <div class="input-group-append">
+        <button class="btn btn-success" type="submit">Create new segment</button>
+    </div>
+</div>
+</form>

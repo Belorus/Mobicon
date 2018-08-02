@@ -1,0 +1,72 @@
+﻿@page
+@using Models
+@model Mobicon.Pages.ConfigModel
+@{
+    ViewData["Title"] = "Config";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+
+<table>
+    <thead class="table table-borderless">
+    <tr>
+        <th>Prefixes</th>
+        <th>Key</th>
+        <th>Value</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Jira</th>
+    </tr>
+    </thead>
+    <tbody>
+    @{
+        foreach (var entry in Model.Entries)
+        {
+            <tr>
+                <td>@string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))</td>
+                <td>@entry.Key</td>
+                @switch (entry.Type)
+                {
+                    case FieldType.String:
+                    case FieldType.Integer:
+                    case FieldType.Float:
+                    case FieldType.Bool:
+                        <td>@entry.Value</td>
+                        break;
+                    case FieldType.ListOfBool:
+                    case FieldType.ListOfString:
+                    case FieldType.ListOfInteger:
+                    case FieldType.ListOfFloat:
+                        <td>List...</td>
+                        break;
+                    default:
+                        <td>Unknown</td>
+                        break;
+                }
+                <td>@entry.Type</td>
+                <td>@entry.Description</td>
+                <td>@entry.Jira</td>
+            </tr>
+        }
+                }
+    </tbody>
+</table>
+
+<form method="post" class="form-inline">
+    <input type="text" class="form-control mb-2 mr-sm-2" name="key" placeholder="Key">
+    
+    <input type="text" class="form-control mb-2 mr-sm-2" name="value" placeholder="Value">
+    
+    <select class="form-control mb-2 mr-sm-2" id="exampleFormControlSelect1">
+        @foreach (var type in Model.FieldTypes)
+        {
+            <option>@type</option>
+        }
+    </select>
+
+    <input type="text" class="form-control mb-2 mr-sm-2" name="description" placeholder="Description">
+
+    <input type="text" class="form-control mb-2 mr-sm-2" name="jira" placeholder="Jira">
+
+    <button type="submit" class="btn btn-primary mb-2">Add</button>
+</form>
