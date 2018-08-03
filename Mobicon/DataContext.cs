@@ -17,9 +17,9 @@ namespace Mobicon
 
         public DbSet<SegmentPrefix> SegmentPrefixes { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
+        public DataContext(DbContextOptions options) : base(options)
         {
-            optionsBuilder.UseMySql(@"Server=localhost;Database=moco;Uid=root;Pwd=Ыутвьщку1");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

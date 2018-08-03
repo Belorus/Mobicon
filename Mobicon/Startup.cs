@@ -19,7 +19,7 @@ namespace Mobicon
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>();
+            services.AddDbContext<DataContext>(options => options.UseMySql(Configuration.GetConnectionString("MySQL")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
