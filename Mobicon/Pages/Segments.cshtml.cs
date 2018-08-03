@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Mobicon.Models;
 
 namespace Mobicon.Pages
@@ -17,7 +18,7 @@ namespace Mobicon.Pages
 
         public void OnGet()
         {
-            Segments = _dataContext.Segments.ToArray();
+            Segments = _dataContext.Segments.Include(s => s.Configs).ToArray();
         }
 
         public void OnPost(string segmentName)

@@ -10,6 +10,7 @@
 <table>
     <thead class="table table-borderless">
     <tr>
+        <th>#</th>
         <th>Prefixes</th>
         <th>Key</th>
         <th>Value</th>
@@ -23,6 +24,12 @@
         foreach (var entry in Model.Entries)
         {
             <tr>
+                <td>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-success">Edit</button>
+                        <button type="button" class="btn btn-danger">Delete</button>
+                    </div>
+                </td>
                 <td>@string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))</td>
                 <td>@entry.Key</td>
                 @switch (entry.Type)
@@ -45,7 +52,7 @@
                 }
                 <td>@entry.Type</td>
                 <td>@entry.Description</td>
-                <td>@entry.Jira</td>
+                <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
             </tr>
         }
                 }
