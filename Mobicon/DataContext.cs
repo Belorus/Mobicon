@@ -7,6 +7,8 @@ namespace Mobicon
     {
         public DbSet<Segment> Segments { get; set; }
 
+        public DbSet<Snapshot> Snapshots { get; set; }
+
         public DbSet<Config> Configs { get; set; }
 
         public DbSet<ConfigEntry> Entries { get; set; }

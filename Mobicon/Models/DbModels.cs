@@ -6,6 +6,20 @@ using Newtonsoft.Json;
 
 namespace Mobicon.Models
 {
+    public class Snapshot
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+        public string CreatedBy { get; set; }
+
+        public List<ConfigEntry> Entries { get; set; } = new List<ConfigEntry>();
+    }
+
     public class Segment
     {
         [Key]
