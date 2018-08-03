@@ -40,9 +40,6 @@ namespace Mobicon
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseStaticFiles();
-            app.UseCookiePolicy();
-
             app.UseMvc();
         }
     }

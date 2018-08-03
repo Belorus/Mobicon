@@ -18,6 +18,16 @@
         $('input[name="description"]').val(obj.Description);
         $('input[name="jira"]').val(obj.Jira);
         $('input[name="type"]').val(obj.Type);
+        
+        if (obj.VersionPrefix) {
+            $('input[name="versionFrom"]').val(obj.VersionPrefix.From);
+            $('input[name="versionTo"]').val(obj.VersionPrefix.To);
+        }
+        if (obj.SegmentPrefix) {
+
+        $('input[name="segmentFrom"]').val(obj.SegmentPrefix.From);
+        $('input[name="segmentTo"]').val(obj.SegmentPrefix.To);
+            }
         $('#addEditModal').modal('show');
     }
 
@@ -31,12 +41,15 @@
 
     function onAddClick() {
         $('input[name="entryId"]').val('');
-        $('input[name="key"]').val('')
-            .prop('disabled', false);;
+        $('input[name="key"]').val('').prop('disabled', false);;
         $('input[name="value"]').val('');
         $('input[name="description"]').val('');
         $('input[name="jira"]').val('');
         $('input[name="type"]').val('');
+        $('input[name="versionFrom"]').val('');
+        $('input[name="versionTo"]').val('');
+        $('input[name="segmentFrom"]').val('');
+        $('input[name="segmentTo"]').val('');
 
         $('#addEditModal').modal('show');
     }
@@ -88,6 +101,41 @@
 
                     <input type="text" class="form-control mb-2 mr-sm-2" name="description" placeholder="Description">
                     <input type="text" class="form-control mb-2 mr-sm-2" name="jira" placeholder="Jira">
+
+                    <hr />
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input type="checkbox"
+                                       data-toggle='collapse' data-target='#versionBlock'
+                                       id="versionCheck">
+                                <label for="versionCheck">For version</label>
+                            </div>
+                        </div>
+                        <div id="versionBlock" class="collapse">
+                            <input type="text" class="form-control" name="versionFrom" placeholder="From version">
+                            <input type="text" class="form-control" name="versionTo" placeholder="To version">
+                        </div>
+                    </div>
+
+                    <hr />
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input type="checkbox"
+                                       data-toggle='collapse' data-target='#segmentBlock'
+                                       id="segmentCheck">
+                                <label for="segmentCheck">For segment</label>
+                            </div>
+                        </div>
+                        <div id="segmentBlock" class="collapse">
+                            <input type="text" class="form-control" name="segmentFrom" placeholder="From segment">
+                            <input type="text" class="form-control" name="segmentTo" placeholder="To segment">
+                        </div>
+                    </div>
+                    <hr />
+
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -126,7 +174,20 @@
                         <button type="button" class="btn btn-danger" onclick="onDeleteClick($(this).closest('tr').attr('data'))">Delete</button>
                     </div>
                 </td>
-                <td>@string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))</td>
+                <td>
+                    @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))
+                    @{
+                        if (entry.VersionPrefix != null)
+                        {
+                            Write($"({entry.VersionPrefix.From} - {entry.VersionPrefix.To})");
+                        }
+
+                        if (entry.SegmentPrefix != null)
+                        {
+                            Write($"<{entry.SegmentPrefix.From} .. {entry.SegmentPrefix.To}>");
+                        }
+                    }
+                </td>
                 <td>@entry.Key</td>
                 @switch (entry.Type)
                 {

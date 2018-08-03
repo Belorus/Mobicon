@@ -57,10 +57,8 @@ namespace Mobicon.Models
         public DateTime VersionCreateTime { get; set; }
         public string VersionCreatedBy { get; set; }
 
-        [JsonIgnore]
         public SegmentPrefix SegmentPrefix { get; set; }
 
-        [JsonIgnore]
         public VersionPrefix VersionPrefix { get; set; }
 
         [JsonIgnore]
@@ -82,6 +80,7 @@ namespace Mobicon.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [JsonIgnore]
         public List<ConfigEntry> ConfigEntries { get; set; }
 
         public string From { get; set; }
@@ -94,6 +93,7 @@ namespace Mobicon.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [JsonIgnore]
         public List<ConfigEntry> ConfigEntries { get; set; }
 
         public int From { get; set; }

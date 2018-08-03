@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Mobicon.Models;
 
@@ -18,6 +20,21 @@ namespace Mobicon.Pages
         public void OnGet(int id)
         {
             Configs = _dataContext.Configs.Where(c => c.SegmentId == id).ToArray();
+        }
+
+        public IActionResult OnPost(int id, string configName)
+        {
+            _dataContext.Configs.Add(new Config()
+            {
+                Name = configName,
+                SegmentId = id,
+                CreatedAt = DateTime.Now,
+                CreatedBy = "grigoryp"
+            });
+
+            _dataContext.SaveChanges();
+
+            return RedirectToPage(new {id = id});
         }
     }
 }

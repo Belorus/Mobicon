@@ -46,8 +46,26 @@ namespace Mobicon.Pages
             return RedirectToPage(new { id = id });
         }
 
-        public IActionResult OnPost(int id, int entryId, string key, string value, string description, string jira, FieldType type)
+        public IActionResult OnPost(int id, int entryId, string key, string value, string description, string jira, FieldType type, string versionFrom, string versionTo, int? segmentFrom, int? segmentTo)
         {
+            VersionPrefix versionPrefix = null;
+            if (!string.IsNullOrEmpty(versionFrom) || !string.IsNullOrEmpty(versionTo))
+            {
+                versionPrefix = new VersionPrefix();
+                if (Version.TryParse(versionFrom, out _))
+                    versionPrefix.From = versionFrom;
+                if (Version.TryParse(versionTo, out _))
+                    versionPrefix.To = versionTo;
+            }
+
+            SegmentPrefix segmentPrefix = null;
+            if (segmentFrom != null && segmentTo != null)
+            {
+                segmentPrefix = new SegmentPrefix();
+                segmentPrefix.From = segmentFrom.Value;
+                segmentPrefix.To = segmentTo.Value;
+            }
+
             var newEntry = new ConfigEntry
             {
                 Key = key,
@@ -58,7 +76,9 @@ namespace Mobicon.Pages
                 Type = type,
                 Version = 1,
                 VersionCreateTime = DateTime.Now,
-                VersionCreatedBy = "grigoryp"
+                VersionCreatedBy = "grigoryp",
+                VersionPrefix = versionPrefix,
+                SegmentPrefix = segmentPrefix
             };
 
             if (entryId > 0)
@@ -67,8 +87,6 @@ namespace Mobicon.Pages
 
                 newEntry.Key = entry.Key;
                 newEntry.Version = entry.Version + 1;
-                newEntry.SegmentPrefix = entry.SegmentPrefix;
-                newEntry.VersionPrefix = entry.VersionPrefix;
             }
 
             _dataContext.Entries.Add(newEntry);

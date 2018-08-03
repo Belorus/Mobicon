@@ -10,8 +10,18 @@
         foreach (var config in Model.Configs)
         {
             <li class="list-group-item list-group-item-action">
-                <a href="/Config?id=@config.Id">@config.Name</a> 
+                <a href="/Config?id=@config.Id">@config.Name</a>
             </li>
         }
     }
 </ul>
+
+
+<form method="post">
+    <div class="input-group">
+        <input type="text" name="configName" class="form-control">
+        <div class="input-group-append">
+            <button class="btn btn-success" type="submit">Create new config</button>
+        </div>
+    </div>
+</form>
