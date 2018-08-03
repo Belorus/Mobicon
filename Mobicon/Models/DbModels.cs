@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace Mobicon.Models
 {
@@ -56,8 +57,13 @@ namespace Mobicon.Models
         public DateTime VersionCreateTime { get; set; }
         public string VersionCreatedBy { get; set; }
 
-        public List<SegmentPrefix> SegmentPrefixes { get; set; }
-        public List<VersionPrefix> VersionPrefixes { get; set; }
+        [JsonIgnore]
+        public SegmentPrefix SegmentPrefix { get; set; }
+
+        [JsonIgnore]
+        public VersionPrefix VersionPrefix { get; set; }
+
+        [JsonIgnore]
         public List<EntryConfigSimplePrefix> SimplePrefixes { get; set; }
     }
 
@@ -73,9 +79,10 @@ namespace Mobicon.Models
     public class VersionPrefix
     {
         [Key]
-        [ForeignKey("ConfigEntry")]
-        public int ConfigEntryId { get; set; }
-        public ConfigEntry ConfigEntry { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public List<ConfigEntry> ConfigEntries { get; set; }
 
         public string From { get; set; }
         public string To { get; set; }
@@ -84,9 +91,10 @@ namespace Mobicon.Models
     public class SegmentPrefix
     {
         [Key]
-        [ForeignKey("ConfigEntry")]
-        public int ConfigEntryId { get; set; }
-        public ConfigEntry ConfigEntry { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public List<ConfigEntry> ConfigEntries { get; set; }
 
         public int From { get; set; }
         public int To { get; set; }

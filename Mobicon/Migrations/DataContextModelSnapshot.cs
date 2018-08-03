@@ -50,6 +50,8 @@ namespace Mobicon.Migrations
 
                     b.Property<string>("Key");
 
+                    b.Property<int?>("SegmentPrefixId");
+
                     b.Property<int>("Type");
 
                     b.Property<string>("Value");
@@ -60,9 +62,15 @@ namespace Mobicon.Migrations
 
                     b.Property<string>("VersionCreatedBy");
 
+                    b.Property<int?>("VersionPrefixId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ConfigId");
+
+                    b.HasIndex("SegmentPrefixId");
+
+                    b.HasIndex("VersionPrefixId");
 
                     b.ToTable("Entries");
                 });
@@ -98,13 +106,14 @@ namespace Mobicon.Migrations
 
             modelBuilder.Entity("Mobicon.Models.SegmentPrefix", b =>
                 {
-                    b.Property<int>("ConfigEntryId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("From");
 
                     b.Property<int>("To");
 
-                    b.HasKey("ConfigEntryId");
+                    b.HasKey("Id");
 
                     b.ToTable("SegmentPrefixes");
                 });
@@ -127,13 +136,14 @@ namespace Mobicon.Migrations
 
             modelBuilder.Entity("Mobicon.Models.VersionPrefix", b =>
                 {
-                    b.Property<int>("ConfigEntryId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("From");
 
                     b.Property<string>("To");
 
-                    b.HasKey("ConfigEntryId");
+                    b.HasKey("Id");
 
                     b.ToTable("VersionPrefixes");
                 });
@@ -152,6 +162,14 @@ namespace Mobicon.Migrations
                         .WithMany("Entries")
                         .HasForeignKey("ConfigId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Mobicon.Models.SegmentPrefix", "SegmentPrefix")
+                        .WithMany("ConfigEntries")
+                        .HasForeignKey("SegmentPrefixId");
+
+                    b.HasOne("Mobicon.Models.VersionPrefix", "VersionPrefix")
+                        .WithMany("ConfigEntries")
+                        .HasForeignKey("VersionPrefixId");
                 });
 
             modelBuilder.Entity("Mobicon.Models.EntryConfigSimplePrefix", b =>
@@ -162,24 +180,8 @@ namespace Mobicon.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Mobicon.Models.SimplePrefix", "SimplePrefix")
-                        .WithMany("SimplePrefixes")
+                        .WithMany()
                         .HasForeignKey("SimplePrefixId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Mobicon.Models.SegmentPrefix", b =>
-                {
-                    b.HasOne("Mobicon.Models.ConfigEntry", "ConfigEntry")
-                        .WithMany("SegmentPrefixes")
-                        .HasForeignKey("ConfigEntryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Mobicon.Models.VersionPrefix", b =>
-                {
-                    b.HasOne("Mobicon.Models.ConfigEntry", "ConfigEntry")
-                        .WithMany("VersionPrefixes")
-                        .HasForeignKey("ConfigEntryId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

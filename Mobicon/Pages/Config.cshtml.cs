@@ -24,8 +24,8 @@ namespace Mobicon.Pages
             Entries = _dataContext.Entries
                 .Include(e => e.SimplePrefixes)
                 .ThenInclude(e => e.SimplePrefix)
-                .Include(e => e.SegmentPrefixes)
-                .Include(e => e.VersionPrefixes)
+                .Include(e => e.SegmentPrefix)
+                .Include(e => e.VersionPrefix)
                 .Where(e => e.ConfigId == id)
                 .GroupBy(e => e.Id)
                 .Select(g => g.OrderByDescending(e => e.Version).First())
@@ -37,9 +37,18 @@ namespace Mobicon.Pages
             return Page();
         }
 
-        public IActionResult OnPost(int id, string key, string value, string description, string jira, FieldType type)
+        public IActionResult OnPostDelete(int id, int entryId)
         {
-            _dataContext.Entries.Add(new ConfigEntry()
+            var entry = _dataContext.Entries.Find(entryId);
+            _dataContext.Entries.Remove(entry);
+            _dataContext.SaveChanges();
+
+            return RedirectToPage(new { id = id });
+        }
+
+        public IActionResult OnPost(int id, int entryId, string key, string value, string description, string jira, FieldType type)
+        {
+            var newEntry = new ConfigEntry
             {
                 Key = key,
                 Value = value,
@@ -47,12 +56,25 @@ namespace Mobicon.Pages
                 Jira = jira,
                 ConfigId = id,
                 Type = type,
-                Version = 1
-            });
+                Version = 1,
+                VersionCreateTime = DateTime.Now,
+                VersionCreatedBy = "grigoryp"
+            };
 
+            if (entryId > 0)
+            {
+                var entry = _dataContext.Entries.First(e => e.Id == entryId);
+
+                newEntry.Key = entry.Key;
+                newEntry.Version = entry.Version + 1;
+                newEntry.SegmentPrefix = entry.SegmentPrefix;
+                newEntry.VersionPrefix = entry.VersionPrefix;
+            }
+
+            _dataContext.Entries.Add(newEntry);
             _dataContext.SaveChanges();
 
-            return OnGet(id);
+            return RedirectToPage(new {id = id});
         }
     }
 }

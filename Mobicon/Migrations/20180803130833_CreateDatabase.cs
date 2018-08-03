@@ -9,6 +9,20 @@ namespace Mobicon.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "SegmentPrefixes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    From = table.Column<int>(nullable: false),
+                    To = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SegmentPrefixes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Segments",
                 columns: table => new
                 {
@@ -29,13 +43,27 @@ namespace Mobicon.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ParentId = table.Column<int>(nullable: false),
+                    ParentId = table.Column<int>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SimplePrefixes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VersionPrefixes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    From = table.Column<string>(nullable: true),
+                    To = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VersionPrefixes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -74,7 +102,9 @@ namespace Mobicon.Migrations
                     Description = table.Column<string>(nullable: true),
                     Jira = table.Column<string>(nullable: true),
                     VersionCreateTime = table.Column<DateTime>(nullable: false),
-                    VersionCreatedBy = table.Column<string>(nullable: true)
+                    VersionCreatedBy = table.Column<string>(nullable: true),
+                    SegmentPrefixId = table.Column<int>(nullable: true),
+                    VersionPrefixId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,6 +115,18 @@ namespace Mobicon.Migrations
                         principalTable: "Configs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Entries_SegmentPrefixes_SegmentPrefixId",
+                        column: x => x.SegmentPrefixId,
+                        principalTable: "SegmentPrefixes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Entries_VersionPrefixes_VersionPrefixId",
+                        column: x => x.VersionPrefixId,
+                        principalTable: "VersionPrefixes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -111,44 +153,6 @@ namespace Mobicon.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "SegmentPrefixes",
-                columns: table => new
-                {
-                    ConfigEntryId = table.Column<int>(nullable: false),
-                    From = table.Column<int>(nullable: false),
-                    To = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SegmentPrefixes", x => x.ConfigEntryId);
-                    table.ForeignKey(
-                        name: "FK_SegmentPrefixes_Entries_ConfigEntryId",
-                        column: x => x.ConfigEntryId,
-                        principalTable: "Entries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "VersionPrefixes",
-                columns: table => new
-                {
-                    ConfigEntryId = table.Column<int>(nullable: false),
-                    From = table.Column<string>(nullable: true),
-                    To = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_VersionPrefixes", x => x.ConfigEntryId);
-                    table.ForeignKey(
-                        name: "FK_VersionPrefixes_Entries_ConfigEntryId",
-                        column: x => x.ConfigEntryId,
-                        principalTable: "Entries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Configs_SegmentId",
                 table: "Configs",
@@ -158,6 +162,16 @@ namespace Mobicon.Migrations
                 name: "IX_Entries_ConfigId",
                 table: "Entries",
                 column: "ConfigId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Entries_SegmentPrefixId",
+                table: "Entries",
+                column: "SegmentPrefixId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Entries_VersionPrefixId",
+                table: "Entries",
+                column: "VersionPrefixId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EntryConfigSimplePrefix_SimplePrefixId",
@@ -171,19 +185,19 @@ namespace Mobicon.Migrations
                 name: "EntryConfigSimplePrefix");
 
             migrationBuilder.DropTable(
-                name: "SegmentPrefixes");
-
-            migrationBuilder.DropTable(
-                name: "VersionPrefixes");
+                name: "Entries");
 
             migrationBuilder.DropTable(
                 name: "SimplePrefixes");
 
             migrationBuilder.DropTable(
-                name: "Entries");
+                name: "Configs");
 
             migrationBuilder.DropTable(
-                name: "Configs");
+                name: "SegmentPrefixes");
+
+            migrationBuilder.DropTable(
+                name: "VersionPrefixes");
 
             migrationBuilder.DropTable(
                 name: "Segments");
