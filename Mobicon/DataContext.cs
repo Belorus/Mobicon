@@ -26,6 +26,9 @@ namespace Mobicon
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<SnapshotToEntry>().HasKey(e => new {e.EntryId, e.SnapshotId});
+
+
             modelBuilder.Entity<EntryConfigSimplePrefix>().HasKey(e => new {e.ConfigEntryId, e.SimplePrefixId});
             modelBuilder.Entity<EntryConfigSimplePrefix>()
                 .HasOne<ConfigEntry>(e => e.ConfigEntry)

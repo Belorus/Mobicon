@@ -6,18 +6,37 @@ using Newtonsoft.Json;
 
 namespace Mobicon.Models
 {
+    public class SnapshotToEntry
+    {
+        public int SnapshotId { get; set; }
+        public Snapshot Snapshot { get; set; }
+
+        public int EntryId { get; set; }
+        public ConfigEntry ConfigEntry { get; set; }
+    }
+
     public class Snapshot
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
+        [Required]
         public DateTime CreatedAt { get; set; }
+
+        [Required]
+        public DateTime UpdatedAt { get; set; }
+
+        [Required]
         public string CreatedBy { get; set; }
 
-        public List<ConfigEntry> Entries { get; set; } = new List<ConfigEntry>();
+        [Required]
+        public string UpdatedBy { get; set; }
+
+        public List<SnapshotToEntry> Entries { get; set; } = new List<SnapshotToEntry>();
     }
 
     public class Segment
