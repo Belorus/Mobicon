@@ -1,0 +1,77 @@
+﻿@page
+@using Models
+@using Newtonsoft.Json
+@model Mobicon.Pages.SnapshotModel
+@{
+    ViewData["Title"] = "Snapshot";
+}
+
+
+<select>
+    @foreach (var snapshot in Model.Snapshots)
+    {
+        <option value="@snapshot.Id">@snapshot.Name</option>
+    }
+</select>
+
+<hr/>
+
+<table>
+    <thead class="table table-borderless">
+        <tr>
+            <th>Prefixes</th>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Jira</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var entry in Model.Entries)
+            {
+                <tr data="@JsonConvert.SerializeObject(entry)">
+                   
+                    <td>
+                        @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))
+                        @{
+                            if (entry.VersionPrefix != null)
+                            {
+                                Write($"({entry.VersionPrefix.From} - {entry.VersionPrefix.To})");
+                            }
+
+                            if (entry.SegmentPrefix != null)
+                            {
+                                Write($"<{entry.SegmentPrefix.From} .. {entry.SegmentPrefix.To}>");
+                            }
+                        }
+                    </td>
+                    <td>@entry.Key</td>
+                    @switch (entry.Type)
+                    {
+                        case FieldType.String:
+                        case FieldType.Integer:
+                        case FieldType.Float:
+                        case FieldType.Bool:
+                            <td>@entry.Value</td>
+                            break;
+                        case FieldType.ListOfBool:
+                        case FieldType.ListOfString:
+                        case FieldType.ListOfInteger:
+                        case FieldType.ListOfFloat:
+                            <td>List...</td>
+                            break;
+                        default:
+                            <td>Unknown</td>
+                            break;
+                    }
+                    <td>@entry.Type</td>
+                    <td>@entry.Description</td>
+                    <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

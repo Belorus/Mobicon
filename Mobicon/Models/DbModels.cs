@@ -12,7 +12,7 @@ namespace Mobicon.Models
         public Snapshot Snapshot { get; set; }
 
         public int EntryId { get; set; }
-        public ConfigEntry ConfigEntry { get; set; }
+        public ConfigEntry Entry { get; set; }
     }
 
     public class Snapshot

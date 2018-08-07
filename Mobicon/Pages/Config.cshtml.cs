@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Mobicon.Models;
 
 namespace Mobicon.Pages
 {
+    [Authorize]
     public class ConfigModel : PageModel
     {
         private readonly DataContext _dataContext;
@@ -27,7 +29,7 @@ namespace Mobicon.Pages
                 .Include(e => e.SegmentPrefix)
                 .Include(e => e.VersionPrefix)
                 .Where(e => e.ConfigId == id)
-                .GroupBy(e => e.Id)
+                .GroupBy(e => e.Key)
                 .Select(g => g.OrderByDescending(e => e.Version).First())
                 .OrderBy(e => e.Key)
                 .ToArray();
@@ -76,7 +78,7 @@ namespace Mobicon.Pages
                 Type = type,
                 Version = 1,
                 VersionCreateTime = DateTime.Now,
-                VersionCreatedBy = "grigoryp",
+                VersionCreatedBy = User.Identity.Name,
                 VersionPrefix = versionPrefix,
                 SegmentPrefix = segmentPrefix
             };

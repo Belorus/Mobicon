@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Mobicon.Models;
 
 namespace Mobicon.Pages
 {
+    [Authorize]
     public class SnapshotsModel : PageModel
     {
         private readonly DataContext _dataContext;
@@ -37,8 +39,8 @@ namespace Mobicon.Pages
             {
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
-                CreatedBy = "grigoryp",
-                UpdatedBy = "grigoryp",
+                CreatedBy = User.Identity.Name,
+                UpdatedBy = User.Identity.Name,
                 Name = name
             };
 

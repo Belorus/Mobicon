@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Mobicon.Auth;
 using Mobicon.Models;
 
 namespace Mobicon

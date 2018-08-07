@@ -1,0 +1,21 @@
+﻿@page
+@model Mobicon.Pages.LoginModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h2>Login</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="formGroupExampleInput">Username</label>
+        <input type="text" name="username" class="form-control" id="formGroupExampleInput" placeholder="Username">
+    </div>
+    <div class="form-group">
+        <label for="formGroupExampleInput2">Password</label>
+        <input type="password" name="password" class="form-control" id="formGroupExampleInput2" placeholder="Password">
+    </div>
+    
+    <button type="submit">Login</button>
+</form>

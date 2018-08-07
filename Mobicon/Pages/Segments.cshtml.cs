@@ -1,10 +1,12 @@
 ﻿using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Mobicon.Models;
 
 namespace Mobicon.Pages
 {
+    [Authorize]
     public class SegmentsModel : PageModel
     {
         private readonly DataContext _dataContext;
