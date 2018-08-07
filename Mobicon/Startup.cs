@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mobicon.Auth;
+using Mobicon.Services;
 
 namespace Mobicon
 {
@@ -30,6 +32,8 @@ namespace Mobicon
 
             services.Configure<LdapConfig>(Configuration.GetSection("ldap"));
             services.AddSingleton<LdapAuthenticationService>();
+            services.AddSingleton<ImportManager>();
+            services.AddSingleton<ExportManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +42,8 @@ namespace Mobicon
             IHostingEnvironment env,
             DataContext dbContext)
         {
+            app.ApplicationServices.GetService<ImportManager>().ImportYaml(File.ReadAllText(@"C:\STUFF\Projects\bingo.cs\Data\DynamicConfig\config.yml"));
+
             dbContext.Database.Migrate();
 
             if (env.IsDevelopment())

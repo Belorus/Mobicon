@@ -20,6 +20,11 @@ namespace Mobicon.Pages
             _dataContext = dataContext;
         }
 
+        public void OnPostExport(ExportFormat format)
+        {
+            
+        }
+
         public void OnGet(int id)
         {
             Entries = _dataContext.Snapshots
