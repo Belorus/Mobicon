@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Mobicon.Models;
+using Mobicon.Services;
 
 namespace Mobicon.Pages
 {
@@ -11,12 +12,16 @@ namespace Mobicon.Pages
     public class SegmentModel : PageModel
     {
         private readonly DataContext _dataContext;
+        private readonly ImportManager _importManager;
 
         public Config[] Configs { get; private set; }
 
-        public SegmentModel(DataContext dataContext)
+        public SegmentModel(
+            DataContext dataContext,
+            ImportManager importManager)
         {
             _dataContext = dataContext;
+            _importManager = importManager;
         }
 
         public void OnGet(int id)
@@ -24,9 +29,22 @@ namespace Mobicon.Pages
             Configs = _dataContext.Configs.Where(c => c.SegmentId == id).ToArray();
         }
 
-        public IActionResult OnPostImport(int id, string data)
+        public IActionResult OnPostImport(int id, string name, string data)
         {
-            return null;
+            var entries = _importManager.ImportYaml(data);
+
+            _dataContext.Configs.Add(new Config()
+            {
+                Name = name,
+                SegmentId = id,
+                Entries = entries.ToList(),
+                CreatedAt = DateTime.Now,
+                CreatedBy = User.Identity.Name
+            });
+
+            _dataContext.SaveChanges();
+
+            return RedirectToPage(new {id = id});
         }
 
         public IActionResult OnPost(int id, string configName)

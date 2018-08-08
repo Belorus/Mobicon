@@ -29,8 +29,6 @@ namespace Mobicon.Pages
                 .Include(e => e.SegmentPrefix)
                 .Include(e => e.VersionPrefix)
                 .Where(e => e.ConfigId == id)
-                .GroupBy(e => e.Key)
-                .Select(g => g.OrderByDescending(e => e.Version).First())
                 .OrderBy(e => e.Key)
                 .ToArray();
 

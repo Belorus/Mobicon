@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Antiforgery.Internal;
 using Mobicon.Models;
+using Newtonsoft.Json;
 using SharpYaml.Serialization;
 
 namespace Mobicon.Services
@@ -38,11 +38,11 @@ namespace Mobicon.Services
 
                     (var simple, var version, var segment) = ExtractPrefixes(parts.Take(parts.Length - 1));
 
-                    list.Add(new ConfigEntry()
+                     list.Add(new ConfigEntry()
                     {
                         Key = Join(":", currentPrefix, parts.Last()),
-                        Type = FieldType.String,
-                        Value = kv.Value.ToString(),
+                        Type = MapType(kv.Value),
+                        Value = JsonConvert.SerializeObject(kv.Value),
                         Version = 1,
                         VersionCreateTime = DateTime.Now,
                         VersionPrefix = version,
@@ -56,6 +56,38 @@ namespace Mobicon.Services
             }
         }
 
+        private FieldType MapType(object value)
+        {
+            if (value is long || long.TryParse(value.ToString(), out _))
+                return FieldType.Integer;
+
+            if (value is bool || bool.TryParse(value.ToString(), out _))
+                return FieldType.Bool;
+
+            if (value is double || double.TryParse(value.ToString(), out _))
+                return FieldType.Float;
+
+            if (value is List<object> list)
+            {
+                if (list.Count > 0)
+                {
+                    var itemValue = list[0];
+                    if (itemValue is long || long.TryParse(itemValue.ToString(), out _))
+                        return FieldType.ListOfInteger;
+
+                    if (itemValue is bool || bool.TryParse(itemValue.ToString(), out _))
+                        return FieldType.ListOfBool;
+
+                    if (itemValue is double || double.TryParse(itemValue.ToString(), out _))
+                        return FieldType.ListOfFloat;
+                }
+
+                return FieldType.ListOfString;
+            }
+
+            return FieldType.String;
+        }
+
         private (SimplePrefix[], VersionPrefix, SegmentPrefix) ExtractPrefixes(IEnumerable<string> parts)
         {
             VersionPrefix version = null;
@@ -63,7 +95,7 @@ namespace Mobicon.Services
             var versionPrefixString = parts.SingleOrDefault(s => s.StartsWith("(") && s.EndsWith(")"));
             if (versionPrefixString != null)
             {
-                var versionParts = versionPrefixString.Split("-");
+                var versionParts = versionPrefixString.Substring(1, versionPrefixString.Length - 2).Split("-");
                 version = new VersionPrefix()
                 {
                     From = versionParts.First(),
@@ -76,7 +108,7 @@ namespace Mobicon.Services
             var segmentPrefixString = parts.SingleOrDefault(s => s.StartsWith("<") && s.EndsWith(">"));
             if (segmentPrefixString != null)
             {
-                var segmentParts = segmentPrefixString.Split("-");
+                var segmentParts = segmentPrefixString.Substring(1, segmentPrefixString.Length - 2).Split("-");
                 segment = new SegmentPrefix()
                 {
                     From = int.Parse(segmentParts[0]),

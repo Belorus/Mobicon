@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Mobicon.Models;
@@ -23,7 +24,7 @@ namespace Mobicon.Pages
             Segments = _dataContext.Segments.Include(s => s.Configs).ToArray();
         }
 
-        public void OnPost(string segmentName)
+        public IActionResult OnPost(string segmentName)
         {
             _dataContext.Segments.Add(new Segment()
             {
@@ -31,6 +32,8 @@ namespace Mobicon.Pages
             });
 
             _dataContext.SaveChanges();
+
+            return RedirectToPage();
         }
     }
 }

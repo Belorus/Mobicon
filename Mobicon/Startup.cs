@@ -42,8 +42,6 @@ namespace Mobicon
             IHostingEnvironment env,
             DataContext dbContext)
         {
-            app.ApplicationServices.GetService<ImportManager>().ImportYaml(File.ReadAllText(@"C:\STUFF\Projects\bingo.cs\Data\DynamicConfig\config.yml"));
-
             dbContext.Database.Migrate();
 
             if (env.IsDevelopment())
