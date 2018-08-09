@@ -60,7 +60,7 @@ namespace Mobicon.Auth
             }
             catch
             {
-                throw new Exception("Login failed.");
+                return null;
             }
             _connection.Disconnect();
             return null;

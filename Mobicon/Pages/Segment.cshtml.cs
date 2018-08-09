@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Mobicon.Models;
 using Mobicon.Services;
 
@@ -26,7 +27,7 @@ namespace Mobicon.Pages
 
         public void OnGet(int id)
         {
-            Configs = _dataContext.Configs.Where(c => c.SegmentId == id).ToArray();
+            Configs = _dataContext.Configs.Include(x => x.Entries).Where(c => c.SegmentId == id).ToArray();
         }
 
         public IActionResult OnPostImport(int id, string name, string data)

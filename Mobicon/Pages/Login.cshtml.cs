@@ -24,18 +24,23 @@ namespace Mobicon.Pages
         {
             var user = _authService.Login(username, password);
 
-            var claims = new List<Claim>
+            if (user != null)
             {
-                new Claim("Name", user.UserName),
-                new Claim("FullName", user.FullName),
-            };
 
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme, "Name", "Role");
+                var claims = new List<Claim>
+                {
+                    new Claim("Name", user.UserName),
+                    new Claim("FullName", user.FullName),
+                };
 
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity),
-                new AuthenticationProperties());
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme,
+                    "Name", "Role");
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    new AuthenticationProperties());
+            }
         }
     }
 }

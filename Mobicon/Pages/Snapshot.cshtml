@@ -14,6 +14,15 @@
     }
 </select>
 
+<form method="post" asp-page-handler="export">
+    <select name="exportFormat">
+        <option value="@ExportFormat.Json">Json</option>
+        <option value="@ExportFormat.Yaml">Yaml</option>
+    </select>
+    
+    <button type="submit">Export</button>
+</form>
+
 <hr/>
 
 <table>
@@ -29,7 +38,7 @@
     </thead>
     <tbody>
         @{
-            foreach (var entry in Model.Entries)
+            foreach (var entry in Model.Snapshot.Entries.Select(e => e.Entry).OrderBy(e => e.Key))
             {
                 <tr data="@JsonConvert.SerializeObject(entry)">
                    
@@ -60,7 +69,7 @@
                         case FieldType.ListOfString:
                         case FieldType.ListOfInteger:
                         case FieldType.ListOfFloat:
-                            <td>List...</td>
+                            <td>@entry.Value</td>
                             break;
                         default:
                             <td>Unknown</td>

@@ -28,9 +28,9 @@ namespace Mobicon.Pages
             Segments = _dataContext.Segments.Include(s => s.Configs).ToArray();
         }
 
-        public IActionResult OnPost(string name, string[] configId)
+        public IActionResult OnPost(string name, int[] configId)
         {
-            var entries = _dataContext.Configs.Where(c => configId.Contains(c.Id.ToString()))
+            var entries = _dataContext.Configs.Where(c => configId.Contains(c.Id))
                 .Include(c => c.Entries)
                 .SelectMany(c => c.Entries)
                 .ToList();

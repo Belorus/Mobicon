@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Mobicon.Models;
@@ -29,6 +30,16 @@ namespace Mobicon.Services
             {
                 if (kv.Value is Dictionary<object, object> asMap)
                 {
+                    string keyName = kv.Key.ToString();
+                    string[] parts = Regex.Split(keyName, @"(?=[^\d])-(?=[^\d)])").Where(s => !string.IsNullOrEmpty(s)).ToArray();
+
+                    (var simple, var version, var segment) = ExtractPrefixes(parts.Take(parts.Length - 1));
+
+                    if (simple.Any() || version != null || segment != null)
+                    {
+                        Debug.Assert(false);
+                    }
+
                     Fill(Join(":", currentPrefix, kv.Key.ToString()), asMap, list);
                 }
                 else
@@ -38,7 +49,7 @@ namespace Mobicon.Services
 
                     (var simple, var version, var segment) = ExtractPrefixes(parts.Take(parts.Length - 1));
 
-                     list.Add(new ConfigEntry()
+                    list.Add(new ConfigEntry()
                     {
                         Key = Join(":", currentPrefix, parts.Last()),
                         Type = MapType(kv.Value),
