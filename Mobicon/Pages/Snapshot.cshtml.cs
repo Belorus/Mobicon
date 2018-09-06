@@ -15,9 +15,10 @@ namespace Mobicon.Pages
         private readonly DataContext _dataContext;
         private readonly ExportManager _exportManager;
 
+        public int Id { get; set; }
+        public int? ComparedWithId { get; set; }
         public Snapshot[] Snapshots{ get; set; }
-
-        public Snapshot Snapshot{ get; set; }
+        public EntryDiff[] Entries { get; set; }
 
         public SnapshotModel(
             DataContext dataContext,
@@ -42,14 +43,52 @@ namespace Mobicon.Pages
             }
         }
 
-        public void OnGet(int id)
+        public IActionResult OnPostCompared(int id, int? compareWithId)
         {
-            Snapshot = LoadSnapshot(id);
+            if (!compareWithId.HasValue)
+                return OnGet(id);
 
+            var snapshot = LoadSnapshot(id);
+
+            var snapshotToCompareWith = LoadSnapshot(compareWithId.Value);
+
+            var diff = Compare(snapshot, snapshotToCompareWith);
+
+            ComparedWithId = compareWithId;
+            Id = id;
+            Entries = diff;
             Snapshots = _dataContext.Snapshots
                 .Where(s => s.Id != id)
                 .OrderByDescending(s => s.UpdatedAt)
                 .ToArray();
+
+            return Page();
+        }
+
+        private EntryDiff[] Compare(Snapshot snapshot, Snapshot snapshotToCompareWith)
+        {
+            var curr = snapshot.Entries.Select(x => x.Entry).ToArray();
+            var old = snapshotToCompareWith.Entries.Select(x => x.Entry).ToArray();
+
+            var added = curr.Except(old, Pages.Compare.By<ConfigEntry, int>(x => x.Id)).Select(x => new EntryDiff(x, Difference.Added));
+            var deleted = old.Except(curr, Pages.Compare.By<ConfigEntry, int>(x => x.Id)).Select(x => new EntryDiff(x, Difference.Removed));
+            var unchanged = curr.ToHashSet().Intersect(old, Pages.Compare.By<ConfigEntry, int>(x => x.Id)).Select(x => new EntryDiff(x, Difference.None));
+
+            return added.Concat(deleted).Concat(unchanged).ToArray();
+        }
+
+        public IActionResult OnGet(int id)
+        {
+            var snapshot = LoadSnapshot(id);
+
+            Id = id;
+            Entries = snapshot.Entries.Select(e => new EntryDiff(e.Entry, Difference.None)).ToArray();
+            Snapshots = _dataContext.Snapshots
+                .Where(s => s.Id != id)
+                .OrderByDescending(s => s.UpdatedAt)
+                .ToArray();
+
+            return Page();
         }
 
         private Snapshot LoadSnapshot(int id)
@@ -67,5 +106,25 @@ namespace Mobicon.Pages
                 .ThenInclude(e => e.VersionPrefix)
                 .First(x => x.Id == id);
         }
+    }
+
+    public enum Difference
+    {
+        None,
+        Added,
+        Removed,
+        Changed
+    }
+
+    public class EntryDiff
+    {
+        public EntryDiff(ConfigEntry entry, Difference difference)
+        {
+            Entry = entry;
+            Difference = difference;
+        }
+
+        public ConfigEntry Entry;
+        public Difference Difference;
     }
 }

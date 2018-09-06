@@ -89,6 +89,7 @@ namespace Mobicon.Pages
                 newEntry.Version = entry.Version + 1;
             }
 
+            _dataContext.Configs.Find(id).Entries.RemoveAll(e => e.Id == entryId);
             _dataContext.Entries.Add(newEntry);
             _dataContext.SaveChanges();
 

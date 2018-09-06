@@ -7,12 +7,30 @@
 }
 
 
-<select>
-    @foreach (var snapshot in Model.Snapshots)
-    {
-        <option value="@snapshot.Id">@snapshot.Name</option>
-    }
-</select>
+<form asp-route-id="@Model.Id" asp-page-handler="Compared">
+    <select name="compareWithId" onchange="this.form.submit()">
+        @if (Model.ComparedWithId == null)
+        {
+            <option selected>---</option>
+        }
+        else
+        {
+            <option>---</option>
+        }
+
+        @foreach (var snapshot in Model.Snapshots)
+        {
+            if (Model.ComparedWithId == snapshot.Id)
+            {
+                <option selected value="@snapshot.Id">@snapshot.Name</option>
+            }
+            else
+            {
+                <option value="@snapshot.Id">@snapshot.Name</option>
+            }
+        }
+    </select>
+</form>
 
 <form method="post" asp-page-handler="export">
     <select name="exportFormat">
@@ -38,9 +56,14 @@
     </thead>
     <tbody>
         @{
-            foreach (var entry in Model.Snapshot.Entries.Select(e => e.Entry).OrderBy(e => e.Key))
+            foreach (var diff in Model.Entries.OrderBy(e => e.Entry.Key))
             {
-                <tr data="@JsonConvert.SerializeObject(entry)">
+                var entry = diff.Entry;
+                <tr data="@JsonConvert.SerializeObject(entry)"
+                    class="@(diff.Difference == Difference.Added ? "table-success"
+                           : diff.Difference == Difference.Removed ? "table-danger" 
+                           : diff.Difference == Difference.Changed ? "table-warning" 
+                           : "")">
                    
                     <td>
                         @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))

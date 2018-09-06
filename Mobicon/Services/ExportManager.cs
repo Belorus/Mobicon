@@ -10,35 +10,50 @@ namespace Mobicon.Services
 {
     public class ExportManager
     {
-        public Stream ExportToJson(ConfigEntry[] entries)
+        public Stream ExportToJson(IReadOnlyCollection<ConfigEntry> entries)
         {
             var map = new Dictionary<object, object>();
             ConvertToMap(entries, map, 0);
 
             var ms = new MemoryStream();
 
-            var formatter = new Serializer(new SerializerSettings { EmitAlias = false, EmitJsonComptible = true});
+            var formatter = new Serializer(new SerializerSettings
+            {
+                SortKeyForMapping = false,
+                EmitTags = false,
+                PreferredIndent = 4,
+                LimitPrimitiveFlowSequence = 25,
+                EmitAlias = false,
+                EmitJsonComptible = true
+            });
             formatter.Serialize(ms, map);
             ms.Position = 0;
 
             return ms;
         }
 
-        public Stream ExportToYaml(ConfigEntry[] entries)
+        public Stream ExportToYaml(IReadOnlyCollection<ConfigEntry> entries)
         {
             var map = new Dictionary<object, object>();
             ConvertToMap(entries, map, 0);
 
             var ms = new MemoryStream();
 
-            var formatter = new Serializer(new SerializerSettings { EmitAlias = false,EmitJsonComptible = true});
+            var formatter = new Serializer(new SerializerSettings
+            {
+                SortKeyForMapping = false,
+                EmitTags = false,
+                PreferredIndent = 4,
+                LimitPrimitiveFlowSequence = 25,
+                EmitAlias = false,
+            });
             formatter.Serialize(ms, map);
             ms.Position = 0;
 
             return ms;
         }
 
-        private void ConvertToMap(ConfigEntry[] entries, Dictionary<object, object> map, int depth)
+        private void ConvertToMap(IReadOnlyCollection<ConfigEntry> entries, Dictionary<object, object> map, int depth)
         {
             foreach (IGrouping<string, ConfigEntry> g in entries.GroupBy(e => e.Key.Split(':')[depth]))
             {

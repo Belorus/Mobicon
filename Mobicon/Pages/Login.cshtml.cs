@@ -22,7 +22,12 @@ namespace Mobicon.Pages
 
         public async void OnPost(string username, string password)
         {
-            var user = _authService.Login(username, password);
+            //var user = _authService.Login(username, password);
+            var user = new ApplicationUser()
+            {
+                FullName = "Grigory Perepechko",
+                UserName = "grigoryp"
+            };
 
             if (user != null)
             {
