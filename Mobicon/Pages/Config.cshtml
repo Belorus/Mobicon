@@ -17,17 +17,12 @@
         $('input[name="value"]').val(obj.Value);
         $('input[name="description"]').val(obj.Description);
         $('input[name="jira"]').val(obj.Jira);
-        $('input[name="type"]').val(obj.Type);
+        $('select[name="type"]').val(obj.Type);
         
-        if (obj.VersionPrefix) {
-            $('input[name="versionFrom"]').val(obj.VersionPrefix.From);
-            $('input[name="versionTo"]').val(obj.VersionPrefix.To);
-        }
-        if (obj.SegmentPrefix) {
-
-        $('input[name="segmentFrom"]').val(obj.SegmentPrefix.From);
-        $('input[name="segmentTo"]').val(obj.SegmentPrefix.To);
-        }
+        $('input[name="versionFrom"]').val(obj.VersionPrefixFrom);
+        $('input[name="versionTo"]').val(obj.VersionPrefixTo);
+        $('input[name="segmentFrom"]').val(obj.SegmentPrefixFrom);
+        $('input[name="segmentTo"]').val(obj.SegmentPrefixTo);
 
         $('#versionGroup').hide();
         $('#segmentGroup').hide();
@@ -47,11 +42,11 @@
 
     function onAddClick() {
         $('input[name="entryId"]').val('');
-        $('input[name="key"]').val('').prop('disabled', false);;
+        $('input[name="key"]').val('').prop('disabled', false);
         $('input[name="value"]').val('');
         $('input[name="description"]').val('');
         $('input[name="jira"]').val('');
-        $('input[name="type"]').val('');
+        $('select[name="type"]').val(1);
         $('input[name="versionFrom"]').val('');
         $('input[name="versionTo"]').val('');
         $('input[name="segmentFrom"]').val('');
@@ -104,10 +99,10 @@
                     <input type="text" class="form-control mb-2 mr-sm-2" name="key" placeholder="Key">
                     <input type="text" class="form-control mb-2 mr-sm-2" name="value" placeholder="Value">
 
-                    <select class="form-control mb-2 mr-sm-2" name="type" id="exampleFormControlSelect1">
+                    <select class="form-control mb-2 mr-sm-2" name="type">
                         @foreach (var type in Model.FieldTypes)
                         {
-                            <option>@type</option>
+                            <option value="@((int)type)">@type</option>
                         }
                     </select>
 

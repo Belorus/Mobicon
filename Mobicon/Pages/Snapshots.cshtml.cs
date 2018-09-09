@@ -35,6 +35,7 @@ namespace Mobicon.Pages
                 .SelectMany(c => c.Entries)
                 .GroupBy(x => x.EntryId)
                 .Select(g => g.OrderByDescending(x => x.Version).First())
+                .Where(e => e.IsDeleted == false)
                 .ToList();
 
             var snapshot = new Snapshot
