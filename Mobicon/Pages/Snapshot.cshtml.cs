@@ -30,7 +30,7 @@ namespace Mobicon.Pages
 
         public IActionResult OnPostExport(int id, ExportFormat exportFormat)
         {
-            var snapshot = LoadSnapshot(5);
+            var snapshot = LoadSnapshot(1);
 
             switch (exportFormat)
             {

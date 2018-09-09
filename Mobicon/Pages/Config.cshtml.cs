@@ -15,6 +15,7 @@ namespace Mobicon.Pages
 
         public ConfigEntry[] Entries { get; set; }
         public FieldType[] FieldTypes { get; set; }
+        public SimplePrefix[] SimplePrefixes { get; set; }
 
         public ConfigModel(DataContext dataContext)
         {
@@ -29,10 +30,14 @@ namespace Mobicon.Pages
                 .Include(e => e.SegmentPrefix)
                 .Include(e => e.VersionPrefix)
                 .Where(e => e.ConfigId == id)
+                .GroupBy(x => x.EntryId)
+                .Select(g => g.OrderByDescending(x => x.Version).First())
                 .OrderBy(e => e.Key)
                 .ToArray();
 
             FieldTypes = Enum.GetValues(typeof(FieldType)).Cast<FieldType>().Where(f => f != FieldType.Unknown).ToArray();
+
+            SimplePrefixes = _dataContext.SimplePrefixes.ToArray();
 
             return Page();
         }
@@ -86,10 +91,10 @@ namespace Mobicon.Pages
                 var entry = _dataContext.Entries.First(e => e.Id == entryId);
 
                 newEntry.Key = entry.Key;
+                newEntry.EntryId = entry.EntryId;
                 newEntry.Version = entry.Version + 1;
             }
 
-            _dataContext.Configs.Find(id).Entries.RemoveAll(e => e.Id == entryId);
             _dataContext.Entries.Add(newEntry);
             _dataContext.SaveChanges();
 

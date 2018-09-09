@@ -53,6 +53,7 @@ namespace Mobicon.Services
                     {
                         Key = Join(":", currentPrefix, parts.Last()),
                         Type = MapType(kv.Value),
+                        EntryId = Guid.NewGuid().ToString("N"),
                         Value = JsonConvert.SerializeObject(kv.Value),
                         Version = 1,
                         VersionCreateTime = DateTime.Now,

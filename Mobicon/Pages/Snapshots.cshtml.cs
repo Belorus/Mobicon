@@ -33,6 +33,8 @@ namespace Mobicon.Pages
             var entries = _dataContext.Configs.Where(c => configId.Contains(c.Id))
                 .Include(c => c.Entries)
                 .SelectMany(c => c.Entries)
+                .GroupBy(x => x.EntryId)
+                .Select(g => g.OrderByDescending(x => x.Version).First())
                 .ToList();
 
             var snapshot = new Snapshot

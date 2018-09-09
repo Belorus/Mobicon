@@ -27,7 +27,13 @@
 
         $('input[name="segmentFrom"]').val(obj.SegmentPrefix.From);
         $('input[name="segmentTo"]').val(obj.SegmentPrefix.To);
-            }
+        }
+
+        $('#versionGroup').hide();
+        $('#segmentGroup').hide();
+        $('#simplePrefixSelect').hide();
+
+
         $('#addEditModal').modal('show');
     }
 
@@ -50,6 +56,12 @@
         $('input[name="versionTo"]').val('');
         $('input[name="segmentFrom"]').val('');
         $('input[name="segmentTo"]').val('');
+
+        $('#versionGroup').show();
+        $('#segmentGroup').show();
+
+        $('#simplePrefixSelect').multiselect();
+
 
         $('#addEditModal').modal('show');
     }
@@ -103,7 +115,7 @@
                     <input type="text" class="form-control mb-2 mr-sm-2" name="jira" placeholder="Jira">
 
                     <hr />
-                    <div class="input-group">
+                    <div id="versionGroup" class="input-group">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <input type="checkbox"
@@ -119,7 +131,7 @@
                     </div>
 
                     <hr />
-                    <div class="input-group">
+                    <div id="segmentGroup" class="input-group">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <input type="checkbox"
@@ -134,6 +146,9 @@
                         </div>
                     </div>
                     <hr />
+                    <div>
+                        <select id="simplePrefixSelect" asp-items="@(new SelectList(Model.SimplePrefixes, "Id", "Name"))" multiple="multiple"></select>
+                    </div>
 
 
                 </div>

@@ -76,6 +76,8 @@ namespace Mobicon.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        public string EntryId { get; set; }
+
         public int Version { get; set; }
 
         public int ConfigId { get; set; }
