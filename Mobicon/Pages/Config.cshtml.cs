@@ -27,11 +27,10 @@ namespace Mobicon.Pages
             Entries = _dataContext.Entries
                 .Include(e => e.SimplePrefixes)
                 .ThenInclude(e => e.SimplePrefix)
-                .Include(e => e.SegmentPrefix)
-                .Include(e => e.VersionPrefix)
                 .Where(e => e.ConfigId == id)
                 .GroupBy(x => x.EntryId)
                 .Select(g => g.OrderByDescending(x => x.Version).First())
+                .Where(e => e.IsDeleted == false)
                 .OrderBy(e => e.Key)
                 .ToArray();
 
@@ -45,32 +44,14 @@ namespace Mobicon.Pages
         public IActionResult OnPostDelete(int id, int entryId)
         {
             var entry = _dataContext.Entries.Find(entryId);
-            _dataContext.Entries.Remove(entry);
+            entry.IsDeleted = true;
             _dataContext.SaveChanges();
 
             return RedirectToPage(new { id = id });
         }
 
-        public IActionResult OnPost(int id, int entryId, string key, string value, string description, string jira, FieldType type, string versionFrom, string versionTo, int? segmentFrom, int? segmentTo)
+        public IActionResult OnPost(int id, int entryId, string key, string value, string description, string jira, FieldType type, string versionFrom, string versionTo, int? segmentFrom, int? segmentTo, int[] simplePrefixes)
         {
-            VersionPrefix versionPrefix = null;
-            if (!string.IsNullOrEmpty(versionFrom) || !string.IsNullOrEmpty(versionTo))
-            {
-                versionPrefix = new VersionPrefix();
-                if (Version.TryParse(versionFrom, out _))
-                    versionPrefix.From = versionFrom;
-                if (Version.TryParse(versionTo, out _))
-                    versionPrefix.To = versionTo;
-            }
-
-            SegmentPrefix segmentPrefix = null;
-            if (segmentFrom != null && segmentTo != null)
-            {
-                segmentPrefix = new SegmentPrefix();
-                segmentPrefix.From = segmentFrom.Value;
-                segmentPrefix.To = segmentTo.Value;
-            }
-
             var newEntry = new ConfigEntry
             {
                 Key = key,
@@ -79,20 +60,42 @@ namespace Mobicon.Pages
                 Jira = jira,
                 ConfigId = id,
                 Type = type,
-                Version = 1,
                 VersionCreateTime = DateTime.Now,
                 VersionCreatedBy = User.Identity.Name,
-                VersionPrefix = versionPrefix,
-                SegmentPrefix = segmentPrefix
             };
 
             if (entryId > 0)
             {
-                var entry = _dataContext.Entries.First(e => e.Id == entryId);
+                // Edit
+                var entry = _dataContext.Entries.Include(x => x.SimplePrefixes).First(e => e.Id == entryId);
 
                 newEntry.Key = entry.Key;
                 newEntry.EntryId = entry.EntryId;
                 newEntry.Version = entry.Version + 1;
+                newEntry.SimplePrefixes = entry.SimplePrefixes.Select(p => new EntryConfigSimplePrefix()
+                     {
+                         SimplePrefixId = p.SimplePrefixId
+                     }).ToList();
+                newEntry.SegmentPrefixFrom = entry.SegmentPrefixFrom;
+                newEntry.SegmentPrefixTo = entry.SegmentPrefixTo;
+                newEntry.VersionPrefixFrom = entry.VersionPrefixFrom;
+                newEntry.VersionPrefixTo = entry.VersionPrefixTo;
+            }
+            else
+            {
+                // Add 
+
+                newEntry.VersionPrefixFrom = versionFrom;
+                newEntry.VersionPrefixTo = versionTo;
+                newEntry.SegmentPrefixFrom = segmentFrom;
+                newEntry.SegmentPrefixTo = segmentTo;
+
+                newEntry.EntryId = Guid.NewGuid().ToString("N");
+                newEntry.Version = 1;
+                newEntry.SimplePrefixes = simplePrefixes.Select(sid => new EntryConfigSimplePrefix()
+                {
+                    SimplePrefixId = sid
+                }).ToList();
             }
 
             _dataContext.Entries.Add(newEntry);

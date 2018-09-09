@@ -49,12 +49,6 @@ namespace Mobicon.Pages
                 var segment = _dataContext.Segments
                     .Include(x => x.Configs)
                     .ThenInclude(x => x.Entries)
-                    .ThenInclude(x => x.VersionPrefix)
-                    .Include(x => x.Configs)
-                    .ThenInclude(x => x.Entries)
-                    .ThenInclude(x => x.SegmentPrefix)
-                    .Include(x => x.Configs)
-                    .ThenInclude(x => x.Entries)
                     .ThenInclude(x => x.SimplePrefixes)
                     .ThenInclude(x => x.SimplePrefix)
                     .First(x => x.Name == arr[0]);

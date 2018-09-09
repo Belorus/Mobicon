@@ -16,11 +16,6 @@ namespace Mobicon
 
         public DbSet<SimplePrefix> SimplePrefixes { get; set; }
 
-        public DbSet<VersionPrefix> VersionPrefixes { get; set; }
-
-        public DbSet<SegmentPrefix> SegmentPrefixes { get; set; }
-
-
         public DataContext(DbContextOptions options) : base(options)
         {
         }

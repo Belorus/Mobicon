@@ -92,9 +92,13 @@ namespace Mobicon.Models
         public DateTime VersionCreateTime { get; set; }
         public string VersionCreatedBy { get; set; }
 
-        public SegmentPrefix SegmentPrefix { get; set; }
+        public int? SegmentPrefixFrom { get; set; }
+        public int? SegmentPrefixTo{ get; set; }
 
-        public VersionPrefix VersionPrefix { get; set; }
+        public string VersionPrefixFrom { get; set; }
+        public string VersionPrefixTo { get; set; }
+
+        public bool IsDeleted { get; set; }
 
         [JsonIgnore]
         public List<EntryConfigSimplePrefix> SimplePrefixes { get; set; }
@@ -107,32 +111,6 @@ namespace Mobicon.Models
 
         public int ConfigEntryId { get; set; }
         public ConfigEntry ConfigEntry { get; set; }
-    }
-
-    public class VersionPrefix
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
-        [JsonIgnore]
-        public List<ConfigEntry> ConfigEntries { get; set; }
-
-        public string From { get; set; }
-        public string To { get; set; }
-    }
-
-    public class SegmentPrefix
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
-        [JsonIgnore]
-        public List<ConfigEntry> ConfigEntries { get; set; }
-
-        public int From { get; set; }
-        public int To { get; set; }
     }
 
     public class SimplePrefix

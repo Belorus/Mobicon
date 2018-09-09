@@ -68,14 +68,14 @@
                     <td>
                         @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))
                         @{
-                            if (entry.VersionPrefix != null)
+                            if ((entry.VersionPrefixFrom ?? entry.VersionPrefixTo) != null)
                             {
-                                Write($"({entry.VersionPrefix.From} - {entry.VersionPrefix.To})");
+                                Write($"({entry.VersionPrefixFrom} - {entry.VersionPrefixTo})");
                             }
 
-                            if (entry.SegmentPrefix != null)
+                            if ((entry.SegmentPrefixFrom ?? entry.SegmentPrefixTo) != null)
                             {
-                                Write($"<{entry.SegmentPrefix.From} .. {entry.SegmentPrefix.To}>");
+                                Write($"<{entry.SegmentPrefixFrom} .. {entry.SegmentPrefixTo}>");
                             }
                         }
                     </td>

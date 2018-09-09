@@ -64,10 +64,10 @@ namespace Mobicon.Services
                     if (item.Key.Count(c => c == ':') == depth)
                     {
                         var key = string.Join("-", item.SimplePrefixes.Select(x => x.SimplePrefix.Name));
-                        if (item.SegmentPrefix != null)
-                            key += "<" + item.SegmentPrefix.From + ".." + item.SegmentPrefix.To + ">";
-                        if (item.VersionPrefix != null)
-                            key += "(" + item.VersionPrefix.From + "-" + item.VersionPrefix.To + ")";
+                        if (item.SegmentPrefixFrom != null || item.SegmentPrefixTo != null)
+                            key += "<" + item.SegmentPrefixFrom + ".." + item.SegmentPrefixTo + ">";
+                        if (item.VersionPrefixFrom != null || item.VersionPrefixTo != null)
+                            key += "(" + item.VersionPrefixFrom + "-" + item.VersionPrefixTo + ")";
 
                         if (key != string.Empty)
                             key = "-" + key + "-";

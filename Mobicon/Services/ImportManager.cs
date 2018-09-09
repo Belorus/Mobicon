@@ -30,16 +30,6 @@ namespace Mobicon.Services
             {
                 if (kv.Value is Dictionary<object, object> asMap)
                 {
-                    string keyName = kv.Key.ToString();
-                    string[] parts = Regex.Split(keyName, @"(?=[^\d])-(?=[^\d)])").Where(s => !string.IsNullOrEmpty(s)).ToArray();
-
-                    (var simple, var version, var segment) = ExtractPrefixes(parts.Take(parts.Length - 1));
-
-                    if (simple.Any() || version != null || segment != null)
-                    {
-                        Debug.Assert(false);
-                    }
-
                     Fill(Join(":", currentPrefix, kv.Key.ToString()), asMap, list);
                 }
                 else
@@ -57,8 +47,10 @@ namespace Mobicon.Services
                         Value = JsonConvert.SerializeObject(kv.Value),
                         Version = 1,
                         VersionCreateTime = DateTime.Now,
-                        VersionPrefix = version,
-                        SegmentPrefix = segment,
+                        VersionPrefixFrom = version.Item1,
+                        VersionPrefixTo = version.Item2,
+                        SegmentPrefixFrom = segment.Item1,
+                        SegmentPrefixTo = segment.Item2,
                         SimplePrefixes = simple.Select(s => new EntryConfigSimplePrefix()
                         {
                             SimplePrefix = s
@@ -100,32 +92,24 @@ namespace Mobicon.Services
             return FieldType.String;
         }
 
-        private (SimplePrefix[], VersionPrefix, SegmentPrefix) ExtractPrefixes(IEnumerable<string> parts)
+        private (SimplePrefix[], (string, string), (int?, int?)) ExtractPrefixes(IEnumerable<string> parts)
         {
-            VersionPrefix version = null;
+            (string, string) version = (null, null);
 
             var versionPrefixString = parts.SingleOrDefault(s => s.StartsWith("(") && s.EndsWith(")"));
             if (versionPrefixString != null)
             {
                 var versionParts = versionPrefixString.Substring(1, versionPrefixString.Length - 2).Split("-");
-                version = new VersionPrefix()
-                {
-                    From = versionParts.First(),
-                    To = versionParts.Last()
-                };
+                version = (versionParts.First(), versionParts.Last());
             }
 
-            SegmentPrefix segment = null;
+            (int?, int?) segment = (null, null);
 
             var segmentPrefixString = parts.SingleOrDefault(s => s.StartsWith("<") && s.EndsWith(">"));
             if (segmentPrefixString != null)
             {
                 var segmentParts = segmentPrefixString.Substring(1, segmentPrefixString.Length - 2).Split("-");
-                segment = new SegmentPrefix()
-                {
-                    From = int.Parse(segmentParts[0]),
-                    To = int.Parse(segmentParts[1])
-                };
+                segment = (int.Parse(segmentParts[0]), int.Parse(segmentParts[1]));
             }
 
             SimplePrefix[] simple = parts.Where(p => p != versionPrefixString && p != segmentPrefixString)

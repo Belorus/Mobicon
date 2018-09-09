@@ -10,25 +10,13 @@ namespace Mobicon.Pages
             if (!string.Equals(x.Key, y.Key))
                 return false;
 
-            if ((x.VersionPrefix == null) != (y.VersionPrefix == null))
-                return false;
-
-            if (x.VersionPrefix != null)
-            {
-                if (x.VersionPrefix.From != y.VersionPrefix.From ||
-                    x.VersionPrefix.To != y.VersionPrefix.To)
+                if (x.VersionPrefixFrom != y.VersionPrefixFrom ||
+                    x.VersionPrefixTo != y.VersionPrefixTo)
                     return false;
-            }
 
-            if ((x.SegmentPrefix == null) != (y.SegmentPrefix == null))
-                return false;
-
-            if (x.SegmentPrefix != null)
-            {
-                if (x.SegmentPrefix.From != y.SegmentPrefix.From ||
-                    x.SegmentPrefix.To != y.SegmentPrefix.To)
+                if (x.SegmentPrefixFrom != y.SegmentPrefixFrom ||
+                    x.SegmentPrefixTo != y.SegmentPrefixTo)
                     return false;
-            }
 
             if (!Enumerable.SequenceEqual(
                 x.SimplePrefixes.Select(p => p.SimplePrefix.Id),

@@ -98,12 +98,6 @@ namespace Mobicon.Pages
                 .ThenInclude(e => e.Entry)
                 .ThenInclude(e => e.SimplePrefixes)
                 .ThenInclude(e => e.SimplePrefix)
-                .Include(e => e.Entries)
-                .ThenInclude(e => e.Entry)
-                .ThenInclude(e => e.SegmentPrefix)
-                .Include(e => e.Entries)
-                .ThenInclude(e => e.Entry)
-                .ThenInclude(e => e.VersionPrefix)
                 .First(x => x.Id == id);
         }
     }
