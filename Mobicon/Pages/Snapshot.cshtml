@@ -37,11 +37,42 @@
         <option value="@ExportFormat.Json">Json</option>
         <option value="@ExportFormat.Yaml">Yaml</option>
     </select>
-    
+
     <button type="submit">Export</button>
 </form>
 
-<hr/>
+<hr />
+
+<span>Approved by:</span>
+<table>
+    @foreach (var approve in Model.Approves)
+    {
+        <tr>
+            <td>@approve.Username</td>
+            <td>@approve.ApprovedAt</td>
+        </tr>
+    }
+</table>
+
+@if (User.IsInRole(UserRole.Approver.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
+{
+    if (Model.Approves.All(a => a.Username != User.Identity.Name))
+    {
+        <form method="post" asp-page-handler="approve"
+              asp-route-id="@Model.Id">
+            <button type="submit">Approve</button>
+        </form>
+    }
+    else
+    {
+        <form method="post" asp-page-handler="disapprove"
+              asp-route-id="@Model.Id">
+            <button type="submit">Disapprove</button>
+        </form>
+    }
+}
+
+<hr />
 
 <table>
     <thead class="table table-borderless">
@@ -61,10 +92,10 @@
                 var entry = diff.Entry;
                 <tr data="@JsonConvert.SerializeObject(entry)"
                     class="@(diff.Difference == Difference.Added ? "table-success"
-                           : diff.Difference == Difference.Removed ? "table-danger" 
-                           : diff.Difference == Difference.Changed ? "table-warning" 
+                           : diff.Difference == Difference.Removed ? "table-danger"
+                           : diff.Difference == Difference.Changed ? "table-warning"
                            : "")">
-                   
+
                     <td>
                         @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))
                         @{

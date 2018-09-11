@@ -13,6 +13,7 @@ namespace Mobicon.Pages
     {
         private readonly DataContext _dataContext;
 
+        public int Id { get; set; }
         public ConfigEntry[] Entries { get; set; }
         public FieldType[] FieldTypes { get; set; }
         public SimplePrefix[] SimplePrefixes { get; set; }
@@ -34,6 +35,7 @@ namespace Mobicon.Pages
                 .OrderBy(e => e.Key)
                 .ToArray();
 
+            Id = id;
             FieldTypes = Enum.GetValues(typeof(FieldType)).Cast<FieldType>().Where(f => f != FieldType.Unknown).ToArray();
 
             SimplePrefixes = _dataContext.SimplePrefixes.ToArray();

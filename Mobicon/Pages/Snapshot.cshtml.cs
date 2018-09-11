@@ -17,8 +17,9 @@ namespace Mobicon.Pages
 
         public int Id { get; set; }
         public int? ComparedWithId { get; set; }
-        public Snapshot[] Snapshots{ get; set; }
+        public Snapshot[] Snapshots { get; set; }
         public EntryDiff[] Entries { get; set; }
+        public SnapshotApproval[] Approves { get; set; }
 
         public SnapshotModel(
             DataContext dataContext,
@@ -30,14 +31,16 @@ namespace Mobicon.Pages
 
         public IActionResult OnPostExport(int id, ExportFormat exportFormat)
         {
-            var snapshot = LoadSnapshot(1);
+            var snapshot = LoadSnapshot(id);
 
             switch (exportFormat)
             {
                 case ExportFormat.Json:
-                    return File(_exportManager.ExportToJson(snapshot.Entries.Select(e => e.Entry).ToArray()), "application/json", snapshot.Name + ".json");
+                    return File(_exportManager.ExportToJson(snapshot.Entries.Select(e => e.Entry).ToArray()),
+                        "application/json", snapshot.Name + ".json");
                 case ExportFormat.Yaml:
-                    return File(_exportManager.ExportToYaml(snapshot.Entries.Select(e => e.Entry).ToArray()), "application/yaml", snapshot.Name + ".yml");
+                    return File(_exportManager.ExportToYaml(snapshot.Entries.Select(e => e.Entry).ToArray()),
+                        "application/yaml", snapshot.Name + ".yml");
                 default:
                     throw new NotImplementedException();
             }
@@ -70,12 +73,39 @@ namespace Mobicon.Pages
             var curr = snapshot.Entries.Select(x => x.Entry).ToArray();
             var old = snapshotToCompareWith.Entries.Select(x => x.Entry).ToArray();
 
-            var added = curr.Except(old, Pages.Compare.By<ConfigEntry, int>(x => x.Id)).Select(x => new EntryDiff(x, Difference.Added));
-            var deleted = old.Except(curr, Pages.Compare.By<ConfigEntry, int>(x => x.Id)).Select(x => new EntryDiff(x, Difference.Removed));
-            var unchanged = curr.ToHashSet().Intersect(old, Pages.Compare.By<ConfigEntry, int>(x => x.Id)).Select(x => new EntryDiff(x, Difference.None));
+            var added = curr.Except(old, Pages.Compare.By<ConfigEntry, int>(x => x.Id))
+                .Select(x => new EntryDiff(x, Difference.Added));
+            var deleted = old.Except(curr, Pages.Compare.By<ConfigEntry, int>(x => x.Id))
+                .Select(x => new EntryDiff(x, Difference.Removed));
+            var unchanged = curr.ToHashSet().Intersect(old, Pages.Compare.By<ConfigEntry, int>(x => x.Id))
+                .Select(x => new EntryDiff(x, Difference.None));
 
             return added.Concat(deleted).Concat(unchanged).ToArray();
         }
+
+        public IActionResult OnPostApprove(int id)
+        {
+            _dataContext.SnapshotApprovals.Add(new SnapshotApproval()
+            {
+                Username = User.Identity.Name,
+                ApprovedAt = DateTime.Now,
+                SnapshotId = id
+            });
+            _dataContext.SaveChanges();
+
+            return RedirectToPage(new { id = id });
+        }
+
+        public IActionResult OnPostDisapprove(int id)
+        {
+            var itemToRemove = _dataContext.SnapshotApprovals.First(a => a.Username == User.Identity.Name && a.SnapshotId == id);
+
+            _dataContext.SnapshotApprovals.Remove(itemToRemove);
+            _dataContext.SaveChanges();
+
+            return RedirectToPage(new {id = id});
+        }
+
 
         public IActionResult OnGet(int id)
         {
@@ -86,6 +116,9 @@ namespace Mobicon.Pages
             Snapshots = _dataContext.Snapshots
                 .Where(s => s.Id != id)
                 .OrderByDescending(s => s.UpdatedAt)
+                .ToArray();
+            Approves = _dataContext.SnapshotApprovals
+                .Where(a => a.SnapshotId == id)
                 .ToArray();
 
             return Page();

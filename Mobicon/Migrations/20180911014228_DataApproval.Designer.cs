@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mobicon;
 
 namespace Mobicon.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180911014228_DataApproval")]
+    partial class DataApproval
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,8 +139,6 @@ namespace Mobicon.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<int>("Status");
-
                     b.Property<DateTime>("UpdatedAt");
 
                     b.Property<string>("UpdatedBy")
@@ -151,18 +151,18 @@ namespace Mobicon.Migrations
 
             modelBuilder.Entity("Mobicon.Models.SnapshotApproval", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("SnapshotId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("ApprovedAt");
 
-                    b.Property<int>("SnapshotId");
+                    b.Property<int?>("SnapshotId1");
 
                     b.Property<string>("Username");
 
-                    b.HasKey("Id");
+                    b.HasKey("SnapshotId");
 
-                    b.HasIndex("SnapshotId");
+                    b.HasIndex("SnapshotId1");
 
                     b.ToTable("SnapshotApprovals");
                 });
@@ -190,12 +190,6 @@ namespace Mobicon.Migrations
                     b.HasKey("Username");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new { Username = "grigoryp", Role = 3 },
-                        new { Username = "yaroslavs", Role = 3 },
-                        new { Username = "alexeyra", Role = 3 }
-                    );
                 });
 
             modelBuilder.Entity("Mobicon.Models.Config", b =>
@@ -231,8 +225,7 @@ namespace Mobicon.Migrations
                 {
                     b.HasOne("Mobicon.Models.Snapshot", "Snapshot")
                         .WithMany()
-                        .HasForeignKey("SnapshotId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SnapshotId1");
                 });
 
             modelBuilder.Entity("Mobicon.Models.SnapshotToEntry", b =>

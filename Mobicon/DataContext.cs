@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Mobicon.Auth;
 using Mobicon.Models;
 
 namespace Mobicon
@@ -15,6 +14,10 @@ namespace Mobicon
         public DbSet<ConfigEntry> Entries { get; set; }
 
         public DbSet<SimplePrefix> SimplePrefixes { get; set; }
+
+        public DbSet<UserToRole> UserRoles { get; set; }
+
+        public DbSet<SnapshotApproval> SnapshotApprovals { get; set; }
 
         public DataContext(DbContextOptions options) : base(options)
         {
@@ -33,6 +36,13 @@ namespace Mobicon
 
             modelBuilder.Entity<EntryConfigSimplePrefix>()
                 .HasOne<SimplePrefix>(e => e.SimplePrefix);
+
+            modelBuilder.Entity<UserToRole>()
+                .HasData(
+                    new UserToRole {Username = "grigoryp", Role = UserRole.Admin},
+                    new UserToRole {Username = "yaroslavs", Role = UserRole.Admin},
+                    new UserToRole {Username = "alexeyra", Role = UserRole.Admin}
+                    );
         }
     }
 }

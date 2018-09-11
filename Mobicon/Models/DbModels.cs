@@ -6,6 +6,37 @@ using Newtonsoft.Json;
 
 namespace Mobicon.Models
 {
+    public enum UserRole
+    {
+        Reader,
+        Editor,
+        Approver,
+        Admin
+    }
+
+    public class SnapshotApproval
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int SnapshotId { get; set; }
+
+        public Snapshot Snapshot { get; set; }
+
+        public string Username { get; set; }
+
+        public DateTime ApprovedAt { get; set; }
+    }
+
+    public class UserToRole
+    {
+        [Key]
+        public string Username { get; set; }
+
+        public UserRole Role { get; set; }
+    }
+
     public class SnapshotToEntry
     {
         public int SnapshotId { get; set; }
@@ -13,6 +44,12 @@ namespace Mobicon.Models
 
         public int EntryId { get; set; }
         public ConfigEntry Entry { get; set; }
+    }
+
+    public enum SnapshotStatus
+    {
+        WaitingForApprove,
+        Published
     }
 
     public class Snapshot
@@ -35,6 +72,8 @@ namespace Mobicon.Models
 
         [Required]
         public string UpdatedBy { get; set; }
+
+        public SnapshotStatus Status { get; set; }
 
         public List<SnapshotToEntry> Entries { get; set; } = new List<SnapshotToEntry>();
     }

@@ -33,7 +33,7 @@
     @RenderBody()
     <hr/>
     <footer>
-        <p>Bingo Blitz Configuration | @User.Identity.Name</p>
+        <p>Bingo Blitz Configuration | @User.Identity.Name | <form asp-page="Login" asp-page-handler="logout"> <button type="submit">logout</button> </form></p>
     </footer>
 </div>
 
