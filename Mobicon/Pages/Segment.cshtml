@@ -34,7 +34,22 @@
     </div>
 </div>
 
-<ul class="list-group">
+<div class="d-flex justify-content-between align-items-center">
+    <h2>Segment configs <span class="badge badge-info">@Model.Configs.Length</span></h2>
+    <div class="d-flex">
+        <buton class="btn btn-secondary import-form" onclick="onImportClick()">Import config</buton>
+        <form method="post" class="d-flex justify-content-end">
+            <div class="input-group add-list-item">
+                <input type="text" name="configName" required placeholder="Enter config name" class="form-control">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Add config</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<ul class="list-group items-list">
     @{
         foreach (var config in Model.Configs)
         {
@@ -46,17 +61,8 @@
     }
 </ul>
 
-
-<form method="post">
-    <div class="input-group">
-        <input type="text" name="configName" class="form-control">
-        <div class="input-group-append">
-            <button class="btn btn-success" type="submit">Create new config</button>
-        </div>
-    </div>
-
-
-</form>
-<form>
-    <buton class="btn btn-success" type="button" onclick="onImportClick()">Import</buton>
-</form>
+<style>
+    .import-form {
+        margin-right: 36px;
+    }
+</style>
