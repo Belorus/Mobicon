@@ -67,6 +67,8 @@ namespace Mobicon.Models
         [Required]
         public DateTime UpdatedAt { get; set; }
 
+        public DateTime? PublishedAt { get; set; }
+
         [Required]
         public string CreatedBy { get; set; }
 

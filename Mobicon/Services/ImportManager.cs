@@ -11,6 +11,13 @@ namespace Mobicon.Services
 {
     public class ImportManager
     {
+        private readonly DataContext _dataContext;
+
+        public ImportManager(DataContext dataContext)
+        {
+            _dataContext = dataContext;
+        }
+
         public ConfigEntry[] ImportYaml(string data)
         {
             var list = new List<ConfigEntry>();
@@ -53,7 +60,7 @@ namespace Mobicon.Services
                         SegmentPrefixTo = segment.Item2,
                         SimplePrefixes = simple.Select(s => new EntryConfigSimplePrefix()
                         {
-                            SimplePrefix = s
+                            SimplePrefixId = s.Id
                         }).ToList()
                     });
                 }
@@ -113,10 +120,7 @@ namespace Mobicon.Services
             }
 
             SimplePrefix[] simple = parts.Where(p => p != versionPrefixString && p != segmentPrefixString)
-                .Select(p => new SimplePrefix()
-                {
-                    Name = p
-                }).ToArray();
+                .Select(p => _dataContext.SimplePrefixes.First(prefix => prefix.Name == p)).ToArray();
 
             return (simple, version, segment);
         }

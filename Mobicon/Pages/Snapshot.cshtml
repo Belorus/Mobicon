@@ -44,7 +44,7 @@
 <hr />
 
 <span>Approved by:</span>
-<table>
+@*<table>
     @foreach (var approve in Model.Approves)
     {
         <tr>
@@ -52,9 +52,9 @@
             <td>@approve.ApprovedAt</td>
         </tr>
     }
-</table>
+</table>*@
 
-@if (User.IsInRole(UserRole.Approver.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
+@*@if (User.IsInRole(UserRole.Approver.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
 {
     if (Model.Approves.All(a => a.Username != User.Identity.Name))
     {
@@ -70,7 +70,7 @@
             <button type="submit">Disapprove</button>
         </form>
     }
-}
+}*@
 
 <hr />
 

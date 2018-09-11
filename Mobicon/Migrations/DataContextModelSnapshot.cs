@@ -122,6 +122,26 @@ namespace Mobicon.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SimplePrefixes");
+
+                    b.HasData(
+                        new { Id = 1, Name = "W10" },
+                        new { Id = 2, Name = "W10MOBILE" },
+                        new { Id = 3, Name = "W10DESKTOP" },
+                        new { Id = 4, Name = "IOS" },
+                        new { Id = 5, Name = "IPHONE" },
+                        new { Id = 6, Name = "IPAD" },
+                        new { Id = 7, Name = "Android" },
+                        new { Id = 8, Name = "Google" },
+                        new { Id = 9, Name = "Amazon" },
+                        new { Id = 10, Name = "MacOs" },
+                        new { Id = 11, Name = "Win32" },
+                        new { Id = 12, Name = "Web" },
+                        new { Id = 13, Name = "BBCOM" },
+                        new { Id = 14, Name = "FBCOM" },
+                        new { Id = 15, Name = "DEV" },
+                        new { Id = 16, Name = "GEN" },
+                        new { Id = 17, Name = "PREVIEW" }
+                    );
                 });
 
             modelBuilder.Entity("Mobicon.Models.Snapshot", b =>
@@ -136,6 +156,8 @@ namespace Mobicon.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired();
+
+                    b.Property<DateTime?>("PublishedAt");
 
                     b.Property<int>("Status");
 

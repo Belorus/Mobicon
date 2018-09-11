@@ -9,8 +9,8 @@ using Mobicon;
 namespace Mobicon.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20180807092456_CreateDatabase1Auth2")]
-    partial class CreateDatabase1Auth2
+    [Migration("20180911080552_Base2")]
+    partial class Base2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,44 +18,6 @@ namespace Mobicon.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("Mobicon.Auth.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("ConcurrencyStamp");
-
-                    b.Property<string>("Email");
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail");
-
-                    b.Property<string>("NormalizedUserName");
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
 
             modelBuilder.Entity("Mobicon.Models.Config", b =>
                 {
@@ -86,11 +48,17 @@ namespace Mobicon.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<string>("EntryId");
+
+                    b.Property<bool>("IsDeleted");
+
                     b.Property<string>("Jira");
 
                     b.Property<string>("Key");
 
-                    b.Property<int?>("SegmentPrefixId");
+                    b.Property<int?>("SegmentPrefixFrom");
+
+                    b.Property<int?>("SegmentPrefixTo");
 
                     b.Property<int>("Type");
 
@@ -102,15 +70,13 @@ namespace Mobicon.Migrations
 
                     b.Property<string>("VersionCreatedBy");
 
-                    b.Property<int?>("VersionPrefixId");
+                    b.Property<string>("VersionPrefixFrom");
+
+                    b.Property<string>("VersionPrefixTo");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ConfigId");
-
-                    b.HasIndex("SegmentPrefixId");
-
-                    b.HasIndex("VersionPrefixId");
 
                     b.ToTable("Entries");
                 });
@@ -144,20 +110,6 @@ namespace Mobicon.Migrations
                     b.ToTable("Segments");
                 });
 
-            modelBuilder.Entity("Mobicon.Models.SegmentPrefix", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("From");
-
-                    b.Property<int>("To");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SegmentPrefixes");
-                });
-
             modelBuilder.Entity("Mobicon.Models.SimplePrefix", b =>
                 {
                     b.Property<int>("Id")
@@ -172,6 +124,26 @@ namespace Mobicon.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SimplePrefixes");
+
+                    b.HasData(
+                        new { Id = 1, Name = "W10" },
+                        new { Id = 2, Name = "W10MOBILE" },
+                        new { Id = 3, Name = "W10DESKTOP" },
+                        new { Id = 4, Name = "IOS" },
+                        new { Id = 5, Name = "IPHONE" },
+                        new { Id = 6, Name = "IPAD" },
+                        new { Id = 7, Name = "Android" },
+                        new { Id = 8, Name = "Google" },
+                        new { Id = 9, Name = "Amazon" },
+                        new { Id = 10, Name = "MacOs" },
+                        new { Id = 11, Name = "Win32" },
+                        new { Id = 12, Name = "Web" },
+                        new { Id = 13, Name = "BBCOM" },
+                        new { Id = 14, Name = "FBCOM" },
+                        new { Id = 15, Name = "DEV" },
+                        new { Id = 16, Name = "GEN" },
+                        new { Id = 17, Name = "PREVIEW" }
+                    );
                 });
 
             modelBuilder.Entity("Mobicon.Models.Snapshot", b =>
@@ -187,6 +159,10 @@ namespace Mobicon.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<DateTime?>("PublishedAt");
+
+                    b.Property<int>("Status");
+
                     b.Property<DateTime>("UpdatedAt");
 
                     b.Property<string>("UpdatedBy")
@@ -195,6 +171,24 @@ namespace Mobicon.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Snapshots");
+                });
+
+            modelBuilder.Entity("Mobicon.Models.SnapshotApproval", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("ApprovedAt");
+
+                    b.Property<int>("SnapshotId");
+
+                    b.Property<string>("Username");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SnapshotId");
+
+                    b.ToTable("SnapshotApprovals");
                 });
 
             modelBuilder.Entity("Mobicon.Models.SnapshotToEntry", b =>
@@ -210,18 +204,22 @@ namespace Mobicon.Migrations
                     b.ToTable("SnapshotToEntry");
                 });
 
-            modelBuilder.Entity("Mobicon.Models.VersionPrefix", b =>
+            modelBuilder.Entity("Mobicon.Models.UserToRole", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Username")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("From");
+                    b.Property<int>("Role");
 
-                    b.Property<string>("To");
+                    b.HasKey("Username");
 
-                    b.HasKey("Id");
+                    b.ToTable("UserRoles");
 
-                    b.ToTable("VersionPrefixes");
+                    b.HasData(
+                        new { Username = "grigoryp", Role = 3 },
+                        new { Username = "yaroslavs", Role = 3 },
+                        new { Username = "alexeyra", Role = 3 }
+                    );
                 });
 
             modelBuilder.Entity("Mobicon.Models.Config", b =>
@@ -238,14 +236,6 @@ namespace Mobicon.Migrations
                         .WithMany("Entries")
                         .HasForeignKey("ConfigId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Mobicon.Models.SegmentPrefix", "SegmentPrefix")
-                        .WithMany("ConfigEntries")
-                        .HasForeignKey("SegmentPrefixId");
-
-                    b.HasOne("Mobicon.Models.VersionPrefix", "VersionPrefix")
-                        .WithMany("ConfigEntries")
-                        .HasForeignKey("VersionPrefixId");
                 });
 
             modelBuilder.Entity("Mobicon.Models.EntryConfigSimplePrefix", b =>
@@ -258,6 +248,14 @@ namespace Mobicon.Migrations
                     b.HasOne("Mobicon.Models.SimplePrefix", "SimplePrefix")
                         .WithMany()
                         .HasForeignKey("SimplePrefixId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Mobicon.Models.SnapshotApproval", b =>
+                {
+                    b.HasOne("Mobicon.Models.Snapshot", "Snapshot")
+                        .WithMany()
+                        .HasForeignKey("SnapshotId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -32,7 +32,7 @@ namespace Mobicon
 
             services.Configure<LdapConfig>(Configuration.GetSection("ldap"));
             services.AddSingleton<LdapAuthenticationService>();
-            services.AddSingleton<ImportManager>();
+            services.AddTransient<ImportManager>();
             services.AddSingleton<ExportManager>();
         }
 

@@ -15,6 +15,8 @@ namespace Mobicon.Pages
 
         public Snapshot[] Snapshots { get; set; }
 
+        public Snapshot LastPublished { get; set; }
+
         public Segment[] Segments { get; private set; }
 
         public SnapshotsModel(DataContext dataContext)
@@ -26,6 +28,9 @@ namespace Mobicon.Pages
         {
             Snapshots = _dataContext.Snapshots.Include(s => s.Entries).ToArray();
             Segments = _dataContext.Segments.Include(s => s.Configs).ToArray();
+            LastPublished = Snapshots.Where(s => s.Status == SnapshotStatus.Published)
+                .OrderByDescending(x => x.PublishedAt.Value)
+                .FirstOrDefault();
         }
 
         public IActionResult OnPost(string name, int[] configId)
@@ -52,7 +57,6 @@ namespace Mobicon.Pages
                 EntryId = e.Id,
                 Snapshot = snapshot
             }).ToList();
-
 
             _dataContext.Snapshots.Add(snapshot);
             _dataContext.SaveChanges();
