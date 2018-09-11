@@ -46,7 +46,19 @@ namespace Mobicon.Pages
         public IActionResult OnPostDelete(int id, int entryId)
         {
             var entry = _dataContext.Entries.Find(entryId);
-            entry.IsDeleted = true;
+
+            var newEntry = new ConfigEntry
+            {
+                Key = entry.Key,
+                ConfigId = id,
+                VersionCreateTime = DateTime.Now,
+                VersionCreatedBy = User.Identity.Name,
+                EntryId = entry.EntryId,
+                Version = entry.Version + 1,
+                IsDeleted = true
+            };
+
+            _dataContext.Entries.Add(newEntry);
             _dataContext.SaveChanges();
 
             return RedirectToPage(new { id = id });

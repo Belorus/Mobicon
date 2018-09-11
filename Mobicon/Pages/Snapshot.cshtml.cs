@@ -64,6 +64,9 @@ namespace Mobicon.Pages
                 .Where(s => s.Id != id)
                 .OrderByDescending(s => s.UpdatedAt)
                 .ToArray();
+            Approves = _dataContext.SnapshotApprovals
+                .Where(a => a.SnapshotId == id)
+                .ToArray();
 
             return Page();
         }
