@@ -15,6 +15,12 @@ html, body {
     width: 400px;
 }
 
+h2 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .items-list {
     margin-top: 24px;
     max-height: calc(100% - 72px);
