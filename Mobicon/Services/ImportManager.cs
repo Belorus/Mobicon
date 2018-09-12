@@ -18,7 +18,9 @@ namespace Mobicon.Services
             _dataContext = dataContext;
         }
 
-        public ConfigEntry[] ImportYaml(string data)
+        public ConfigEntry[] ImportYaml(
+            string data,
+            string importOnBehalf)
         {
             var list = new List<ConfigEntry>();
 
@@ -26,18 +28,22 @@ namespace Mobicon.Services
 
             var map = formatter.Deserialize<Dictionary<object, object>>(data);
 
-            Fill("", map, list);
+            Fill("", map, list, importOnBehalf);
 
             return list.ToArray();
         }
 
-        private void Fill(string currentPrefix, Dictionary<object, object> map, List<ConfigEntry> list)
+        private void Fill(
+            string currentPrefix, 
+            Dictionary<object, object> map, 
+            List<ConfigEntry> list,
+            string createdBy)
         {
             foreach (var kv in map)
             {
                 if (kv.Value is Dictionary<object, object> asMap)
                 {
-                    Fill(Join(":", currentPrefix, kv.Key.ToString()), asMap, list);
+                    Fill(Join(":", currentPrefix, kv.Key.ToString()), asMap, list, createdBy);
                 }
                 else
                 {
@@ -53,6 +59,7 @@ namespace Mobicon.Services
                         EntryId = Guid.NewGuid().ToString("N"),
                         Value = JsonConvert.SerializeObject(kv.Value),
                         Version = 1,
+                        VersionCreatedBy = createdBy,
                         VersionCreateTime = DateTime.Now,
                         VersionPrefixFrom = version.Item1,
                         VersionPrefixTo = version.Item2,

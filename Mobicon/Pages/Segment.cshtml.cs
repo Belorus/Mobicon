@@ -32,7 +32,7 @@ namespace Mobicon.Pages
 
         public IActionResult OnPostImport(int id, string name, string data)
         {
-            var entries = _importManager.ImportYaml(data);
+            var entries = _importManager.ImportYaml(data, User.Identity.Name);
 
             _dataContext.Configs.Add(new Config()
             {
