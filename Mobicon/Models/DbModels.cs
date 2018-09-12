@@ -24,6 +24,7 @@ namespace Mobicon.Models
 
         public Snapshot Snapshot { get; set; }
 
+        [Required]
         public string Username { get; set; }
 
         public DateTime ApprovedAt { get; set; }
@@ -86,9 +87,14 @@ namespace Mobicon.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
+        [MinLength(1)]
         public string Name { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        [Required]
+        [MinLength(1)]
         public string CreatedBy { get; set; }
 
         public List<Config> Configs { get; set; } = new List<Config>();
@@ -100,12 +106,17 @@ namespace Mobicon.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
+        [MinLength(1)]
         public string Name { get; set; }
 
         public int SegmentId { get; set; }
         public Segment Segment { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        [Required]
+        [MinLength(1)]
         public string CreatedBy { get; set; }
 
         public List<ConfigEntry> Entries { get; set; }
@@ -117,20 +128,29 @@ namespace Mobicon.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
         public string EntryId { get; set; }
 
         public int Version { get; set; }
 
         public int ConfigId { get; set; }
-        public Config Config { get; set; }        
+        public Config Config { get; set; }
 
+        [Required]
+        [MinLength(1)]
         public string Key { get; set; }
+
+        [Required]
+        [MinLength(1)]
         public string Value { get; set; }
         public FieldType Type { get; set; }
         public string Description { get; set; }
         public string Jira { get; set; }
 
         public DateTime VersionCreateTime { get; set; }
+
+        [Required]
+        [MinLength(1)]
         public string VersionCreatedBy { get; set; }
 
         public int? SegmentPrefixFrom { get; set; }
@@ -162,6 +182,8 @@ namespace Mobicon.Models
 
         public int? ParentId { get; set; }
 
+        [Required]
+        [MinLength(1)]
         public string Name { get; set; }
 
         public string Description { get; set; }

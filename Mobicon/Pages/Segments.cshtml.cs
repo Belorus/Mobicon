@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -28,7 +29,9 @@ namespace Mobicon.Pages
         {
             _dataContext.Segments.Add(new Segment()
             {
-                Name = segmentName
+                Name = segmentName,
+                CreatedAt = DateTime.Now,
+                CreatedBy = User.Identity.Name
             });
 
             _dataContext.SaveChanges();
