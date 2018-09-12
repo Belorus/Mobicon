@@ -32,7 +32,7 @@
     </select>
 </form>
 
-<form method="post" asp-page-handler="export">
+<form asp-route-id="@Model.Id" method="post" asp-page-handler="export">
     <select name="exportFormat">
         <option value="@ExportFormat.Json">Json</option>
         <option value="@ExportFormat.Yaml">Yaml</option>

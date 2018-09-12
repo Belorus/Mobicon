@@ -58,8 +58,14 @@ namespace Mobicon.Pages
                 IsDeleted = true
             };
 
+            var config = _dataContext.Configs.Find(id);
+            config.UpdatedAt = DateTime.Now;
+            config.UpdatedBy = User.Identity.Name;
+
             _dataContext.Entries.Add(newEntry);
             _dataContext.SaveChanges();
+
+            
 
             return RedirectToPage(new { id = id });
         }
@@ -111,6 +117,10 @@ namespace Mobicon.Pages
                     SimplePrefixId = sid
                 }).ToList();
             }
+
+            var config = _dataContext.Configs.Find(id);
+            config.UpdatedAt = DateTime.Now;
+            config.UpdatedBy = User.Identity.Name;
 
             _dataContext.Entries.Add(newEntry);
             _dataContext.SaveChanges();

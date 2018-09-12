@@ -119,6 +119,12 @@ namespace Mobicon.Models
         [MinLength(1)]
         public string CreatedBy { get; set; }
 
+        [Required]
+        [MinLength(1)]
+        public string UpdatedBy { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
+
         public List<ConfigEntry> Entries { get; set; }
     }
 
@@ -134,6 +140,8 @@ namespace Mobicon.Models
         public int Version { get; set; }
 
         public int ConfigId { get; set; }
+
+        [JsonIgnore]
         public Config Config { get; set; }
 
         [Required]

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Mobicon.Migrations
 {
-    public partial class Base : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,9 +14,9 @@ namespace Mobicon.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true)
+                    CreatedBy = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,7 +30,7 @@ namespace Mobicon.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ParentId = table.Column<int>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -47,6 +47,7 @@ namespace Mobicon.Migrations
                     Name = table.Column<string>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
+                    PublishedAt = table.Column<DateTime>(nullable: true),
                     CreatedBy = table.Column<string>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: false),
                     Status = table.Column<int>(nullable: false)
@@ -74,10 +75,12 @@ namespace Mobicon.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     SegmentId = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: true)
+                    CreatedBy = table.Column<string>(nullable: false),
+                    UpdatedBy = table.Column<string>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,7 +100,7 @@ namespace Mobicon.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     SnapshotId = table.Column<int>(nullable: false),
-                    Username = table.Column<string>(nullable: true),
+                    Username = table.Column<string>(nullable: false),
                     ApprovedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -117,16 +120,16 @@ namespace Mobicon.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    EntryId = table.Column<string>(nullable: true),
+                    EntryId = table.Column<string>(nullable: false),
                     Version = table.Column<int>(nullable: false),
                     ConfigId = table.Column<int>(nullable: false),
-                    Key = table.Column<string>(nullable: true),
-                    Value = table.Column<string>(nullable: true),
+                    Key = table.Column<string>(nullable: false),
+                    Value = table.Column<string>(nullable: false),
                     Type = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Jira = table.Column<string>(nullable: true),
                     VersionCreateTime = table.Column<DateTime>(nullable: false),
-                    VersionCreatedBy = table.Column<string>(nullable: true),
+                    VersionCreatedBy = table.Column<string>(nullable: false),
                     SegmentPrefixFrom = table.Column<int>(nullable: true),
                     SegmentPrefixTo = table.Column<int>(nullable: true),
                     VersionPrefixFrom = table.Column<string>(nullable: true),

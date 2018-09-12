@@ -14,6 +14,7 @@ namespace Mobicon.Pages
     {
         private readonly DataContext _dataContext;
         private readonly ExportManager _exportManager;
+        private readonly AppSettings _settings;
 
         public int Id { get; set; }
         public int? ComparedWithId { get; set; }
@@ -23,10 +24,12 @@ namespace Mobicon.Pages
 
         public SnapshotModel(
             DataContext dataContext,
-            ExportManager exportManager)
+            ExportManager exportManager,
+            AppSettings settings)
         {
             _dataContext = dataContext;
             _exportManager = exportManager;
+            _settings = settings;
         }
 
         public IActionResult OnPostExport(int id, ExportFormat exportFormat)
@@ -88,23 +91,32 @@ namespace Mobicon.Pages
 
         public IActionResult OnPostApprove(int id)
         {
-            _dataContext.SnapshotApprovals.Add(new SnapshotApproval()
+            _dataContext.SnapshotApprovals.Add(new SnapshotApproval
             {
                 Username = User.Identity.Name,
                 ApprovedAt = DateTime.Now,
                 SnapshotId = id
             });
+
             _dataContext.SaveChanges();
+
+            if (_dataContext.SnapshotApprovals.Count(a => a.SnapshotId == id) == _settings.ApprovalsBeforePublish)
+            {
+                _dataContext.Snapshots.Find(id).Status = SnapshotStatus.Published;
+            }
 
             return RedirectToPage(new { id = id });
         }
 
         public IActionResult OnPostDisapprove(int id)
         {
-            var itemToRemove = _dataContext.SnapshotApprovals.First(a => a.Username == User.Identity.Name && a.SnapshotId == id);
+            if (_dataContext.Snapshots.Find(id).Status == SnapshotStatus.WaitingForApprove)
+            {
+                var itemToRemove = _dataContext.SnapshotApprovals.First(a => a.Username == User.Identity.Name && a.SnapshotId == id);
 
-            _dataContext.SnapshotApprovals.Remove(itemToRemove);
-            _dataContext.SaveChanges();
+                _dataContext.SnapshotApprovals.Remove(itemToRemove);
+                _dataContext.SaveChanges();
+            }
 
             return RedirectToPage(new {id = id});
         }

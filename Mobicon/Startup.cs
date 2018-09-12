@@ -21,7 +21,8 @@ namespace Mobicon
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(
+            IServiceCollection services)
         {
             services.AddDbContext<DataContext>(options => options.UseMySql(Configuration.GetConnectionString("MySQL")));
             services.AddMvc()
@@ -34,6 +35,10 @@ namespace Mobicon
             services.AddSingleton<LdapAuthenticationService>();
             services.AddTransient<ImportManager>();
             services.AddSingleton<ExportManager>();
+
+            var appSettings = new AppSettings();
+            Configuration.GetSection("settings").Bind(appSettings);
+            services.Add(new ServiceDescriptor(typeof(AppSettings), appSettings));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
