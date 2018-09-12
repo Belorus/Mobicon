@@ -15,6 +15,7 @@ namespace Mobicon.Pages
         private readonly DataContext _dataContext;
         private readonly ImportManager _importManager;
 
+        public string Name { get; set; }
         public Config[] Configs { get; private set; }
 
         public SegmentModel(
@@ -28,6 +29,7 @@ namespace Mobicon.Pages
         public void OnGet(int id)
         {
             Configs = _dataContext.Configs.Include(x => x.Entries).Where(c => c.SegmentId == id).ToArray();
+            Name = _dataContext.Segments.Find(id).Name;
         }
 
         public IActionResult OnPostImport(int id, string name, string data)

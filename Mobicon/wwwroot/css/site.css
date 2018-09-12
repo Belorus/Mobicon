@@ -8,7 +8,7 @@ html, body {
 .view-content {
     padding: 24px 16px;
     height:calc(100% - 62px);
-    overflow: scroll;;
+    overflow: auto;;
 }
 
 .add-list-item {
@@ -18,7 +18,7 @@ html, body {
 .items-list {
     margin-top: 24px;
     max-height: calc(100% - 72px);
-    overflow: scroll;
+    overflow: auto;
     margin-bottom: 0;
 }
 

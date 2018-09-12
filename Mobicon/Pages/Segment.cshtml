@@ -35,7 +35,7 @@
 </div>
 
 <div class="d-flex justify-content-between align-items-center">
-    <h2>Segment configs <span class="badge badge-info">@Model.Configs.Length</span></h2>
+    <h2>@Model.Name configs <span class="badge badge-info">@Model.Configs.Length</span></h2>
     <div class="d-flex">
         <buton class="btn btn-secondary import-form" onclick="onImportClick()">Import config</buton>
         <form method="post" class="d-flex justify-content-end">
@@ -49,17 +49,39 @@
     </div>
 </div>
 
-<ul class="list-group items-list">
+<div class="list-group items-list">
     @{
-        foreach (var config in Model.Configs)
+        foreach (var config in Model.Configs.OrderByDescending(x => x.UpdatedAt))
         {
-            <li class="list-group-item list-group-item-action">
-                <a href="/Config?id=@config.Id">@config.Name</a>
-                <span>with @config.Entries.Count entries</span>
-            </li>
+            <a class="list-group-item list-group-item-action" href="/Config?id=@config.Id">
+                <span class="text-primary">@config.Name</span>
+                @if (config.Entries.Count > 0)
+                {
+                    <span>with entries:</span>
+                    <div class="d-inline-block text-secondary">
+                        @{
+                            int i = 0;
+                            int configPreviewCount = config.Entries.Count < 5 ? config.Entries.Count : 5;
+                        }
+                        @foreach (var c in config.Entries.Take(configPreviewCount))
+                        {
+                            i++;
+                            if(i < configPreviewCount) { <span>@c.Key,</span> } else { <span>@c.Key</span>}
+                        }
+                    </div>
+                    if (config.Entries.Count > configPreviewCount)
+                    {
+                        <span class="text-secondary"> and @(config.Entries.Count - configPreviewCount) more...</span>
+                    }
+                }
+                else
+                {
+                    <span class="text-secondary">without entries</span>
+                }
+            </a>
         }
     }
-</ul>
+</div>
 
 <style>
     .import-form {

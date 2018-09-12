@@ -6,7 +6,7 @@
 }
 
 <div class="d-flex justify-content-between align-items-center">
-    <h2>Segments list <span class="badge badge-info">@Model.Segments.Length</span></h2>
+    <h2>Segments <span class="badge badge-info">@Model.Segments.Length</span></h2>
     <form method="post" class="d-flex justify-content-end">
         <div class="input-group add-list-item">
             <input type="text" name="segmentName" required placeholder="Enter segment name" class="form-control">
@@ -17,20 +17,37 @@
     </form>
 </div>
 
-<ul class="list-group items-list">
+<div class="list-group items-list">
     @{
-        foreach (var segment in Model.Segments)
+        foreach (var segment in Model.Segments.OrderByDescending(x => x.CreatedAt))
         {
-            <li class="list-group-item list-group-item-action">
-                <a href="/Segment?id=@segment.Id">@segment.Name</a> 
-                <span>with @segment.Configs.Count configs</span>
-                <ul>
-                    @foreach (var c in segment.Configs.OrderByDescending(x => x.CreatedAt).Take(3))
-                    {
-                        <li>@c.Name</li>  
-                    }
-                </ul>
-            </li>
+            <a  class="list-group-item list-group-item-action" href="/Segment?id=@segment.Id">
+                <span class="text-primary">@segment.Name</span>
+                @if (segment.Configs.Count > 0)
+                {
+                    <span>with configs:</span>
+                    <div class="d-inline-block text-secondary">
+                        @{
+                            int i = 0;
+                            int configPreviewCount = segment.Configs.Count < 5 ? segment.Configs.Count : 5;
+                        }
+                        @foreach (var c in segment.Configs.OrderByDescending(x => x.CreatedAt).Take(configPreviewCount))
+                        {
+                            i++;
+                            if(i < configPreviewCount) { <span>@c.Name,</span> } else { <span>@c.Name</span>}
+                        }
+                    </div>
+                    if (segment.Configs.Count > configPreviewCount)
+                     {
+                         <span class="text-secondary"> and @(segment.Configs.Count - configPreviewCount) more...</span>
+                     }
+                }
+                else
+                {
+                    <span class="text-secondary">without configs</span>
+                }
+
+            </a>
         }
     }
-</ul>
+</div>
