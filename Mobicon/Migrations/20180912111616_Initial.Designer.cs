@@ -9,8 +9,8 @@ using Mobicon;
 namespace Mobicon.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20180911064150_Base")]
-    partial class Base
+    [Migration("20180912111616_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,11 +26,18 @@ namespace Mobicon.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<string>("CreatedBy");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.Property<int>("SegmentId");
+
+                    b.Property<DateTime>("UpdatedAt");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -48,13 +55,15 @@ namespace Mobicon.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("EntryId");
+                    b.Property<string>("EntryId")
+                        .IsRequired();
 
                     b.Property<bool>("IsDeleted");
 
                     b.Property<string>("Jira");
 
-                    b.Property<string>("Key");
+                    b.Property<string>("Key")
+                        .IsRequired();
 
                     b.Property<int?>("SegmentPrefixFrom");
 
@@ -62,13 +71,15 @@ namespace Mobicon.Migrations
 
                     b.Property<int>("Type");
 
-                    b.Property<string>("Value");
+                    b.Property<string>("Value")
+                        .IsRequired();
 
                     b.Property<int>("Version");
 
                     b.Property<DateTime>("VersionCreateTime");
 
-                    b.Property<string>("VersionCreatedBy");
+                    b.Property<string>("VersionCreatedBy")
+                        .IsRequired();
 
                     b.Property<string>("VersionPrefixFrom");
 
@@ -101,9 +112,11 @@ namespace Mobicon.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<string>("CreatedBy");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -117,7 +130,8 @@ namespace Mobicon.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.Property<int?>("ParentId");
 
@@ -159,6 +173,8 @@ namespace Mobicon.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<DateTime?>("PublishedAt");
+
                     b.Property<int>("Status");
 
                     b.Property<DateTime>("UpdatedAt");
@@ -180,7 +196,8 @@ namespace Mobicon.Migrations
 
                     b.Property<int>("SnapshotId");
 
-                    b.Property<string>("Username");
+                    b.Property<string>("Username")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

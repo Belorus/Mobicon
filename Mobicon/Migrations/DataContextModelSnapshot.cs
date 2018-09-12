@@ -32,6 +32,11 @@ namespace Mobicon.Migrations
 
                     b.Property<int>("SegmentId");
 
+                    b.Property<DateTime>("UpdatedAt");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired();
+
                     b.HasKey("Id");
 
                     b.HasIndex("SegmentId");
