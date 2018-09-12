@@ -11,7 +11,7 @@
         <div class="input-group add-list-item">
             <input type="text" name="segmentName" required placeholder="Enter segment name" class="form-control">
             <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">Add segment</button>
+                <button class="btn btn-primary" type="submit"><i class="fas fa-plus"></i> Add segment</button>
             </div>
         </div>
     </form>
@@ -24,6 +24,12 @@
             <li class="list-group-item list-group-item-action">
                 <a href="/Segment?id=@segment.Id">@segment.Name</a> 
                 <span>with @segment.Configs.Count configs</span>
+                <ul>
+                    @foreach (var c in segment.Configs.OrderByDescending(x => x.CreatedAt).Take(3))
+                    {
+                        <li>@c.Name</li>  
+                    }
+                </ul>
             </li>
         }
     }

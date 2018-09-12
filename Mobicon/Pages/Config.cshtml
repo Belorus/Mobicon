@@ -159,22 +159,22 @@
 </div>
 
 <div class="d-flex justify-content-between align-items-center">
-    <h2>Config items <span class="badge badge-info">@Model.Entries.Length</span></h2>
+    <h2>@Model.Name <span class="badge badge-info">@Model.Entries.Length</span></h2>
     <div class="d-flex">
-        <buton class="btn btn-primary" onclick="onAddClick()">Add item</buton>
+        <buton class="btn btn-primary" onclick="onAddClick()"><i class="fas fa-plus"></i> Add item</buton>
     </div>
 </div>
-
-<table>
-    <thead class="table table-borderless">
+<div class="items-list">
+<table class="table table-hover">
+    <thead>
     <tr>
-        <th>#</th>
-        <th>Prefixes</th>
-        <th>Key</th>
-        <th>Value</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Jira</th>
+        <th width="10%">Prefixes</th>
+        <th width="25%">Key</th>
+        <th width="25%">Value</th>
+        <th width="10%">Type</th>
+        <th width="20%">Description</th>
+        <th width="10%">Jira</th>
+        <th width="160"></th>
     </tr>
     </thead>
     <tbody>
@@ -182,13 +182,6 @@
         foreach (var entry in Model.Entries)
         {
             <tr data="@JsonConvert.SerializeObject(entry)">
-                
-                <td>
-                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-success" onclick="onEditClick($(this).closest('tr').attr('data'))">Edit</button>
-                        <button type="button" class="btn btn-danger" onclick="onDeleteClick($(this).closest('tr').attr('data'))">Delete</button>
-                    </div>
-                </td>
                 <td>
                     @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))
                     @{
@@ -203,7 +196,8 @@
                         }
                     }
                 </td>
-                <td>@entry.Key</td>
+                <td>
+                <div>@entry.Key</div></td>
                 @switch (entry.Type)
                 {
                     case FieldType.String:
@@ -225,8 +219,43 @@
                 <td>@entry.Type</td>
                 <td>@entry.Description</td>
                 <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
+                <td class="row-actions-td">
+                    <div class="row-actions d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-info btn-sm" onclick="onEditClick($(this).closest('tr').attr('data'))"><i class="fas fa-edit"></i> Edit</button>
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="onDeleteClick($(this).closest('tr').attr('data'))"><i class="fas fa-trash-alt"></i> Delete</button>
+                    </div>
+                </td>
             </tr>
         }
-                }
+    }
     </tbody>
 </table>
+</div>
+
+<style>
+    .table {
+        table-layout:fixed;
+    }
+
+    .table td {
+        word-break: break-all;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .row-actions-td {
+        position: relative;
+    }
+  
+    .row-actions {
+        visibility: hidden;
+        position: absolute;
+        top: 9px;
+        right: 5px;
+        width: 145px;
+    }
+
+    table tr:hover .row-actions {
+        visibility: initial;
+    }
+</style>

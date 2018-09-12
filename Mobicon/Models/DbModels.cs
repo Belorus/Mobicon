@@ -134,6 +134,8 @@ namespace Mobicon.Models
         public int Version { get; set; }
 
         public int ConfigId { get; set; }
+        
+        [JsonIgnore]
         public Config Config { get; set; }
 
         [Required]

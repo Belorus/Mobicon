@@ -17,8 +17,9 @@ html, body {
 
 .items-list {
     margin-top: 24px;
-    height: calc(100% - 72px);
+    max-height: calc(100% - 72px);
     overflow: scroll;
+    margin-bottom: 0;
 }
 
     /* Wrapping element */
