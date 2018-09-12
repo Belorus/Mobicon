@@ -40,7 +40,9 @@ namespace Mobicon.Pages
                 SegmentId = id,
                 Entries = entries.ToList(),
                 CreatedAt = DateTime.Now,
-                CreatedBy = User.Identity.Name
+                CreatedBy = User.Identity.Name,
+                UpdatedAt = DateTime.Now,
+                UpdatedBy = User.Identity.Name
             });
 
             _dataContext.SaveChanges();
