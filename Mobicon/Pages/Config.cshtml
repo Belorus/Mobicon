@@ -23,11 +23,10 @@
         $('input[name="versionTo"]').val(obj.VersionPrefixTo);
         $('input[name="segmentFrom"]').val(obj.SegmentPrefixFrom);
         $('input[name="segmentTo"]').val(obj.SegmentPrefixTo);
+        $('#addEditEntryModalTitle').text('Edit entry');
+        $('#addEditEntryModalSubmitBtn').text('Save');
 
-        $('#versionGroup').hide();
-        $('#segmentGroup').hide();
-        $('#simplePrefixSelect').hide();
-
+        $('#additionalEntryFields').hide();
 
         $('#addEditModal').modal('show');
     }
@@ -51,12 +50,11 @@
         $('input[name="versionTo"]').val('');
         $('input[name="segmentFrom"]').val('');
         $('input[name="segmentTo"]').val('');
+        $('#addEditEntryModalTitle').text('Create entry');
+        $('#addEditEntryModalSubmitBtn').text('Create');
 
-        $('#versionGroup').show();
-        $('#segmentGroup').show();
-
+        $('#additionalEntryFields').show();
         $('#simplePrefixSelect').multiselect();
-
 
         $('#addEditModal').modal('show');
     }
@@ -90,84 +88,100 @@
 </div>
 
 <!-- Add/Edit Modal -->
-<div class="modal " id="addEditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalVerticalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalVerticalLabel">Add/Edit</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="post" class="form-inline">
-                <div class="modal-body">
+<div class="modal fade" id="addEditModal" tabindex="-1" role="dialog" aria-labelledby="addEditEntryModal" aria-hidden="true">
+    <form method="post" class="form-inline">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addEditEntryModalTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body d-flex flex-column add-edit-modal-body">
+                    <input type="hidden" class="form-control" name="entryId">
+                    <div class="d-flex fields-row">
+                        <input required type="text" class="form-control fields-row-item w-100" name="key" placeholder="Key">
+                    </div>
+                    <div class="d-flex fields-row">
+                        <input required type="text" class="form-control fields-row-item w-75" name="value" placeholder="Value">
+                        <select placeholder="Type" required class="form-control fields-row-item w-25" name="type">
+                            @foreach (var type in Model.FieldTypes)
+                            {
+                                <option value="@((int)type)">@type</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="d-flex fields-row">
+                        <input type="text" class="form-control fields-row-item w-75" name="description" placeholder="Description">
+                        <input type="text" class="form-control fields-row-item w-25" name="jira" placeholder="Jira">
+                    </div>
+                    
 
-                    <input type="hidden" class="form-control mb-2 mr-sm-2" name="entryId">
-                    <input type="text" class="form-control mb-2 mr-sm-2" name="key" placeholder="Key">
-                    <input type="text" class="form-control mb-2 mr-sm-2" name="value" placeholder="Value">
-
-                    <select class="form-control mb-2 mr-sm-2" name="type">
-                        @foreach (var type in Model.FieldTypes)
-                        {
-                            <option value="@((int)type)">@type</option>
-                        }
-                    </select>
-
-                    <input type="text" class="form-control mb-2 mr-sm-2" name="description" placeholder="Description">
-                    <input type="text" class="form-control mb-2 mr-sm-2" name="jira" placeholder="Jira">
-
-                    <hr />
-                    <div id="versionGroup" class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">
-                                <input type="checkbox"
-                                       data-toggle='collapse' data-target='#versionBlock'
-                                       id="versionCheck">
-                                <label for="versionCheck">For version</label>
+                    <div class="flex-column" id="additionalEntryFields">
+                        <div id="versionGroup" class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <input type="checkbox"
+                                           data-toggle='collapse' data-target='#versionBlock'
+                                           id="versionCheck">
+                                    <label for="versionCheck">For version</label>
+                                </div>
+                            </div>
+                            <div id="versionBlock" class="collapse">
+                                <input type="text" class="form-control" name="versionFrom" placeholder="From version">
+                                <input type="text" class="form-control" name="versionTo" placeholder="To version">
                             </div>
                         </div>
-                        <div id="versionBlock" class="collapse">
-                            <input type="text" class="form-control" name="versionFrom" placeholder="From version">
-                            <input type="text" class="form-control" name="versionTo" placeholder="To version">
-                        </div>
-                    </div>
-
-                    <hr />
-                    <div id="segmentGroup" class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">
-                                <input type="checkbox"
-                                       data-toggle='collapse' data-target='#segmentBlock'
-                                       id="segmentCheck">
-                                <label for="segmentCheck">For segment</label>
+    
+                        <div id="segmentGroup" class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <input type="checkbox"
+                                           data-toggle='collapse' data-target='#segmentBlock'
+                                           id="segmentCheck">
+                                    <label for="segmentCheck">For segment</label>
+                                </div>
+                            </div>
+                            <div id="segmentBlock" class="collapse">
+                                <input type="text" class="form-control" name="segmentFrom" placeholder="From segment">
+                                <input type="text" class="form-control" name="segmentTo" placeholder="To segment">
                             </div>
                         </div>
-                        <div id="segmentBlock" class="collapse">
-                            <input type="text" class="form-control" name="segmentFrom" placeholder="From segment">
-                            <input type="text" class="form-control" name="segmentTo" placeholder="To segment">
+                        <div>
+                            <select name="simplePrefixes" id="simplePrefixSelect" asp-items="@(new SelectList(Model.SimplePrefixes, "Id", "Name"))" multiple="multiple"></select>
                         </div>
                     </div>
-                    <hr />
-                    <div>
-                        <select name="simplePrefixes" id="simplePrefixSelect" asp-items="@(new SelectList(Model.SimplePrefixes, "Id", "Name"))" multiple="multiple"></select>
-                    </div>
-
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button id="addEditEntryModalSubmitBtn" type="submit" class="btn btn-primary"></button>
                 </div>
-            </form>
 
+            </div>
         </div>
-    </div>
+    </form>
+    
+    <style>
+        #additionalEntryFields {
+            display: flex;
+        }
+        .fields-row-item + .fields-row-item {
+            margin-left: 16px;
+        }
+        #additionalEntryFields, .fields-row + .fields-row {
+            margin-top: 24px;
+        }
+        .add-edit-modal-body {
+            width: 600px;
+        }
+    </style>
 </div>
 
 <div class="d-flex justify-content-between align-items-center">
     <h2>@Model.Name entries <span class="badge badge-info">@Model.Entries.Length</span></h2>
     <div class="d-flex">
-        <buton class="btn btn-primary" onclick="onAddClick()"><i class="fas fa-plus"></i> Add entry</buton>
+        <buton class="btn btn-primary" onclick="onAddClick()">Create entry</buton>
     </div>
 </div>
 <div class="items-list">
