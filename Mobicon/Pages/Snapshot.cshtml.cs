@@ -101,9 +101,11 @@ namespace Mobicon.Pages
             });
 
 
-            if (_dataContext.SnapshotApprovals.Count(a => a.SnapshotId == id) >= _settings.ApprovalsBeforePublish)
+            if (_dataContext.SnapshotApprovals.Count(a => a.SnapshotId == id) >= _settings.ApprovalsBeforePublish - 1)
             {
-                _dataContext.Snapshots.Find(id).Status = SnapshotStatus.Published;
+                var snapshot = _dataContext.Snapshots.Find(id);
+                snapshot.Status = SnapshotStatus.Published;
+                snapshot.PublishedAt = DateTime.Now;
             }
 
             _dataContext.SaveChanges();
