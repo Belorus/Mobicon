@@ -41,6 +41,10 @@
         $('#deleteModal').modal('show');
     }
 
+    function  onDeleteConfigClick() {
+        $('#deleteConfigModal').modal('show');
+    }
+
     function onAddClick() {
         $('input[name="entryId"]').val('');
         $('input[name="key"]').val('').prop('disabled', false);
@@ -63,7 +67,31 @@
 </script>
 
 
-<!-- Delete Modal -->
+<!-- Delete Config Modal -->
+<div class="modal fade" id="deleteConfigModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfig" aria-hidden="true">
+    <form method="post" asp-page-handler="delete" class="form-inline">
+        <div class="modal-dialog modal-lg delete-confirmation-modal" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfig">Delete confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure want to delete <span class="text-primary">@Model.Name </span> config?</p>
+                    <p>This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Delete Entry Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteEntry" aria-hidden="true">
     <form method="post" asp-page-handler="delete" class="form-inline"
           asp-route-id="@Model.Id">
@@ -80,7 +108,7 @@
                 <p>This action cannot be undone.</p>
             </div>
             <div class="modal-footer">
-                <input type="hidden" class="form-control mb-2 mr-sm-2" name="entryId">
+                <input type="hidden" class="form-control" name="entryId">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-danger">Delete</button>
             </div>
@@ -172,7 +200,8 @@
 <div class="d-flex justify-content-between align-items-center">
     <h2>@Model.Name entries <span class="badge badge-info">@Model.Entries.Length</span></h2>
     <div class="d-flex">
-        <buton class="btn btn-primary" onclick="onAddClick()">Create config entry</buton>
+        <buton class="btn btn-primary" onclick="onAddClick()"><i class="fas fa-plus"></i> Create config entry</buton>
+        <buton class="btn btn-danger delete-config-btn" onclick="onDeleteConfigClick()"><i class="fas fa-trash-alt"></i> Delete config</buton>
     </div>
 </div>
 @if (Model.Entries.Length > 0)
@@ -276,5 +305,9 @@ else
 
     table tr:hover .row-actions {
         display: flex;
+    }
+    
+    .delete-config-btn {
+        margin-left: 36px;
     }
 </style>
