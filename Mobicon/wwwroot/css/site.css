@@ -22,7 +22,26 @@ h2 {
 }
 
 .modal-footer .btn {
-    min-width: 120px;
+    min-width: 125px;
+}
+
+.bootstrap-select .filter-option-inner-inner {
+    color: #495057;
+}
+
+.bootstrap-select .dropdown-toggle.bs-placeholder .filter-option-inner-inner {
+    color: #6c757d;
+}
+
+.bootstrap-select .dropdown-toggle {
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem
+}
+
+.delete-confirmation-modal {
+    width: 400px;
 }
 
 .items-list {
