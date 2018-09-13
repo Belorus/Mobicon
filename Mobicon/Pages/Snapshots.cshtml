@@ -32,7 +32,7 @@
             foreach (var snapshot in Model.Snapshots)
             {
                 <a href="/Snapshot?id=@snapshot.Id" class="list-group-item list-group-item-action">
-                    @if (snapshot.Status != SnapshotStatus.Published)
+                    @if (snapshot.Status == SnapshotStatus.Published)
                     {
                         <i class="fas fa-star text-warning"></i>
                     }
