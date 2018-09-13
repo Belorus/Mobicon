@@ -25,6 +25,16 @@ h2 {
     min-width: 125px;
 }
 
+.empty-data {
+    margin-top: 7%;
+    text-align: center;
+}
+
+.empty-data img {
+    width: 500px;
+    object-fit: contain;
+}
+
 .bootstrap-select .filter-option-inner-inner {
     color: #495057;
 }

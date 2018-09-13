@@ -2,6 +2,7 @@
 @model Mobicon.Pages.SegmentModel
 @{
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Segment";
 }
 
 <script>
@@ -61,39 +62,55 @@
     </div>
 </div>
 
-<div class="list-group items-list">
-    @{
-        foreach (var config in Model.Configs.OrderByDescending(x => x.UpdatedAt))
-        {
-            <a class="list-group-item list-group-item-action" href="/Config?id=@config.Id">
-                <span class="text-primary">@config.Name</span>
-                @if (config.Entries.Count > 0)
-                {
-                    <span>with entries:</span>
-                    <div class="d-inline-block text-secondary">
-                        @{
-                            int i = 0;
-                            int configPreviewCount = config.Entries.Count < 5 ? config.Entries.Count : 5;
-                        }
-                        @foreach (var c in config.Entries.Take(configPreviewCount))
-                        {
-                            i++;
-                            if(i < configPreviewCount) { <span>@c.Key,</span> } else { <span>@c.Key</span>}
-                        }
-                    </div>
-                    if (config.Entries.Count > configPreviewCount)
+@if (Model.Configs.Length > 0)
+{
+    <div class="list-group items-list">
+        @{
+            foreach (var config in Model.Configs.OrderByDescending(x => x.UpdatedAt))
+            {
+                <a class="list-group-item list-group-item-action" href="/Config?id=@config.Id">
+                    <span class="text-primary">@config.Name</span>
+                    @if (config.Entries.Count > 0)
                     {
-                        <span class="text-secondary"> and @(config.Entries.Count - configPreviewCount) more...</span>
+                        <span>with entries:</span>
+                        <div class="d-inline-block text-secondary">
+                            @{
+                                int i = 0;
+                                int configPreviewCount = config.Entries.Count < 5 ? config.Entries.Count : 5;
+                            }
+                            @foreach (var c in config.Entries.Take(configPreviewCount))
+                            {
+                                i++;
+                                if (i < configPreviewCount)
+                                {
+                                    <span>@c.Key,</span>
+                                }
+                                else
+                                {
+                                    <span>@c.Key</span>
+                                }
+                            }
+                        </div>
+                        if (config.Entries.Count > configPreviewCount)
+                        {
+                            <span class="text-secondary"> and @(config.Entries.Count - configPreviewCount) more...</span>
+                        }
                     }
-                }
-                else
-                {
-                    <span class="text-secondary">without entries</span>
-                }
-            </a>
+                    else
+                    {
+                        <span class="text-secondary">without entries</span>
+                    }
+                </a>
+            }
         }
-    }
-</div>
+    </div>
+}
+else
+{
+    <div class="empty-data">
+        <img src="no_data.png"/>
+    </div>
+}
 
 <style>
     .import-form {

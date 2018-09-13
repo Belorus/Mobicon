@@ -175,74 +175,82 @@
         <buton class="btn btn-primary" onclick="onAddClick()">Create config entry</buton>
     </div>
 </div>
-<div class="items-list">
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <th width="10%">Prefixes</th>
-        <th width="25%">Key</th>
-        <th width="25%">Value</th>
-        <th width="10%">Type</th>
-        <th width="20%">Description</th>
-        <th width="10%">Jira</th>
-        <th width="160"></th>
-    </tr>
-    </thead>
-    <tbody>
-    @{
-        foreach (var entry in Model.Entries)
-        {
-            <tr data="@JsonConvert.SerializeObject(entry)">
-                <td>
-                    @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))
-                    @{
-                        if ((entry.VersionPrefixFrom ?? entry.VersionPrefixTo) != null)
-                        {
-                            Write($"({entry.VersionPrefixFrom} - {entry.VersionPrefixTo})");
-                        }
-
-                        if ((entry.SegmentPrefixFrom ?? entry.SegmentPrefixTo) != null)
-                        {
-                            Write($"<{entry.SegmentPrefixFrom} .. {entry.SegmentPrefixTo}>");
-                        }
-                    }
-                </td>
-                <td>
-                <div>@entry.Key</div></td>
-                @switch (entry.Type)
-                {
-                    case FieldType.String:
-                    case FieldType.Integer:
-                    case FieldType.Float:
-                    case FieldType.Bool:
-                        <td>@entry.Value</td>
-                        break;
-                    case FieldType.ListOfBool:
-                    case FieldType.ListOfString:
-                    case FieldType.ListOfInteger:
-                    case FieldType.ListOfFloat:
-                        <td>@entry.Value</td>
-                        break;
-                    default:
-                        <td>Unknown</td>
-                        break;
-                }
-                <td>@entry.Type</td>
-                <td>@entry.Description</td>
-                <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
-                <td class="row-actions-td">
-                    <div class="row-actions justify-content-between">
-                        <button type="button" class="btn btn-outline-info btn-sm" onclick="onEditClick($(this).closest('tr').attr('data'))"><i class="fas fa-edit"></i> Edit</button>
-                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="onDeleteClick($(this).closest('tr').attr('data'))"><i class="fas fa-trash-alt"></i> Delete</button>
-                    </div>
-                </td>
+@if (Model.Entries.Length > 0)
+{
+    <div class="items-list">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th width="10%">Prefixes</th>
+                <th width="25%">Key</th>
+                <th width="25%">Value</th>
+                <th width="10%">Type</th>
+                <th width="20%">Description</th>
+                <th width="10%">Jira</th>
+                <th width="160"></th>
             </tr>
-        }
-    }
-    </tbody>
-</table>
-</div>
+            </thead>
+            <tbody>
+            @{
+                foreach (var entry in Model.Entries)
+                {
+                    <tr data="@JsonConvert.SerializeObject(entry)">
+                        <td>
+                            @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))
+                            @{
+                                if ((entry.VersionPrefixFrom ?? entry.VersionPrefixTo) != null)
+                                {
+                                    Write($"({entry.VersionPrefixFrom} - {entry.VersionPrefixTo})");
+                                }
 
+                                if ((entry.SegmentPrefixFrom ?? entry.SegmentPrefixTo) != null)
+                                {
+                                    Write($"<{entry.SegmentPrefixFrom} .. {entry.SegmentPrefixTo}>");
+                                }
+                            }
+                        </td>
+                        <td>
+                            <div>@entry.Key</div></td>
+                        @switch (entry.Type)
+                        {
+                            case FieldType.String:
+                            case FieldType.Integer:
+                            case FieldType.Float:
+                            case FieldType.Bool:
+                                <td>@entry.Value</td>
+                                break;
+                            case FieldType.ListOfBool:
+                            case FieldType.ListOfString:
+                            case FieldType.ListOfInteger:
+                            case FieldType.ListOfFloat:
+                                <td>@entry.Value</td>
+                                break;
+                            default:
+                                <td>Unknown</td>
+                                break;
+                        }
+                        <td>@entry.Type</td>
+                        <td>@entry.Description</td>
+                        <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
+                        <td class="row-actions-td">
+                            <div class="row-actions justify-content-between">
+                                <button type="button" class="btn btn-outline-info btn-sm" onclick="onEditClick($(this).closest('tr').attr('data'))"><i class="fas fa-edit"></i> Edit</button>
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="onDeleteClick($(this).closest('tr').attr('data'))"><i class="fas fa-trash-alt"></i> Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="empty-data">
+        <img src="no_data.png"/>
+    </div>
+}
 <style>
     .table {
         table-layout:fixed;

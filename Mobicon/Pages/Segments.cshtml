@@ -17,37 +17,53 @@
     </form>
 </div>
 
-<div class="list-group items-list">
-    @{
-        foreach (var segment in Model.Segments.OrderByDescending(x => x.CreatedAt))
-        {
-            <a  class="list-group-item list-group-item-action" href="/Segment?id=@segment.Id">
-                <span class="text-primary">@segment.Name</span>
-                @if (segment.Configs.Count > 0)
-                {
-                    <span>with configs:</span>
-                    <div class="d-inline-block text-secondary">
-                        @{
-                            int i = 0;
-                            int configPreviewCount = segment.Configs.Count < 5 ? segment.Configs.Count : 5;
-                        }
-                        @foreach (var c in segment.Configs.OrderByDescending(x => x.CreatedAt).Take(configPreviewCount))
+@if (Model.Segments.Length > 0)
+{
+    <div class="list-group items-list">
+        @{
+            foreach (var segment in Model.Segments.OrderByDescending(x => x.CreatedAt))
+            {
+                <a class="list-group-item list-group-item-action" href="/Segment?id=@segment.Id">
+                    <span class="text-primary">@segment.Name</span>
+                    @if (segment.Configs.Count > 0)
+                    {
+                        <span>with configs:</span>
+                        <div class="d-inline-block text-secondary">
+                            @{
+                                int i = 0;
+                                int configPreviewCount = segment.Configs.Count < 5 ? segment.Configs.Count : 5;
+                            }
+                            @foreach (var c in segment.Configs.OrderByDescending(x => x.CreatedAt).Take(configPreviewCount))
+                            {
+                                i++;
+                                if (i < configPreviewCount)
+                                {
+                                    <span>@c.Name,</span>
+                                }
+                                else
+                                {
+                                    <span>@c.Name</span>
+                                }
+                            }
+                        </div>
+                        if (segment.Configs.Count > configPreviewCount)
                         {
-                            i++;
-                            if(i < configPreviewCount) { <span>@c.Name,</span> } else { <span>@c.Name</span>}
+                            <span class="text-secondary"> and @(segment.Configs.Count - configPreviewCount) more...</span>
                         }
-                    </div>
-                    if (segment.Configs.Count > configPreviewCount)
-                     {
-                         <span class="text-secondary"> and @(segment.Configs.Count - configPreviewCount) more...</span>
-                     }
-                }
-                else
-                {
-                    <span class="text-secondary">without configs</span>
-                }
+                    }
+                    else
+                    {
+                        <span class="text-secondary">without configs</span>
+                    }
 
-            </a>
+                </a>
+            }
         }
-    }
-</div>
+    </div>
+}
+else
+{
+    <div class="empty-data">
+        <img src="no_data.png"/>
+    </div>
+}
