@@ -38,7 +38,7 @@ namespace Mobicon.Pages
 
             Id = id;
             Name = _dataContext.Configs.Find(id).Name;
-                FieldTypes = Enum.GetValues(typeof(FieldType)).Cast<FieldType>().Where(f => f != FieldType.Unknown).ToArray();
+            FieldTypes = Enum.GetValues(typeof(FieldType)).Cast<FieldType>().Where(f => f != FieldType.Unknown).ToArray();
 
             SimplePrefixes = _dataContext.SimplePrefixes.ToArray();
 

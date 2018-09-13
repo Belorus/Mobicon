@@ -56,19 +56,22 @@
 
 @if (User.IsInRole(UserRole.Approver.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
 {
-    if (Model.Approves.All(a => a.Username != User.Identity.Name))
+    if (Model.Status == SnapshotStatus.WaitingForApprove)
     {
-        <form method="post" asp-page-handler="approve"
-              asp-route-id="@Model.Id">
-            <button type="submit">Approve</button>
-        </form>
-    }
-    else
-    {
-        <form method="post" asp-page-handler="disapprove"
-              asp-route-id="@Model.Id">
-            <button type="submit">Disapprove</button>
-        </form>
+        if (Model.Approves.All(a => a.Username != User.Identity.Name))
+        {
+            <form method="post" asp-page-handler="approve"
+                  asp-route-id="@Model.Id">
+                <button type="submit">Approve</button>
+            </form>
+        }
+        else
+        {
+            <form method="post" asp-page-handler="disapprove"
+                  asp-route-id="@Model.Id">
+                <button type="submit">Disapprove</button>
+            </form>
+        }
     }
 }
 

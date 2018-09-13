@@ -16,6 +16,7 @@ namespace Mobicon.Pages
         private readonly ExportManager _exportManager;
         private readonly AppSettings _settings;
 
+        public SnapshotStatus Status { get; set; }
         public int Id { get; set; }
         public int? ComparedWithId { get; set; }
         public Snapshot[] Snapshots { get; set; }
@@ -70,6 +71,7 @@ namespace Mobicon.Pages
             Approves = _dataContext.SnapshotApprovals
                 .Where(a => a.SnapshotId == id)
                 .ToArray();
+            Status = snapshot.Status;
 
             return Page();
         }
@@ -98,12 +100,13 @@ namespace Mobicon.Pages
                 SnapshotId = id
             });
 
-            _dataContext.SaveChanges();
 
-            if (_dataContext.SnapshotApprovals.Count(a => a.SnapshotId == id) == _settings.ApprovalsBeforePublish)
+            if (_dataContext.SnapshotApprovals.Count(a => a.SnapshotId == id) >= _settings.ApprovalsBeforePublish)
             {
                 _dataContext.Snapshots.Find(id).Status = SnapshotStatus.Published;
             }
+
+            _dataContext.SaveChanges();
 
             return RedirectToPage(new { id = id });
         }
@@ -135,6 +138,8 @@ namespace Mobicon.Pages
             Approves = _dataContext.SnapshotApprovals
                 .Where(a => a.SnapshotId == id)
                 .ToArray();
+
+            Status = snapshot.Status;
 
             return Page();
         }
