@@ -45,19 +45,36 @@ namespace Mobicon.Pages
             return Page();
         }
 
+        public IActionResult OnPostDelete(int id)
+        {
+            _dataContext.Configs.Remove(_dataContext.Configs.Find(id));
+            _dataContext.SaveChanges();
+
+            return RedirectToPage("Configs");
+        }
+
         public IActionResult OnPostDelete(int id, int entryId)
         {
-            var entry = _dataContext.Entries.Find(entryId);
+            var entry = _dataContext.Entries.Include(x => x.SimplePrefixes).First(e => e.Id == entryId);
 
             var newEntry = new ConfigEntry
             {
                 Key = entry.Key,
+                Value = entry.Value,
                 ConfigId = id,
                 VersionCreateTime = DateTime.Now,
                 VersionCreatedBy = User.Identity.Name,
                 EntryId = entry.EntryId,
                 Version = entry.Version + 1,
-                IsDeleted = true
+                SimplePrefixes = entry.SimplePrefixes.Select(p => new EntryConfigSimplePrefix()
+                {
+                    SimplePrefixId = p.SimplePrefixId
+                }).ToList(),
+                SegmentPrefixFrom = entry.SegmentPrefixFrom,
+                SegmentPrefixTo = entry.SegmentPrefixTo,
+                VersionPrefixFrom = entry.VersionPrefixFrom,
+                VersionPrefixTo = entry.VersionPrefixTo,
+                IsDeleted = true,
             };
 
             var config = _dataContext.Configs.Find(id);

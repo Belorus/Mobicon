@@ -52,6 +52,14 @@ namespace Mobicon.Pages
             return RedirectToPage(new {id = id});
         }
 
+        public IActionResult OnPostDelete(int id)
+        {
+            _dataContext.Segments.Remove(_dataContext.Segments.Find(id));
+            _dataContext.SaveChanges();
+
+            return RedirectToPage("Segments");
+        }
+
         public IActionResult OnPost(int id, string configName)
         {
             _dataContext.Configs.Add(new Config()
