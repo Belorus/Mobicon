@@ -34,6 +34,10 @@
             foreach (var snapshot in Model.Snapshots)
             {
                 <a href="/Snapshot?id=@snapshot.Id" class="list-group-item list-group-item-action @(snapshot.Status == SnapshotStatus.Published ? "published" : string.Empty)">
+                    @if (snapshot.Status == SnapshotStatus.Published)
+                    {
+                        <i class="fas fa-star text-warning"></i>
+                    }
                     <span class="text-primary">@snapshot.Name</span>
                     <span class="text-dark">with @snapshot.Entries.Count entries |</span>
                     <span class="text-dark">updated by @snapshot.UpdatedBy at @snapshot.UpdatedAt</span>
@@ -74,7 +78,7 @@ else
                         {
                             <div class="d-flex fields-row">
                                 <label class="fields-row-item w-50">@segment.Name</label>
-                                <select class="fields-row-item form-control w-50 config-select" name="configId"  required  data-size="8" data-width="50%" title="Select config">
+                                <select class="fields-row-item form-control w-50 config-select" name="configId" data-size="8" data-width="50%" title="Select config">
                                     @foreach (var config in segment.Configs)
                                     {
                                         <option value="@config.Id">@config.Name</option>

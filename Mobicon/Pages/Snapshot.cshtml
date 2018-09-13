@@ -6,42 +6,11 @@
     ViewData["Title"] = "Snapshot";
 }
 
-
-<form asp-route-id="@Model.Id" asp-page-handler="Compared">
-    <select name="compareWithId" onchange="this.form.submit()">
-        @if (Model.ComparedWithId == null)
-        {
-            <option selected>---</option>
-        }
-        else
-        {
-            <option>---</option>
-        }
-
-        @foreach (var snapshot in Model.Snapshots)
-        {
-            if (Model.ComparedWithId == snapshot.Id)
-            {
-                <option selected value="@snapshot.Id">@snapshot.Name</option>
-            }
-            else
-            {
-                <option value="@snapshot.Id">@snapshot.Name</option>
-            }
-        }
-    </select>
-</form>
-
-<form asp-route-id="@Model.Id" method="post" asp-page-handler="export">
-    <select name="exportFormat">
-        <option value="@ExportFormat.Json">Json</option>
-        <option value="@ExportFormat.Yaml">Yaml</option>
-    </select>
-
-    <button type="submit">Export</button>
-</form>
-
-<hr />
+<script>
+    document.addEventListener("DOMContentLoaded", function() { 
+        $('#compareSelect').selectpicker();
+    });
+</script>
 
 <span>Approved by:</span>
 <table>
@@ -75,69 +44,150 @@
     }
 }
 
-<hr />
-
-<table>
-    <thead class="table table-borderless">
-        <tr>
-            <th>Prefixes</th>
-            <th>Key</th>
-            <th>Value</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Jira</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            foreach (var diff in Model.Entries.OrderBy(e => e.Entry.Key))
-            {
-                var entry = diff.Entry;
-                <tr data="@JsonConvert.SerializeObject(entry)"
-                    class="@(diff.Difference == Difference.Added ? "table-success"
-                           : diff.Difference == Difference.Removed ? "table-danger"
-                           : diff.Difference == Difference.Changed ? "table-warning"
-                           : "")">
-
-                    <td>
-                        @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))
-                        @{
-                            if ((entry.VersionPrefixFrom ?? entry.VersionPrefixTo) != null)
-                            {
-                                Write($"({entry.VersionPrefixFrom} - {entry.VersionPrefixTo})");
-                            }
-
-                            if ((entry.SegmentPrefixFrom ?? entry.SegmentPrefixTo) != null)
-                            {
-                                Write($"<{entry.SegmentPrefixFrom} .. {entry.SegmentPrefixTo}>");
-                            }
-                        }
-                    </td>
-                    <td>@entry.Key</td>
-                    @switch (entry.Type)
+<div class="d-flex justify-content-between align-items-center">
+    <h2>Snapshot entries <span class="badge badge-info">@Model.Entries.Length</span></h2>
+    <div class="d-flex">
+        <div class="d-flex align-items-center">
+            <label class="compare-label">Compare with: </label>
+            <form asp-route-id="@Model.Id" asp-page-handler="Compared">
+                <select  class="form-control compare-select" name="compareWithId"  data-size="8" data-width="200px" id="compareSelect" title="Snapshot to compare" onchange="this.form.submit()">
+                    @if (Model.ComparedWithId == null)
                     {
-                        case FieldType.String:
-                        case FieldType.Integer:
-                        case FieldType.Float:
-                        case FieldType.Bool:
-                            <td>@entry.Value</td>
-                            break;
-                        case FieldType.ListOfBool:
-                        case FieldType.ListOfString:
-                        case FieldType.ListOfInteger:
-                        case FieldType.ListOfFloat:
-                            <td>@entry.Value</td>
-                            break;
-                        default:
-                            <td>Unknown</td>
-                            break;
+                        <option selected>—</option>
                     }
-                    <td>@entry.Type</td>
-                    <td>@entry.Description</td>
-                    <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
-                </tr>
+                    else
+                    {
+                        <option>—</option>
+                    }
+
+                    @foreach (var snapshot in Model.Snapshots)
+                    {
+                        if (Model.ComparedWithId == snapshot.Id)
+                        {
+                            <option selected value="@snapshot.Id">@snapshot.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@snapshot.Id">@snapshot.Name</option>
+                        }
+                    }
+                </select>
+            </form>
+        </div>
+        <div class="dropdown export-dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="exportMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-file-export"></i> Export snapshot
+            </button>
+            <div class="dropdown-menu" aria-labelledby="exportMenuButton">
+                <form asp-route-id="@Model.Id" method="post" asp-page-handler="export">
+                    <input type="hidden" name="exportFormat" value="@ExportFormat.Json">
+                    <button class="dropdown-item" type="submit">JSON</button>
+                </form>
+                <form asp-route-id="@Model.Id" method="post" asp-page-handler="export">
+                    <input type="hidden" name="exportFormat" value="@ExportFormat.Yaml">
+                    <button class="dropdown-item" type="submit">YAML</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .compare-label {
+        margin-right: 16px;
+        margin-bottom: 0;
+    }
+    .export-dropdown {
+        margin-left: 36px;
+    }
+    .compare-select {
+        width: 200px;
+    }
+</style>
+@if (Model.Entries.Length > 0)
+{
+    <div class="items-list">
+        <table class="table">
+            <thead>
+            <tr>
+                <th width="10%">Prefixes</th>
+                <th width="25%">Key</th>
+                <th width="25%">Value</th>
+                <th width="10%">Type</th>
+                <th width="20%">Description</th>
+                <th width="10%">Jira</th>
+            </tr>
+            </thead>
+            <tbody>
+            @{
+                foreach (var diff in Model.Entries.OrderBy(e => e.Entry.Key))
+                {
+                    var entry = diff.Entry;
+                    <tr data="@JsonConvert.SerializeObject(entry)"
+                        class="@(diff.Difference == Difference.Added ? "table-success"
+                                     : diff.Difference == Difference.Removed ? "table-danger"
+                                         : diff.Difference == Difference.Changed ? "table-warning"
+                                             : "")">
+
+                        <td>
+                            @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))
+                            @{
+                                if ((entry.VersionPrefixFrom ?? entry.VersionPrefixTo) != null)
+                                {
+                                    Write($"({entry.VersionPrefixFrom} - {entry.VersionPrefixTo})");
+                                }
+
+                                if ((entry.SegmentPrefixFrom ?? entry.SegmentPrefixTo) != null)
+                                {
+                                    Write($"<{entry.SegmentPrefixFrom} .. {entry.SegmentPrefixTo}>");
+                                }
+                            }
+                        </td>
+                        <td>@entry.Key</td>
+                        @switch (entry.Type)
+                        {
+                            case FieldType.String:
+                            case FieldType.Integer:
+                            case FieldType.Float:
+                            case FieldType.Bool:
+                                <td>@entry.Value</td>
+                                break;
+                            case FieldType.ListOfBool:
+                            case FieldType.ListOfString:
+                            case FieldType.ListOfInteger:
+                            case FieldType.ListOfFloat:
+                                <td>@entry.Value</td>
+                                break;
+                            default:
+                                <td>Unknown</td>
+                                break;
+                        }
+                        <td>@entry.Type</td>
+                        <td>@entry.Description</td>
+                        <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
+                    </tr>
+                }
             }
-        }
-    </tbody>
-</table>
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="empty-data">
+        <img src="no_data.png"/>
+    </div>
+}
+
+<style>
+    .table {
+        table-layout:fixed;
+    }
+
+    .table td {
+        word-break: break-all;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
 
