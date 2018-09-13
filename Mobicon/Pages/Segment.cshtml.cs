@@ -54,8 +54,11 @@ namespace Mobicon.Pages
 
         public IActionResult OnPostDelete(int id)
         {
-            _dataContext.Segments.Remove(_dataContext.Segments.Find(id));
-            _dataContext.SaveChanges();
+            if (User.IsInRole(UserRole.Admin.ToString()))
+            {
+                _dataContext.Segments.Remove(_dataContext.Segments.Find(id));
+                _dataContext.SaveChanges();
+            }
 
             return RedirectToPage("Segments");
         }

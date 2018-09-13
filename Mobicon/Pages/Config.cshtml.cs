@@ -47,8 +47,11 @@ namespace Mobicon.Pages
 
         public IActionResult OnPostDelete(int id)
         {
-            _dataContext.Configs.Remove(_dataContext.Configs.Find(id));
-            _dataContext.SaveChanges();
+            if (User.IsInRole(UserRole.Admin.ToString()))
+            {
+                _dataContext.Configs.Remove(_dataContext.Configs.Find(id));
+                _dataContext.SaveChanges();
+            }
 
             return RedirectToPage("Configs");
         }
