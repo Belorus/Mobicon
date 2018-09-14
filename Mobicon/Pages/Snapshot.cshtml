@@ -14,9 +14,9 @@
 </script>
 
 <div class="d-flex justify-content-between align-items-center">
-    <h2>@Model.Name </h2>
+    <h2>@Model.Name</h2>
     <div class="d-flex">
-        <div class="d-flex align-items-center approves-block"  data-toggle="tooltip" data-html="true" title="@(string.Join("", Model.Approves.Select(a => $"<p class=\"tooltip-row\">{a.Username} | {a.ApprovedAt}</p>")))">
+        <div class="d-flex align-items-center approves-block" data-toggle="tooltip" data-html="true" title="@(string.Join("", Model.Approves.Select(a => $"<p class=\"tooltip-row\">{a.Username} | {a.ApprovedAt}</p>")))">
             <span>Approves: <span class="badge badge-info"> @Model.Approves.Length / @Model.ApprovesToPublish</span></span>
 
                @if (User.IsInRole(UserRole.Approver.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
