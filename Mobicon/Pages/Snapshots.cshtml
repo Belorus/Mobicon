@@ -15,17 +15,11 @@
 
 
 <div class="d-flex justify-content-between align-items-center">
-    <h2>Snapshots <span class="badge badge-info">@Model.Snapshots.Length</span></h2>
+    <br/>
     <div class="d-flex">
         <buton class="btn btn-primary" onclick="onAddClick()"><i class="fas fa-camera"></i> Create snapshot</buton>
     </div>
 </div>
-
-
-@if (Model.LastPublished != null)
-{
-    <a asp-page="PromoteKeys">Promote keys</a>
-}
 
 @if (Model.Snapshots.Length > 0)
 {
@@ -33,15 +27,23 @@
         @{
             foreach (var snapshot in Model.Snapshots)
             {
-                <a href="/Snapshot?id=@snapshot.Id" class="list-group-item list-group-item-action @(snapshot.Status == SnapshotStatus.Published ? "published" : string.Empty)">
-                    @if (snapshot.Status == SnapshotStatus.Published)
-                    {
-                        <i class="fas fa-star text-warning"></i>
-                    }
-                    <span class="text-primary">@snapshot.Name</span>
-                    <span class="text-dark">with @snapshot.Entries.Count entries |</span>
-                    <span class="text-dark">updated by @snapshot.UpdatedBy at @snapshot.UpdatedAt</span>
-                </a>
+        <a href="/Snapshot?id=@snapshot.Id" class="list-group-item list-group-item-action @(snapshot.Status == SnapshotStatus.Published ? "published" : string.Empty)">
+            @if (snapshot.Status == SnapshotStatus.Published)
+            {
+                <i class="text-warning"></i>
+            }
+            <span class="text-primary">@snapshot.Name</span>
+
+            @if (snapshot.Status == SnapshotStatus.Published)
+            {
+                <span class="text-dark">published at @snapshot.PublishedAt </span>
+                <span class="text-dark">approved by @(string.Join(",", snapshot.Approves.Select(a => a.Username))) </span>
+            }
+            else
+            {
+                <span class="text-dark">updated by @snapshot.UpdatedBy at @snapshot.UpdatedAt</span>
+            }
+        </a>
             }
         }
     </div>

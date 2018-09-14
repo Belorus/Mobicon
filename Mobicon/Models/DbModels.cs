@@ -79,6 +79,8 @@ namespace Mobicon.Models
         public SnapshotStatus Status { get; set; }
 
         public List<SnapshotToEntry> Entries { get; set; } = new List<SnapshotToEntry>();
+
+        public List<SnapshotApproval> Approves { get; set; } = new List<SnapshotApproval>();
     }
 
     public class Segment

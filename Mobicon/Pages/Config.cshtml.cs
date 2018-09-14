@@ -155,5 +155,10 @@ namespace Mobicon.Pages
 
             return RedirectToPage(new {id = id});
         }
+
+        //public IActionResult OnPostPromoteKeys(string[] entryIds)
+        //{
+        //    var lastPublished = 
+        //}
     }
 }

@@ -26,7 +26,7 @@ namespace Mobicon.Pages
 
         public void OnGet()
         {
-            Snapshots = _dataContext.Snapshots.Include(s => s.Entries).ToArray();
+            Snapshots = _dataContext.Snapshots.Include(s => s.Entries).Include(s => s.Approves).ToArray();
             Segments = _dataContext.Segments.Include(s => s.Configs).ToArray();
             LastPublished = Snapshots.Where(s => s.Status == SnapshotStatus.Published)
                 .OrderByDescending(x => x.PublishedAt.Value)
