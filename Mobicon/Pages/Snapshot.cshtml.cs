@@ -17,6 +17,7 @@ namespace Mobicon.Pages
         private readonly AppSettings _settings;
 
         public SnapshotStatus Status { get; set; }
+        public int ApprovesToPublish { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
         public int? ComparedWithId { get; set; }
@@ -74,6 +75,7 @@ namespace Mobicon.Pages
                 .ToArray();
             Status = snapshot.Status;
             Name = snapshot.Name + " compared with " + snapshotToCompareWith.Name;
+            ApprovesToPublish = _settings.ApprovalsBeforePublish;
 
             return Page();
         }
@@ -145,7 +147,7 @@ namespace Mobicon.Pages
 
             Status = snapshot.Status;
             Name = snapshot.Name;
-
+            ApprovesToPublish = _settings.ApprovalsBeforePublish;
 
             return Page();
         }
