@@ -18,6 +18,7 @@ namespace Mobicon.Pages
 
         public SnapshotStatus Status { get; set; }
         public int Id { get; set; }
+        public string Name { get; set; }
         public int? ComparedWithId { get; set; }
         public Snapshot[] Snapshots { get; set; }
         public EntryDiff[] Entries { get; set; }
@@ -72,6 +73,7 @@ namespace Mobicon.Pages
                 .Where(a => a.SnapshotId == id)
                 .ToArray();
             Status = snapshot.Status;
+            Name = snapshot.Name + " compared with " + snapshotToCompareWith.Name;
 
             return Page();
         }
@@ -142,6 +144,8 @@ namespace Mobicon.Pages
                 .ToArray();
 
             Status = snapshot.Status;
+            Name = snapshot.Name;
+
 
             return Page();
         }

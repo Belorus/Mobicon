@@ -17,7 +17,7 @@
 
 <!-- Delete Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteSegment" aria-hidden="true">
-    <form method="post" asp-page-handler="delete" class="form-inline">
+    <form method="post" asp-page-handler="delete" asp-route-id="@Model.Id" class="form-inline">
         <div class="modal-dialog modal-lg delete-confirmation-modal" role="document">
             <div class="modal-content">
                 <div class="modal-header">

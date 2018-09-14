@@ -69,7 +69,7 @@
 
 <!-- Delete Config Modal -->
 <div class="modal fade" id="deleteConfigModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfig" aria-hidden="true">
-    <form method="post" asp-page-handler="delete" class="form-inline">
+    <form method="post" asp-page-handler="deleteConfig" asp-route-id="@Model.Id" class="form-inline">
         <div class="modal-dialog modal-lg delete-confirmation-modal" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -213,9 +213,9 @@
                 <th width="10%">Prefixes</th>
                 <th width="25%">Key</th>
                 <th width="25%">Value</th>
-                <th width="10%">Type</th>
-                <th width="20%">Description</th>
-                <th width="10%">Jira</th>
+                <th width="120">Type</th>
+                <th width="15%">Description</th>
+                <th width="170">Jira</th>
                 <th width="160"></th>
             </tr>
             </thead>

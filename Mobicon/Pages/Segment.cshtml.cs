@@ -16,6 +16,7 @@ namespace Mobicon.Pages
         private readonly ImportManager _importManager;
 
         public string Name { get; set; }
+        public int Id { get; set; }
         public Config[] Configs { get; private set; }
 
         public SegmentModel(
@@ -29,14 +30,17 @@ namespace Mobicon.Pages
         public void OnGet(int id)
         {
             Configs = _dataContext.Configs.Include(x => x.Entries).Where(c => c.SegmentId == id).ToArray();
-            Name = _dataContext.Segments.Find(id).Name;
+
+            var segment = _dataContext.Segments.Find(id);
+            Name = segment.Name;
+            Id = segment.Id;
         }
 
         public IActionResult OnPostImport(int id, string name, string data)
         {
             var entries = _importManager.ImportYaml(data, User.Identity.Name);
 
-            _dataContext.Configs.Add(new Config()
+            var config = new Config()
             {
                 Name = name,
                 SegmentId = id,
@@ -45,11 +49,13 @@ namespace Mobicon.Pages
                 CreatedBy = User.Identity.Name,
                 UpdatedAt = DateTime.Now,
                 UpdatedBy = User.Identity.Name
-            });
+            };
+
+            _dataContext.Configs.Add(config);
 
             _dataContext.SaveChanges();
 
-            return RedirectToPage(new {id = id});
+            return RedirectToPage("Config", new {id = config.Id});
         }
 
         public IActionResult OnPostDelete(int id)

@@ -45,15 +45,21 @@ namespace Mobicon.Pages
             return Page();
         }
 
-        public IActionResult OnPostDelete(int id)
+        public IActionResult OnPostDeleteConfig(int id)
         {
             if (User.IsInRole(UserRole.Admin.ToString()))
             {
-                _dataContext.Configs.Remove(_dataContext.Configs.Find(id));
-                _dataContext.SaveChanges();
+                var snapshot = _dataContext.Configs.Find(id);
+                if (snapshot != null)
+                {
+                    _dataContext.Configs.Remove(snapshot);
+                    _dataContext.SaveChanges();
+
+                    return RedirectToPage("Segment", new {id = snapshot.SegmentId});
+                }
             }
 
-            return RedirectToPage("Configs");
+            return RedirectToPage(new { id = id });
         }
 
         public IActionResult OnPostDelete(int id, int entryId)
