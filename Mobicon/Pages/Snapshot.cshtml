@@ -27,14 +27,14 @@
                     {
                         <form method="post" asp-page-handler="approve"
                               asp-route-id="@Model.Id">
-                            <button class="btn btn-success approve-btn" type="submit">Approve</button>
+                            <button class="btn btn-success btn-sm approve-btn" type="submit"><i class="fas fa-thumbs-up"></i> Approve</button>
                         </form>
                     }
                     else
                     {
                         <form method="post" asp-page-handler="disapprove"
                               asp-route-id="@Model.Id">
-                            <button class="btn btn-danger btn-sm approve-btn" type="submit">Disapprove</button>
+                            <button class="btn btn-danger btn-sm approve-btn" type="submit"><i class="fas fa-thumbs-down"></i> Disapprove</button>
                         </form>
                     }
                 }
@@ -87,13 +87,16 @@
 
 <style>
     .compare-label {
-        margin-right: 16px;
+        margin-right: 8px;
         margin-bottom: 0;
     }
     .export-dropdown {
         margin-left: 36px;
     }
     .approves-block {
+        border-radius: 3px;
+        padding: 4px 10px;
+        box-shadow: 0px 0px 3px -1px;
         margin-right: 36px;
     }
     .compare-select {
