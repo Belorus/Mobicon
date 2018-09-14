@@ -9,48 +9,41 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() { 
         $('#compareSelect').selectpicker();
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
-
-<span>Approved by:</span>
-<table>
-    @foreach (var approve in Model.Approves)
-    {
-        <tr>
-            <td>@approve.Username</td>
-            <td>@approve.ApprovedAt</td>
-        </tr>
-    }
-</table>
-
-@if (User.IsInRole(UserRole.Approver.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
-{
-    if (Model.Status == SnapshotStatus.WaitingForApprove)
-    {
-        if (Model.Approves.All(a => a.Username != User.Identity.Name))
-        {
-            <form method="post" asp-page-handler="approve"
-                  asp-route-id="@Model.Id">
-                <button type="submit">Approve</button>
-            </form>
-        }
-        else
-        {
-            <form method="post" asp-page-handler="disapprove"
-                  asp-route-id="@Model.Id">
-                <button type="submit">Disapprove</button>
-            </form>
-        }
-    }
-}
 
 <div class="d-flex justify-content-between align-items-center">
     <h2>@Model.Name </h2>
     <div class="d-flex">
+        <div class="d-flex align-items-center approves-block"  data-toggle="tooltip" data-html="true" title="@(string.Join("", Model.Approves.Select(a => $"<p class=\"tooltip-row\">{a.Username} | {a.ApprovedAt}</p>")))">
+            <span>Approves: <span class="badge badge-info"> @Model.Approves.Length / @Model.ApprovesToPublish</span></span>
+
+               @if (User.IsInRole(UserRole.Approver.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
+                {
+                if (Model.Status == SnapshotStatus.WaitingForApprove)
+                {
+                    if (Model.Approves.All(a => a.Username != User.Identity.Name))
+                    {
+                        <form method="post" asp-page-handler="approve"
+                              asp-route-id="@Model.Id">
+                            <button class="btn btn-success approve-btn" type="submit">Approve</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="disapprove"
+                              asp-route-id="@Model.Id">
+                            <button class="btn btn-danger btn-sm approve-btn" type="submit">Disapprove</button>
+                        </form>
+                    }
+                }
+            }
+        </div>
         <div class="d-flex align-items-center">
             <label class="compare-label">Compare with: </label>
             <form asp-route-id="@Model.Id" asp-page-handler="Compared">
-                <select  class="form-control compare-select" name="compareWithId"  data-size="8" data-width="200px" id="compareSelect" title="Snapshot to compare" onchange="this.form.submit()">
+                <select class="form-control compare-select" name="compareWithId" data-size="8" data-width="200px" id="compareSelect" title="Snapshot to compare" onchange="this.form.submit()">
                     @if (Model.ComparedWithId == null)
                     {
                         <option selected>—</option>
@@ -100,8 +93,28 @@
     .export-dropdown {
         margin-left: 36px;
     }
+    .approves-block {
+        margin-right: 36px;
+    }
     .compare-select {
         width: 200px;
+    }
+    .badge-info {
+        font-size: 16px;
+    }
+    .approve-btn {
+        margin-left: 16px;
+    }
+    .tooltip {
+        width: auto !important;
+    }
+    .tooltip-inner {
+        max-width: none;
+    }
+    .tooltip-row {
+        margin: 0;
+        padding: 4px 12px;
+        white-space: nowrap;
     }
 </style>
 @if (Model.Entries.Length > 0)
