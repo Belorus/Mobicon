@@ -1,4 +1,5 @@
 ﻿@page
+@using Humanizer
 @using Models
 @model SnapshotsModel
 @{
@@ -25,7 +26,7 @@
 {
     <div class="list-group items-list">
         @{
-            foreach (var snapshot in Model.Snapshots)
+            foreach (var snapshot in Model.Snapshots.OrderByDescending(x => x.UpdatedAt))
             {
         <a href="/Snapshot?id=@snapshot.Id" class="list-group-item list-group-item-action @(snapshot.Status == SnapshotStatus.Published ? "published" : string.Empty)">
             @if (snapshot.Status == SnapshotStatus.Published)
@@ -36,12 +37,12 @@
 
             @if (snapshot.Status == SnapshotStatus.Published)
             {
-                <span class="text-dark">published at @snapshot.PublishedAt </span>
-                <span class="text-dark">approved by @(string.Join(",", snapshot.Approves.Select(a => a.Username))) </span>
+                <span class="text-dark">published @snapshot.PublishedAt.Value.ToUniversalTime().Humanize() </span>
+                <span class="text-dark">approved by <b> @(string.Join(",", snapshot.Approves.Select(a => a.Username))) </b></span>
             }
             else
             {
-                <span class="text-dark">updated by @snapshot.UpdatedBy at @snapshot.UpdatedAt</span>
+                <span class="text-dark">updated by <b>@snapshot.UpdatedBy </b> @snapshot.UpdatedAt.ToUniversalTime().Humanize() </span>
             }
         </a>
             }

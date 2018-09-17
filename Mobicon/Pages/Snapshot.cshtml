@@ -1,4 +1,5 @@
 ﻿@page
+@using Humanizer
 @using Models
 @using Newtonsoft.Json
 @model Mobicon.Pages.SnapshotModel
@@ -126,6 +127,11 @@
         <table class="table">
             <thead>
             <tr>
+                @if (Model.ComparedWithId != null)
+                {
+                    <th width="15%">Changed</th>
+                }
+
                 <th width="10%">Prefixes</th>
                 <th width="25%">Key</th>
                 <th width="25%">Value</th>
@@ -144,6 +150,16 @@
                                      : diff.Difference == Difference.Removed ? "table-danger"
                                          : diff.Difference == Difference.Changed ? "table-warning"
                                              : "")">
+                        
+                        @if (Model.ComparedWithId != null)
+                        {
+                            <td>
+                                @if (diff.Difference != Difference.None)
+                                {
+                                    <span>by <b>@diff.Entry.VersionCreatedBy</b> @diff.Entry.VersionCreateTime.ToUniversalTime().Humanize() </span>
+                                }
+                            </td>
+                        }
 
                         <td>
                             @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))
@@ -159,7 +175,7 @@
                                 }
                             }
                         </td>
-                        <td>@entry.Key</td>
+                        <td>@entry.Key <sup class="text-black-50">@entry.Version</sup> </td>
                         @switch (entry.Type)
                         {
                             case FieldType.String:
