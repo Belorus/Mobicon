@@ -5,6 +5,78 @@
     ViewData["Title"] = "Segments";
 }
 
+<script>
+    function onImportClick() {
+        $('#importModal').modal('show');
+    }
+    
+    function onDeleteClick(event, data) {
+        event.stopPropagation();
+        console.log(event);
+        $('#deleteModal').modal('show');
+    }
+</script>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteSegment" aria-hidden="true">
+    <form method="post" asp-page-handler="delete" asp-route-id="" class="form-inline">
+        <div class="modal-dialog modal-lg delete-confirmation-modal" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteSegment">Delete confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure want to delete <span class="text-primary"> </span>segment?</p>
+                    <p>This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importConfig" aria-hidden="true">
+    <form method="post" asp-page-handler="import" class="form-inline">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importConfig">Import Config</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+    
+                <div class="modal-body d-flex flex-column">
+                    <input required type="text" class="form-control" name="name" placeholder="Enter config name">
+                    <input type="hidden" name="id" value="@Model.Request.Query["id"]">
+                    <textarea required placeholder="Enter config data" class="form-control import-config-entries" rows="7" name="data"></textarea>
+                </div>
+    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Import</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <style>
+        .modal-body {
+            width: 500px;
+        }
+        .import-config-entries {
+            margin-top: 24px;
+            max-height: 400px;
+        }
+    </style>
+</div>
+
+
 <div class="d-flex justify-content-between align-items-center">
     <h2>Configs <span class="badge badge-info">@Model.Segments.Length</span></h2>
     <form method="post" class="d-flex justify-content-end">
@@ -19,44 +91,47 @@
 
 @if (Model.Segments.Length > 0)
 {
-    <div class="list-group items-list">
+    <div id="accordion" class="items-list">
         @{
             foreach (var segment in Model.Segments.OrderByDescending(x => x.CreatedAt))
             {
-                <a class="list-group-item list-group-item-action" href="/Segment?id=@segment.Id">
-                    <span class="text-primary">@segment.Name</span>
-                    @if (segment.Configs.Count > 0)
-                    {
-                        <span>with configs:</span>
-                        <div class="d-inline-block text-secondary">
-                            @{
-                                int i = 0;
-                                int configPreviewCount = segment.Configs.Count < 5 ? segment.Configs.Count : 5;
-                            }
-                            @foreach (var c in segment.Configs.OrderByDescending(x => x.CreatedAt).Take(configPreviewCount))
+                <div class="card">
+                    <a class="card-header" data-toggle="collapse" href="#@segment.Id">
+                        <span class="text-primary">@segment.Name</span>
+                        <buton class="btn btn-outline-danger delete-form btn-sm" onclick="onDeleteClick(event, @segment.Id)"><i class="fas fa-trash-alt"></i> Delete segment</buton>
+                    </a>
+                    <div class="collapse" id="@segment.Id" class="collapse" data-parent="#accordion">
+                        <div class="collapse-wrapper">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2></h2>
+                                <div class="d-flex">
+                                    <buton class="btn btn-success import-form" onclick="onImportClick(@segment.Id)"><i class="fas fa-file-import"></i> Import config</buton>
+                                    <form method="post" class="d-flex justify-content-end">
+                                        <div class="input-group add-list-item">
+                                            <input type="text" name="configName" required placeholder="Enter config name" class="form-control config-name">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" type="submit"><i class="fas fa-plus"></i> Add config</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            @if (segment.Configs.Count > 0)
                             {
-                                i++;
-                                if (i < configPreviewCount)
-                                {
-                                    <span>@c.Name,</span>
-                                }
-                                else
-                                {
-                                    <span>@c.Name</span>
-                                }
+                                <div class="list-group items-list list-group-flush">
+                                    @{
+                                        foreach (var config in segment.Configs.OrderByDescending(x => x.UpdatedAt))
+                                        {
+                                            <a class="list-group-item list-group-item-action" href="/Config?id=@config.Id">
+                                                <span class="text-primary">@config.Name</span>
+                                            </a>
+                                        }
+                                    }
+                                </div>
                             }
                         </div>
-                        if (segment.Configs.Count > configPreviewCount)
-                        {
-                            <span class="text-secondary"> and @(segment.Configs.Count - configPreviewCount) more...</span>
-                        }
-                    }
-                    else
-                    {
-                        <span class="text-secondary">without configs</span>
-                    }
-
-                </a>
+                    </div>
+                </div>
             }
         }
     </div>
@@ -67,3 +142,35 @@ else
         <img src="no_data.png"/>
     </div>
 }
+
+<style>
+    .import-form {
+        margin-right: 36px;
+    }
+    .add-list-item {
+        width: 350px;
+    }
+    .collapse-wrapper {
+        padding: 24px;
+    }
+    .card-header {
+        text-decoration: none !important;
+        border-bottom: 0;
+        position: relative;
+        transition: background-color linear 0.3s;
+    }
+    .card-header .delete-form {
+        position: absolute;
+        right: 24px;
+        top: 9px;
+        opacity: 0;
+        transition: opacity linear 0.3s;
+    }
+    .card-header[aria-expanded="true"] {
+        background-color: rgb(240, 248, 255);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+    .card-header[aria-expanded="true"] .delete-form {
+        opacity: 1;
+    }
+</style>
