@@ -14,7 +14,6 @@
     
     function onDeleteClick(event, segmentId) {
         event.stopPropagation();
-        console.log(event);
         $('#deleteSegmentId').val(segmentId);
         $('#deleteModal').modal('show');
     }
@@ -97,7 +96,7 @@
 
 @if (Model.Segments.Length > 0)
 {
-    <div id="accordion" class="items-list">
+    <div id="accordion" class="items-list accordion">
         @{
             foreach (var segment in Model.Segments.OrderByDescending(x => x.CreatedAt))
             {

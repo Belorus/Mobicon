@@ -61,6 +61,12 @@ h2 {
     margin-bottom: 0;
 }
 
+.accordion .card:not(:last-child) {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: 0;
+}
+
     /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
