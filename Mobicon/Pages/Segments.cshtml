@@ -83,7 +83,7 @@
 
 
 <div class="d-flex justify-content-between align-items-center">
-    <h2>Configs <span class="badge badge-info">@Model.Segments.Length</span></h2>
+    <h2>Configs</h2>
     <form method="post" class="d-flex justify-content-end">
         <div class="input-group add-list-item">
             <input type="text" name="segmentName" required placeholder="Enter segment name" class="form-control">
@@ -108,11 +108,10 @@
                     <div class="collapse" id="@segment.Id" class="collapse" data-parent="#accordion">
                         <div class="collapse-wrapper">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h2></h2>
                                 <div class="d-flex">
-                                    <buton class="btn btn-success import-form" onclick="onImportClick(@segment.Id)"><i class="fas fa-file-import"></i> Import config</buton>
+                                    <buton class="btn btn-success import-form btn-sm" onclick="onImportClick(@segment.Id)"><i class="fas fa-file-import"></i> Import config</buton>
                                     <form method="post" asp-page-handler="addConfig" asp-route-id="@segment.Id" class="d-flex justify-content-end">
-                                        <div class="input-group add-list-item">
+                                        <div class="input-group add-list-item input-group-sm">
                                             <input type="text" name="configName" required placeholder="Enter config name" class="form-control config-name">
                                             <div class="input-group-append">
                                                 <button class="btn btn-primary" type="submit"><i class="fas fa-plus"></i> Add config</button>
@@ -178,5 +177,9 @@ else
     }
     .card-header[aria-expanded="true"] .delete-form {
         opacity: 1;
+    }
+    .list-group-item {
+        padding: 8px 14px;
+        font-size: 15px;
     }
 </style>
