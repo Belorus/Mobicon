@@ -80,6 +80,25 @@ namespace Mobicon.Pages
             return Page();
         }
 
+        public IActionResult OnPostUpdateEntry(int id, string entryId, int version)
+        {
+            var desiredEntryId = _dataContext.Entries.First(e => e.EntryId == entryId && e.Version == version).Id;
+
+            var snapshot = _dataContext.Snapshots.Include(x => x.Entries).First(s => s.Id == id);
+            var entry = snapshot.Entries.First(e => e.Entry.EntryId == entryId);
+
+            snapshot.Entries.Remove(entry);
+            snapshot.Entries.Add(new SnapshotToEntry()
+            {
+                EntryId = desiredEntryId,
+                SnapshotId = id
+            });
+
+            _dataContext.SaveChanges();
+
+            return RedirectToPage(new {id = id});
+        }
+
         private EntrySnapshot[] Compare(Snapshot snapshot, Snapshot snapshotToCompareWith)
         {
             var curr = snapshot.Entries.Select(x => x.Entry).ToArray();

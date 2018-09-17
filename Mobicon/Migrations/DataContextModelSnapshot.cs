@@ -267,7 +267,7 @@ namespace Mobicon.Migrations
             modelBuilder.Entity("Mobicon.Models.SnapshotApproval", b =>
                 {
                     b.HasOne("Mobicon.Models.Snapshot", "Snapshot")
-                        .WithMany()
+                        .WithMany("Approves")
                         .HasForeignKey("SnapshotId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
