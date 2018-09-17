@@ -6,13 +6,16 @@
 }
 
 <script>
-    function onImportClick() {
+    function onImportClick(segmentId) {
+        debugger;
+        $('#importSegmentId').val(segmentId);
         $('#importModal').modal('show');
     }
     
-    function onDeleteClick(event, data) {
+    function onDeleteClick(event, segmentId) {
         event.stopPropagation();
         console.log(event);
+        $('#deleteSegmentId').val(segmentId);
         $('#deleteModal').modal('show');
     }
 </script>
@@ -21,6 +24,8 @@
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteSegment" aria-hidden="true">
     <form method="post" asp-page-handler="delete" asp-route-id="" class="form-inline">
         <div class="modal-dialog modal-lg delete-confirmation-modal" role="document">
+            <input type="hidden" name="id" id="deleteSegmentId"/>
+
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteSegment">Delete confirmation</h5>
@@ -45,19 +50,20 @@
     <form method="post" asp-page-handler="import" class="form-inline">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
+                <input type="hidden" name="id" id="importSegmentId"/>
                 <div class="modal-header">
                     <h5 class="modal-title" id="importConfig">Import Config</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-    
+
                 <div class="modal-body d-flex flex-column">
                     <input required type="text" class="form-control" name="name" placeholder="Enter config name">
                     <input type="hidden" name="id" value="@Model.Request.Query["id"]">
                     <textarea required placeholder="Enter config data" class="form-control import-config-entries" rows="7" name="data"></textarea>
                 </div>
-    
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Import</button>
@@ -106,7 +112,7 @@
                                 <h2></h2>
                                 <div class="d-flex">
                                     <buton class="btn btn-success import-form" onclick="onImportClick(@segment.Id)"><i class="fas fa-file-import"></i> Import config</buton>
-                                    <form method="post" class="d-flex justify-content-end">
+                                    <form method="post" asp-page-handler="addConfig" asp-route-id="@segment.Id" class="d-flex justify-content-end">
                                         <div class="input-group add-list-item">
                                             <input type="text" name="configName" required placeholder="Enter config name" class="form-control config-name">
                                             <div class="input-group-append">
