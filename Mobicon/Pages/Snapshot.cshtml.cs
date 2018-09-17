@@ -22,7 +22,7 @@ namespace Mobicon.Pages
         public string Name { get; set; }
         public int? ComparedWithId { get; set; }
         public Snapshot[] Snapshots { get; set; }
-        public EntryDiff[] Entries { get; set; }
+        public EntrySnapshot[] Entries { get; set; }
         public SnapshotApproval[] Approves { get; set; }
 
         public SnapshotModel(
@@ -80,17 +80,17 @@ namespace Mobicon.Pages
             return Page();
         }
 
-        private EntryDiff[] Compare(Snapshot snapshot, Snapshot snapshotToCompareWith)
+        private EntrySnapshot[] Compare(Snapshot snapshot, Snapshot snapshotToCompareWith)
         {
             var curr = snapshot.Entries.Select(x => x.Entry).ToArray();
             var old = snapshotToCompareWith.Entries.Select(x => x.Entry).ToArray();
 
             var added = curr.Except(old, Pages.Compare.By<ConfigEntry, int>(x => x.Id))
-                .Select(x => new EntryDiff(x, Difference.Added));
+                .Select(x => new EntrySnapshot(x, Difference.Added, new ConfigEntry[0]));
             var deleted = old.Except(curr, Pages.Compare.By<ConfigEntry, int>(x => x.Id))
-                .Select(x => new EntryDiff(x, Difference.Removed));
+                .Select(x => new EntrySnapshot(x, Difference.Removed, new ConfigEntry[0]));
             var unchanged = curr.ToHashSet().Intersect(old, Pages.Compare.By<ConfigEntry, int>(x => x.Id))
-                .Select(x => new EntryDiff(x, Difference.None));
+                .Select(x => new EntrySnapshot(x, Difference.None, new ConfigEntry[0]));
 
             return added.Concat(deleted).Concat(unchanged).ToArray();
         }
@@ -136,7 +136,9 @@ namespace Mobicon.Pages
             var snapshot = LoadSnapshot(id);
 
             Id = id;
-            Entries = snapshot.Entries.Select(e => new EntryDiff(e.Entry, Difference.None)).ToArray();
+            var allEntryIds = snapshot.Entries.Select(e => e.Entry.EntryId).ToHashSet();
+            ILookup<string, ConfigEntry> lookup = _dataContext.Entries.Where(ce => allEntryIds.Contains(ce.EntryId)).ToLookup(e => e.EntryId);
+            Entries = snapshot.Entries.Select(e => new EntrySnapshot(e.Entry, Difference.None, lookup[e.Entry.EntryId].Where(ce => ce.Id != e.EntryId).ToArray())).ToArray();
             Snapshots = _dataContext.Snapshots
                 .Where(s => s.Id != id)
                 .OrderByDescending(s => s.UpdatedAt)
@@ -171,15 +173,17 @@ namespace Mobicon.Pages
         Changed
     }
 
-    public class EntryDiff
+    public class EntrySnapshot
     {
-        public EntryDiff(ConfigEntry entry, Difference difference)
+        public EntrySnapshot(ConfigEntry entry, Difference difference, ConfigEntry[] entryVersions)
         {
             Entry = entry;
             Difference = difference;
+            EntryVersions = entryVersions;
         }
 
         public ConfigEntry Entry;
+        public ConfigEntry[] EntryVersions;
         public Difference Difference;
     }
 }

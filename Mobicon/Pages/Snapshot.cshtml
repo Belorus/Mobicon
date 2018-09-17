@@ -141,65 +141,73 @@
             </tr>
             </thead>
             <tbody>
-            @{
-                foreach (var diff in Model.Entries.OrderBy(e => e.Entry.Key))
-                {
-                    var entry = diff.Entry;
-                    <tr data="@JsonConvert.SerializeObject(entry)"
-                        class="@(diff.Difference == Difference.Added ? "table-success"
+                @{
+                    foreach (var diff in Model.Entries.OrderBy(e => e.Entry.Key))
+                    {
+                        var entry = diff.Entry;
+                        <tr class="@(diff.Difference == Difference.Added ? "table-success"
                                      : diff.Difference == Difference.Removed ? "table-danger"
                                          : diff.Difference == Difference.Changed ? "table-warning"
                                              : "")">
-                        
-                        @if (Model.ComparedWithId != null)
-                        {
+
+                            @if (Model.ComparedWithId != null)
+                            {
+                                <td>
+                                    @if (diff.Difference != Difference.None)
+                                    {
+                                        <span>by <b>@diff.Entry.VersionCreatedBy</b> @diff.Entry.VersionCreateTime.ToUniversalTime().Humanize() </span>
+                                    }
+                                </td>
+                            }
+
                             <td>
-                                @if (diff.Difference != Difference.None)
-                                {
-                                    <span>by <b>@diff.Entry.VersionCreatedBy</b> @diff.Entry.VersionCreateTime.ToUniversalTime().Humanize() </span>
+                                @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))
+                                @{
+                                    if ((entry.VersionPrefixFrom ?? entry.VersionPrefixTo) != null)
+                                    {
+                                        Write($"({entry.VersionPrefixFrom} - {entry.VersionPrefixTo})");
+                                    }
+
+                                    if ((entry.SegmentPrefixFrom ?? entry.SegmentPrefixTo) != null)
+                                    {
+                                        Write($"<{entry.SegmentPrefixFrom} .. {entry.SegmentPrefixTo}>");
+                                    }
                                 }
                             </td>
-                        }
-
-                        <td>
-                            @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))
-                            @{
-                                if ((entry.VersionPrefixFrom ?? entry.VersionPrefixTo) != null)
-                                {
-                                    Write($"({entry.VersionPrefixFrom} - {entry.VersionPrefixTo})");
-                                }
-
-                                if ((entry.SegmentPrefixFrom ?? entry.SegmentPrefixTo) != null)
-                                {
-                                    Write($"<{entry.SegmentPrefixFrom} .. {entry.SegmentPrefixTo}>");
-                                }
+                            <td>@entry.Key <sup class="text-black-50">@entry.Version</sup> </td>
+                            @switch (entry.Type)
+                            {
+                                case FieldType.String:
+                                case FieldType.Integer:
+                                case FieldType.Float:
+                                case FieldType.Bool:
+                                    <td>@entry.Value</td>
+                                    break;
+                                case FieldType.ListOfBool:
+                                case FieldType.ListOfString:
+                                case FieldType.ListOfInteger:
+                                case FieldType.ListOfFloat:
+                                    <td>@entry.Value</td>
+                                    break;
+                                default:
+                                    <td>Unknown</td>
+                                    break;
                             }
-                        </td>
-                        <td>@entry.Key <sup class="text-black-50">@entry.Version</sup> </td>
-                        @switch (entry.Type)
+                            <td>@entry.Type</td>
+                            <td>@entry.Description</td>
+                            <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
+                        </tr>
+                        
+                        foreach (var sub in diff.EntryVersions)
                         {
-                            case FieldType.String:
-                            case FieldType.Integer:
-                            case FieldType.Float:
-                            case FieldType.Bool:
-                                <td>@entry.Value</td>
-                                break;
-                            case FieldType.ListOfBool:
-                            case FieldType.ListOfString:
-                            case FieldType.ListOfInteger:
-                            case FieldType.ListOfFloat:
-                                <td>@entry.Value</td>
-                                break;
-                            default:
-                                <td>Unknown</td>
-                                break;
+                        <tr class="table-warning">
+                            <td>@sub.Version</td>
+                            <td>by <b>@sub.VersionCreatedBy</b> @sub.VersionCreateTime.ToUniversalTime().Humanize()</td>
+                            <td>@sub.Value</td>
+                        </tr>
                         }
-                        <td>@entry.Type</td>
-                        <td>@entry.Description</td>
-                        <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
-                    </tr>
+                    }
                 }
-            }
             </tbody>
         </table>
     </div>
