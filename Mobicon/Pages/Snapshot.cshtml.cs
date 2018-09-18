@@ -153,6 +153,22 @@ namespace Mobicon.Pages
             return RedirectToPage(new {id = id});
         }
 
+        public IActionResult OnPostDelete(int id)
+        {
+            var snapshot = _dataContext.Snapshots.Find(id);
+
+            if (snapshot.Status != SnapshotStatus.Published)
+            {
+                _dataContext.Snapshots.Remove(snapshot);
+                _dataContext.SaveChanges();
+
+                return RedirectToPage("Snapshots");
+            }
+            else
+            {
+                return RedirectToPage(new {id = id});
+            }
+        }
 
         public IActionResult OnGet(int id)
         {

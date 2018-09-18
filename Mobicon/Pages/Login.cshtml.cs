@@ -27,7 +27,7 @@ namespace Mobicon.Pages
         {
             if (User.Claims.Any())
             {
-                return RedirectToPage("/Segments");
+                return RedirectToPage("/Configs");
             }
             else
             {
@@ -72,7 +72,7 @@ namespace Mobicon.Pages
                     new ClaimsPrincipal(claimsIdentity),
                     new AuthenticationProperties());
 
-                return RedirectToPage("/Segments");
+                return RedirectToPage("/Configs");
             }
             else
             {

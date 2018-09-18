@@ -15,6 +15,7 @@ namespace Mobicon.Pages
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public string CreatedBy { get; set; }
         public ConfigEntry[] Entries { get; set; }
         public FieldType[] FieldTypes { get; set; }
         public SimplePrefix[] SimplePrefixes { get; set; }
@@ -37,7 +38,9 @@ namespace Mobicon.Pages
                 .ToArray();
 
             Id = id;
-            Name = _dataContext.Configs.Find(id).Name;
+            var config = _dataContext.Configs.Find(id);
+            Name = config.Name;
+            CreatedBy = config.CreatedBy;
             FieldTypes = Enum.GetValues(typeof(FieldType)).Cast<FieldType>().Where(f => f != FieldType.Unknown).ToArray();
 
             SimplePrefixes = _dataContext.SimplePrefixes.ToArray();

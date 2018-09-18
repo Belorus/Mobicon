@@ -1,7 +1,9 @@
 ﻿@page
+@using Mobicon.Models
 @model Mobicon.Pages.ConfigsModel
 @{
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Configs";
 }
 
 <script>
@@ -80,17 +82,20 @@
 </div>
 
 
-<div class="d-flex justify-content-between align-items-center">
-    <h2>Configs</h2>
-    <form method="post" class="d-flex justify-content-end">
-        <div class="input-group add-list-item">
-            <input type="text" name="segmentName" required placeholder="Enter segment name" class="form-control">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit"><i class="fas fa-plus"></i> Add segment</button>
+@if (User.IsInRole(UserRole.Admin.ToString()))
+{
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Configs</h2>
+        <form method="post" class="d-flex justify-content-end">
+            <div class="input-group add-list-item">
+                <input type="text" name="segmentName" required placeholder="Enter segment name" class="form-control">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-plus"></i> Add segment</button>
+                </div>
             </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
+}
 
 @if (Model.Segments.Length > 0)
 {

@@ -3,7 +3,7 @@
 @using Newtonsoft.Json
 @model Mobicon.Pages.ConfigModel
 @{
-    ViewData["Title"] = "Config";
+    ViewData["Title"] = Model.Name;
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
@@ -202,7 +202,10 @@
     <h2>@Model.Name entries <span class="badge badge-info">@Model.Entries.Length</span></h2>
     <div class="d-flex">
         <buton class="btn btn-primary" onclick="onAddClick()"><i class="fas fa-plus"></i> Create config entry</buton>
-        <buton class="btn btn-danger delete-config-btn" onclick="onDeleteConfigClick()"><i class="fas fa-trash-alt"></i> Delete config</buton>
+        @if (User.IsInRole(UserRole.Admin.ToString()) || User.Identity.Name == Model.CreatedBy)
+        {
+            <buton class="btn btn-danger delete-config-btn" onclick="onDeleteConfigClick()"><i class="fas fa-trash-alt"></i> Delete config</buton>
+        }
     </div>
 </div>
 @if (Model.Entries.Length > 0)

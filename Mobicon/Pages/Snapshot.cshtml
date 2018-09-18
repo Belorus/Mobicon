@@ -4,7 +4,7 @@
 @using Newtonsoft.Json
 @model Mobicon.Pages.SnapshotModel
 @{
-    ViewData["Title"] = "Snapshot";
+    ViewData["Title"] = Model.Name;
 }
 
 <script>
@@ -21,25 +21,25 @@
             <span>Approves: <span class="badge badge-info"> @Model.Approves.Length / @Model.ApprovesToPublish</span></span>
 
                @if (User.IsInRole(UserRole.Approver.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
-                {
-                if (Model.Status == SnapshotStatus.WaitingForApprove)
-                {
-                    if (Model.Approves.All(a => a.Username != User.Identity.Name))
-                    {
-                        <form method="post" asp-page-handler="approve"
-                              asp-route-id="@Model.Id">
-                            <button class="btn btn-success btn-sm approve-btn" type="submit"><i class="fas fa-thumbs-up"></i> Approve</button>
-                        </form>
-                    }
-                    else
-                    {
-                        <form method="post" asp-page-handler="disapprove"
-                              asp-route-id="@Model.Id">
-                            <button class="btn btn-danger btn-sm approve-btn" type="submit"><i class="fas fa-thumbs-down"></i> Disapprove</button>
-                        </form>
-                    }
-                }
-            }
+               {
+                   if (Model.Status == SnapshotStatus.WaitingForApprove)
+                   {
+                       if (Model.Approves.All(a => a.Username != User.Identity.Name))
+                       {
+                           <form method="post" asp-page-handler="approve"
+                                 asp-route-id="@Model.Id">
+                               <button class="btn btn-success btn-sm approve-btn" type="submit"><i class="fas fa-thumbs-up"></i> Approve</button>
+                           </form>
+                       }
+                       else
+                       {
+                           <form method="post" asp-page-handler="disapprove"
+                                 asp-route-id="@Model.Id">
+                               <button class="btn btn-danger btn-sm approve-btn" type="submit"><i class="fas fa-thumbs-down"></i> Disapprove</button>
+                           </form>
+                       }
+                   }
+               }
         </div>
         <div class="d-flex align-items-center">
             <label class="compare-label">Compare with: </label>
@@ -83,6 +83,12 @@
                 </form>
             </div>
         </div>
+        @if (User.IsInRole(UserRole.Admin.ToString()) && Model.Status != SnapshotStatus.Published)
+        {
+            <form method="post" asp-route-id="@Model.Id" asp-page-handler="delete">
+                <button class="btn btn-danger delete-config-btn" type="submit"><i class="fas fa-trash-alt"></i> Delete snapshot</button>
+            </form>
+        }
     </div>
 </div>
 
