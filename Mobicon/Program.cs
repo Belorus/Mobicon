@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace Mobicon
 {
@@ -19,6 +12,9 @@ namespace Mobicon
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                // https://sentry.io/grigory-perepechko/mobicon/
+                // Credentials: mylce@ya.ru / Mobicon1
+                .UseSentry("https://0eb99ad19d364d89876e76c19b7f3afc@sentry.io/1282941")
                 .UseStartup<Startup>();
     }
 }
