@@ -27,6 +27,10 @@ namespace Mobicon.Pages
 
         public IActionResult OnGet(int id)
         {
+            var config = _dataContext.Configs.Find(id);
+            if (config.IsDeleted)
+                return RedirectToPage("Configs");
+
             Entries = _dataContext.Entries
                 .Include(e => e.SimplePrefixes)
                 .ThenInclude(e => e.SimplePrefix)
@@ -38,7 +42,6 @@ namespace Mobicon.Pages
                 .ToArray();
 
             Id = id;
-            var config = _dataContext.Configs.Find(id);
             Name = config.Name;
             CreatedBy = config.CreatedBy;
             FieldTypes = Enum.GetValues(typeof(FieldType)).Cast<FieldType>().Where(f => f != FieldType.Unknown).ToArray();
@@ -52,10 +55,10 @@ namespace Mobicon.Pages
         {
             if (User.IsInRole(UserRole.Admin.ToString()))
             {
-                var snapshot = _dataContext.Configs.Find(id);
-                if (snapshot != null)
+                var config = _dataContext.Configs.Find(id);
+                if (config != null)
                 {
-                    _dataContext.Configs.Remove(snapshot);
+                    config.IsDeleted = true;
                     _dataContext.SaveChanges();
 
                     return RedirectToPage("Configs");

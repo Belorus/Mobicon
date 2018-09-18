@@ -123,11 +123,11 @@
                                     </form>
                                 </div>
                             </div>
-                            @if (segment.Configs.Count > 0)
+                            @if (segment.Configs.Any(c => !c.IsDeleted))
                             {
                                 <div class="list-group items-list list-group-flush">
                                     @{
-                                        foreach (var config in segment.Configs.OrderByDescending(x => x.UpdatedAt))
+                                        foreach (var config in segment.Configs.Where(c => !c.IsDeleted).OrderByDescending(x => x.UpdatedAt))
                                         {
                                             <a class="list-group-item list-group-item-action" href="/Config?id=@config.Id">
                                                 <span class="text-primary">@config.Name</span>
