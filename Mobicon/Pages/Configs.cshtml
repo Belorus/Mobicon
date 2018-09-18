@@ -7,6 +7,49 @@
     ViewData["Title"] = "Configs";
 }
 
+<style>
+    .import-form {
+        margin-right: 36px;
+    }
+    .add-list-item {
+        width: 350px;
+    }
+    .collapse-wrapper {
+        padding: 24px;
+    }
+    .card-header {
+        text-decoration: none !important;
+        border-bottom: 0;
+        position: relative;
+        transition: background-color linear 0.3s;
+    }
+    .card-header .delete-form {
+        position: absolute;
+        right: 24px;
+        top: 9px;
+        opacity: 0;
+        transition: opacity linear 0.3s;
+    }
+    .card-header[aria-expanded="true"] {
+        background-color: rgb(240, 248, 255);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+    .card-header[aria-expanded="true"] .delete-form {
+        opacity: 1;
+    }
+    .list-group-item {
+        padding: 8px 14px;
+        font-size: 15px;
+    }
+    .modal-body {
+        width: 500px;
+    }
+    .import-config-entries {
+        margin-top: 24px;
+        max-height: 400px;
+    }
+</style>
+
 <script>
     function onImportClick(segmentId) {
         $('#importSegmentId').val(segmentId);
@@ -71,15 +114,6 @@
             </div>
         </div>
     </form>
-    <style>
-        .modal-body {
-            width: 500px;
-        }
-        .import-config-entries {
-            margin-top: 24px;
-            max-height: 400px;
-        }
-    </style>
 </div>
 
 
@@ -152,38 +186,4 @@ else
     </div>
 }
 
-<style>
-    .import-form {
-        margin-right: 36px;
-    }
-    .add-list-item {
-        width: 350px;
-    }
-    .collapse-wrapper {
-        padding: 24px;
-    }
-    .card-header {
-        text-decoration: none !important;
-        border-bottom: 0;
-        position: relative;
-        transition: background-color linear 0.3s;
-    }
-    .card-header .delete-form {
-        position: absolute;
-        right: 24px;
-        top: 9px;
-        opacity: 0;
-        transition: opacity linear 0.3s;
-    }
-    .card-header[aria-expanded="true"] {
-        background-color: rgb(240, 248, 255);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-    }
-    .card-header[aria-expanded="true"] .delete-form {
-        opacity: 1;
-    }
-    .list-group-item {
-        padding: 8px 14px;
-        font-size: 15px;
-    }
-</style>
+

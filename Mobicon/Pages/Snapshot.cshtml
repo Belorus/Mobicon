@@ -7,6 +7,63 @@
     ViewData["Title"] = Model.Name;
 }
 
+<style>
+    .compare-label {
+        margin-right: 8px;
+        margin-bottom: 0;
+    }
+    .export-dropdown, .delete-snapshot-btn {
+        margin-left: 36px;
+    }
+    .approves-block {
+        border-radius: 3px;
+        padding: 4px 10px;
+        box-shadow: 0px 0px 3px -1px;
+        margin-right: 36px;
+    }
+    .compare-select {
+        width: 200px;
+    }
+    .badge-info {
+        font-size: 16px;
+    }
+    .approve-btn {
+        margin-left: 16px;
+    }
+    .tooltip {
+        width: auto !important;
+    }
+    .tooltip-inner {
+        max-width: none;
+    }
+    .tooltip-row {
+        margin: 0;
+        padding: 4px 12px;
+        white-space: nowrap;
+    }
+    .table {
+        table-layout:fixed;
+    }
+    tr.versions-table td {
+        display: none;
+    }
+    tr:not(.versions-table):hover + tr.versions-table td, tr.versions-table:hover td{
+        display: table-cell;
+    }
+    .select-version-btn {
+        display: none;
+        position: absolute;
+        right: 10px;
+        top: 3px;
+    }
+    tr.version-row:hover .select-version-btn {
+        display: inline-block;
+    }
+    .select-version-wrapper {
+        position: relative;
+    }
+</style>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() { 
         $('#compareSelect').selectpicker();
@@ -92,41 +149,6 @@
     </div>
 </div>
 
-<style>
-    .compare-label {
-        margin-right: 8px;
-        margin-bottom: 0;
-    }
-    .export-dropdown, .delete-snapshot-btn {
-        margin-left: 36px;
-    }
-    .approves-block {
-        border-radius: 3px;
-        padding: 4px 10px;
-        box-shadow: 0px 0px 3px -1px;
-        margin-right: 36px;
-    }
-    .compare-select {
-        width: 200px;
-    }
-    .badge-info {
-        font-size: 16px;
-    }
-    .approve-btn {
-        margin-left: 16px;
-    }
-    .tooltip {
-        width: auto !important;
-    }
-    .tooltip-inner {
-        max-width: none;
-    }
-    .tooltip-row {
-        margin: 0;
-        padding: 4px 12px;
-        white-space: nowrap;
-    }
-</style>
 @if (Model.Entries.Length > 0)
 {
     <div class="items-list">
@@ -268,31 +290,4 @@ else
         <img src="no_data.png"/>
     </div>
 }
-
-<style>
-    .table {
-        table-layout:fixed;
-    }
-    tr.versions-table td {
-        display: none;
-    }
-
-    tr:not(.versions-table):hover + tr.versions-table td, tr.versions-table:hover td{
-        display: table-cell;
-    }
-    
-    .select-version-btn {
-        display: none;
-        position: absolute;
-        right: 10px;
-        top: 3px;
-    }
-
-    tr.version-row:hover .select-version-btn {
-        display: inline-block;
-    }
-    .select-version-wrapper {
-        position: relative;
-    }
-</style>
 

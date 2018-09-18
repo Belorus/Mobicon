@@ -6,6 +6,47 @@
     ViewData["Title"] = "Snapshots";
 }
 
+<style>
+    .config-picker {
+        margin-top: 24px;
+        display: flex;
+        box-shadow: 0px 0px 6px -3px;
+        padding: 24px 24px;
+        height: 290px;
+        overflow-y: auto;
+    }
+    .fields-row-item + .fields-row-item {
+        margin-left: 24px;
+    }
+    label.fields-row-item {
+        justify-content: flex-end;
+    }
+    .create-snapshot-modal {
+        width: 450px;
+    }
+    .field-label {
+        width: 40%;
+    }
+    .fields-row {
+        justify-content: flex-end;
+        align-items: center;
+    }
+    .fields-row + .fields-row {
+        flex-shrink: 0;
+        margin-top: 24px;
+    }
+    h5 {
+        text-align: center;
+    }
+    .list-group-item.published {
+        background-color: rgb(240, 248, 255);
+    }
+
+    .list-group-item.lastpublished {
+        background-color: #C5FCEC;
+    }
+</style>
+
 <script>
     function onAddClick() {
         $(".config-select").selectpicker();
@@ -56,15 +97,7 @@ else
     </div>  
 }
 
-<style>
-    .list-group-item.published {
-        background-color: rgb(240, 248, 255);
-    }
 
-    .list-group-item.lastpublished {
-        background-color: #C5FCEC;
-    }
-</style>
 
 <div class="modal " id="addEditModal" tabindex="-1" role="dialog" aria-labelledby="createSnapshotModal" aria-hidden="true">
     <form method="post" class="form-inline">
@@ -108,37 +141,3 @@ else
         </div>
     </form>
 </div>
-
-<style>
-    .config-picker {
-        margin-top: 24px;
-        display: flex;
-        box-shadow: 0px 0px 6px -3px;
-        padding: 24px 24px;
-        height: 290px;
-        overflow-y: auto;
-    }
-    .fields-row-item + .fields-row-item {
-        margin-left: 24px;
-    }
-    label.fields-row-item {
-        justify-content: flex-end;
-    }
-    .create-snapshot-modal {
-        width: 450px;
-    }
-    .field-label {
-        width: 40%;
-    }
-    .fields-row {
-        justify-content: flex-end;
-        align-items: center;
-    }
-    .fields-row + .fields-row {
-        flex-shrink: 0;
-        margin-top: 24px;
-    }
-    h5 {
-        text-align: center;
-    }
-</style>

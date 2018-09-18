@@ -7,6 +7,48 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
+<style>
+    .table {
+        table-layout:fixed;
+    }
+    .row-actions-td {
+        position: relative;
+    }
+    .row-actions {
+        display: none;
+        position: absolute;
+        top: 9px;
+        right: 5px;
+        width: 145px;
+    }
+    table tr:hover .row-actions {
+        display: flex;
+    }
+    .delete-config-btn {
+        margin-left: 36px;
+    }
+    #additionalEntryFields {
+        display: flex;
+        border-radius: 3px;
+        box-shadow: 0px 0px 3px -1px;
+        padding: 24px 0;
+    }
+    .fields-row-item + .fields-row-item {
+        margin-left: 16px;
+    }
+    #additionalEntryFields, .fields-row + .fields-row {
+        margin-top: 24px;
+    }
+    .add-edit-modal-body {
+        width: 600px;
+    }
+    .field-label {
+        margin-right: 24px;
+        width: 75px;
+        justify-content: left!important;
+    }
+</style>
+
 <script>
     function onEditClick(data) {
         var obj = JSON.parse(data);
@@ -173,29 +215,6 @@
             </div>
         </div>
     </form>
-    
-    <style>
-        #additionalEntryFields {
-            display: flex;
-            border-radius: 3px;
-            box-shadow: 0px 0px 3px -1px;
-            padding: 24px 0;
-        }
-        .fields-row-item + .fields-row-item {
-            margin-left: 16px;
-        }
-        #additionalEntryFields, .fields-row + .fields-row {
-            margin-top: 24px;
-        }
-        .add-edit-modal-body {
-            width: 600px;
-        }
-        .field-label {
-            margin-right: 24px;
-            width: 75px;
-            justify-content: left!important;
-        }
-    </style>
 </div>
 
 <div class="d-flex justify-content-between align-items-center">
@@ -299,28 +318,3 @@ else
         <img src="no_data.png"/>
     </div>
 }
-<style>
-    .table {
-        table-layout:fixed;
-    }
-
-    .row-actions-td {
-        position: relative;
-    }
-  
-    .row-actions {
-        display: none;
-        position: absolute;
-        top: 9px;
-        right: 5px;
-        width: 145px;
-    }
-
-    table tr:hover .row-actions {
-        display: flex;
-    }
-    
-    .delete-config-btn {
-        margin-left: 36px;
-    }
-</style>
