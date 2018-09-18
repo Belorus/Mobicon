@@ -162,9 +162,28 @@ namespace Mobicon.Pages
             return RedirectToPage(new {id = id});
         }
 
-        //public IActionResult OnPostPromoteKeys(string[] entryIds)
-        //{
-        //    var lastPublished = 
-        //}
+        public IActionResult OnPostPromoteKeys(int id, int[] entryIds)
+        {
+            var lastPublished = _dataContext.Snapshots
+                .Include(s => s.Entries)
+                .ThenInclude(e => e.Entry)
+                .Where(s => s.Status == SnapshotStatus.Published)
+                .OrderByDescending(x => x.PublishedAt.Value)
+                .First();
+
+            var newEntries = _dataContext.Entries.Where(e => entryIds.Contains(e.Id))
+                .ToArray();
+
+            foreach (var newEntry in newEntries)
+            {
+                var existingEntry = lastPublished.Entries.Select(e => e.Entry).FirstOrDefault(x => x.EntryId == newEntry.EntryId);
+                if (existingEntry != null)
+                {
+
+                }
+            }
+
+            return RedirectToPage("Snapshots");
+        }
     }
 }
