@@ -47,8 +47,9 @@
     tr.versions-table td {
         display: none;
     }
-    tr:not(.versions-table):hover + tr.versions-table td, tr.versions-table:hover td{
+    tr.show-versions + tr.versions-table td {
         display: table-cell;
+        border-top: 0;
     }
     .select-version-btn {
         display: none;
@@ -62,6 +63,20 @@
     .select-version-wrapper {
         position: relative;
     }
+    .show-versions-trigger {
+        text-decoration: underline;
+        cursor: pointer;
+        user-select: none;
+    }
+    tr.show-versions .versions-arrow{
+        transform: rotate(-180deg);
+    }
+    .versions-arrow {
+        transition: transform ease-in-out 0.2s;
+    }
+    .show-versions-trigger:hover {
+        opacity: 0.8;
+    }
 </style>
 
 <script>
@@ -69,6 +84,10 @@
         $('#compareSelect').selectpicker();
         $('[data-toggle="tooltip"]').tooltip();
     });
+
+    function showTableVersions(element) {
+        $(element.parentNode.parentNode).toggleClass('show-versions');
+    }
 </script>
 
 <div class="d-flex justify-content-between align-items-center">
@@ -202,14 +221,14 @@
                                     }
                                 }
                             </td>
-                            <td class="key-cell">@entry.Key <sup class="text-info">ver. @entry.Version</sup> </td>
+                            <td class="key-cell">@entry.Key <sup onclick="showTableVersions(this)" class="text-info @(diff.EntryVersions.Length > 0 ? "show-versions-trigger" : "")">ver. @entry.Version @if(diff.EntryVersions.Length > 0) { <i class="fas fa-angle-down versions-arrow"></i> }</sup> </td>
                             @switch (entry.Type)
                             {
                                 case FieldType.String:
                                 case FieldType.Integer:
                                 case FieldType.Float:
                                 case FieldType.Bool:
-                                    <td><script>document.write(JSON.parse('@Html.Raw(entry.Value)'));</script></td>
+                                    <td></td>
                                     break;
                                 case FieldType.ListOfBool:
                                 case FieldType.ListOfString:
