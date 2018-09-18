@@ -74,7 +74,7 @@ namespace Mobicon.Pages
                 _dataContext.SaveChanges();
             }
 
-            return RedirectToPage("Segments");
+            return RedirectToPage("Configs");
         }
 
         public IActionResult OnPostAddConfig(int id, string configName)

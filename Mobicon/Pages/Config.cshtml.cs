@@ -58,7 +58,7 @@ namespace Mobicon.Pages
                     _dataContext.Configs.Remove(snapshot);
                     _dataContext.SaveChanges();
 
-                    return RedirectToPage("Segment", new {id = snapshot.SegmentId});
+                    return RedirectToPage("Configs");
                 }
             }
 
