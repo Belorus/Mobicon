@@ -73,6 +73,12 @@ h2 {
     text-overflow: ellipsis;
 }
 
+.controls-section {
+    align-items: center;
+    white-space: nowrap;
+    margin-left: 36px;
+}
+
     /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {

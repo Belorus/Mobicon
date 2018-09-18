@@ -16,7 +16,7 @@
 
 <div class="d-flex justify-content-between align-items-center">
     <h2>@Model.Name</h2>
-    <div class="d-flex">
+    <div class="d-flex controls-section">
         <div class="d-flex align-items-center approves-block" data-toggle="tooltip" data-html="true" title="@(string.Join("", Model.Approves.Select(a => $"<p class=\"tooltip-row\">{a.Username} | {a.ApprovedAt}</p>")))">
             <span>Approves: <span class="badge badge-info"> @Model.Approves.Length / @Model.ApprovesToPublish</span></span>
 
@@ -86,7 +86,7 @@
         @if (User.IsInRole(UserRole.Admin.ToString()) && Model.Status != SnapshotStatus.Published)
         {
             <form method="post" asp-route-id="@Model.Id" asp-page-handler="delete">
-                <button class="btn btn-danger delete-config-btn" type="submit"><i class="fas fa-trash-alt"></i> Delete snapshot</button>
+                <button class="btn btn-danger delete-snapshot-btn" type="submit"><i class="fas fa-trash-alt"></i> Delete snapshot</button>
             </form>
         }
     </div>
@@ -97,7 +97,7 @@
         margin-right: 8px;
         margin-bottom: 0;
     }
-    .export-dropdown {
+    .export-dropdown, .delete-snapshot-btn {
         margin-left: 36px;
     }
     .approves-block {
