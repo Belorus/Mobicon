@@ -133,6 +133,8 @@ namespace Mobicon.Pages
                 var snapshot = _dataContext.Snapshots.Find(id);
                 snapshot.Status = SnapshotStatus.Published;
                 snapshot.PublishedAt = DateTime.Now;
+                snapshot.UpdatedAt = DateTime.Now;
+                snapshot.UpdatedBy = User.Identity.Name;
             }
 
             _dataContext.SaveChanges();
