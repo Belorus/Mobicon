@@ -10,14 +10,14 @@ using Mobicon.Services;
 namespace Mobicon.Pages
 {
     [Authorize]
-    public class SegmentsModel : PageModel
+    public class ConfigsModel : PageModel
     {
         private readonly DataContext _dataContext;
         private readonly ImportManager _importManager;
 
         public Segment[] Segments { get; private set; }
 
-        public SegmentsModel(
+        public ConfigsModel(
             DataContext dataContext,
             ImportManager importManager)
         {

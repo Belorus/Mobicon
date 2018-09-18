@@ -82,19 +82,23 @@ namespace Mobicon.Pages
 
         public IActionResult OnPostUpdateEntry(int id, string entryId, int version)
         {
-            var desiredEntryId = _dataContext.Entries.First(e => e.EntryId == entryId && e.Version == version).Id;
-
             var snapshot = _dataContext.Snapshots.Include(x => x.Entries).First(s => s.Id == id);
-            var entry = snapshot.Entries.First(e => e.Entry.EntryId == entryId);
 
-            snapshot.Entries.Remove(entry);
-            snapshot.Entries.Add(new SnapshotToEntry()
+            if (snapshot.Status != SnapshotStatus.Published)
             {
-                EntryId = desiredEntryId,
-                SnapshotId = id
-            });
+                var desiredEntryId = _dataContext.Entries.First(e => e.EntryId == entryId && e.Version == version).Id;
 
-            _dataContext.SaveChanges();
+                var entry = snapshot.Entries.First(e => e.Entry.EntryId == entryId);
+
+                snapshot.Entries.Remove(entry);
+                snapshot.Entries.Add(new SnapshotToEntry()
+                {
+                    EntryId = desiredEntryId,
+                    SnapshotId = id
+                });
+
+                _dataContext.SaveChanges();
+            }
 
             return RedirectToPage(new {id = id});
         }

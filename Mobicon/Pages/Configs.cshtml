@@ -1,13 +1,11 @@
 ﻿@page
-@model Mobicon.Pages.SegmentsModel
+@model Mobicon.Pages.ConfigsModel
 @{
     Layout = "~/Pages/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Segments";
 }
 
 <script>
     function onImportClick(segmentId) {
-        debugger;
         $('#importSegmentId').val(segmentId);
         $('#importModal').modal('show');
     }

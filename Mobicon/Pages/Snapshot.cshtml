@@ -197,14 +197,17 @@
                             <td>@entry.Description</td>
                             <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
                         </tr>
-                        
-                        foreach (var sub in diff.EntryVersions)
+
+                        if (Model.Status != SnapshotStatus.Published)
                         {
-                        <tr class="table-warning">
-                            <td>@sub.Version</td>
-                            <td>by <b>@sub.VersionCreatedBy</b> @sub.VersionCreateTime.ToUniversalTime().Humanize()</td>
-                            <td>@sub.Value</td>
-                        </tr>
+                            foreach (var sub in diff.EntryVersions)
+                            {
+                                <tr class="table-warning">
+                                    <td>@sub.Version</td>
+                                    <td>by <b>@sub.VersionCreatedBy</b> @sub.VersionCreateTime.ToUniversalTime().Humanize()</td>
+                                    <td>@sub.Value</td>
+                                </tr>
+                            }
                         }
                     }
                 }
