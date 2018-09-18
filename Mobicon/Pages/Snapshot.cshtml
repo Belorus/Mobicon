@@ -221,7 +221,7 @@
                                     }
                                 }
                             </td>
-                            <td class="key-cell">@entry.Key <sup onclick="showTableVersions(this)" class="text-info @(diff.EntryVersions.Length > 0 ? "show-versions-trigger" : "")">ver. @entry.Version @if(diff.EntryVersions.Length > 0) { <i class="fas fa-angle-down versions-arrow"></i> }</sup> </td>
+                            <td class="key-cell">@entry.Key <sup onclick="showTableVersions(this)" class="text-info @(Model.Status != SnapshotStatus.Published && diff.EntryVersions.Length > 0 ? "show-versions-trigger" : "")">ver. @entry.Version @if(Model.Status != SnapshotStatus.Published  && diff.EntryVersions.Length > 0) { <i class="fas fa-angle-down versions-arrow"></i> }</sup> </td>
                             @switch (entry.Type)
                             {
                                 case FieldType.String:
