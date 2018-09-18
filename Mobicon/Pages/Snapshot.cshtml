@@ -212,6 +212,11 @@
                                     <td>@sub.Version</td>
                                     <td>by <b>@sub.VersionCreatedBy</b> @sub.VersionCreateTime.ToUniversalTime().Humanize()</td>
                                     <td>@sub.Value</td>
+                                    <td>
+                                        <form asp-page-handler="updateEntry" method="post" asp-route-id="@Model.Id" asp-route-entryId="@sub.EntryId" asp-route-version="@sub.Version">
+                                            <button type="submit">Select</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             }
                         }

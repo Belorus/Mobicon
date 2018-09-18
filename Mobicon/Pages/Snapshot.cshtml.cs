@@ -82,7 +82,7 @@ namespace Mobicon.Pages
 
         public IActionResult OnPostUpdateEntry(int id, string entryId, int version)
         {
-            var snapshot = _dataContext.Snapshots.Include(x => x.Entries).First(s => s.Id == id);
+            var snapshot = _dataContext.Snapshots.Include(x => x.Entries).ThenInclude(x => x.Entry).First(s => s.Id == id);
 
             if (snapshot.Status != SnapshotStatus.Published)
             {
