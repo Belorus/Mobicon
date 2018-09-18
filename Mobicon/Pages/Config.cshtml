@@ -249,13 +249,29 @@
                             case FieldType.Integer:
                             case FieldType.Float:
                             case FieldType.Bool:
-                                <td>@entry.Value</td>
+                                <td><script>document.write(JSON.parse('@Html.Raw(entry.Value)'));</script></td>
                                 break;
                             case FieldType.ListOfBool:
                             case FieldType.ListOfString:
                             case FieldType.ListOfInteger:
                             case FieldType.ListOfFloat:
-                                <td>@entry.Value</td>
+                                <td>
+                                    <script>
+                                        var list = JSON.parse('@Html.Raw(entry.Value)');
+                                        if (list === undefined || list.length === 0) {
+                                            document.write('Empty!!!1');
+                                        } else {
+                                            document.write("<ul>");
+                                            for (var item of list) {
+                                                document.write("<li>");
+                                                document.write(item);
+                                                document.write("</li>");
+                                            }
+                                            document.write("</ul>");
+                                        }
+                                    </script>
+                                </td>
+
                                 break;
                             default:
                                 <td>Unknown</td>
