@@ -1,4 +1,5 @@
 ﻿@page
+@using Humanizer
 @using Mobicon.Models
 @model Mobicon.Pages.ConfigsModel
 @{
@@ -101,7 +102,7 @@
 {
     <div id="accordion" class="items-list accordion">
         @{
-            foreach (var segment in Model.Segments.OrderByDescending(x => x.CreatedAt))
+            foreach (var segment in Model.Segments.OrderBy(x => x.Name))
             {
                 <div class="card">
                     <a class="card-header" data-toggle="collapse" href="#@segment.Id">
@@ -127,11 +128,11 @@
                             {
                                 <div class="list-group items-list list-group-flush">
                                     @{
-                                        foreach (var config in segment.Configs.Where(c => !c.IsDeleted).OrderByDescending(x => x.UpdatedAt))
+                                        foreach (var config in segment.Configs.Where(c => !c.IsDeleted).OrderBy(x => x.Name))
                                         {
                                             <a class="list-group-item list-group-item-action" href="/Config?id=@config.Id">
                                                 <span class="text-primary">@config.Name</span>
-                                                <span>updated by @config.UpdatedBy at @config.UpdatedAt</span>
+                                                <span>updated by <b>@config.UpdatedBy</b> @config.UpdatedAt.ToUniversalTime().Humanize()</span>
                                             </a>
                                         }
                                     }
