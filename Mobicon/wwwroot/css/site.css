@@ -79,6 +79,9 @@ h2 {
     margin-left: 36px;
 }
 
+.table-sm td, .table-sm th {
+    padding: 0.45rem;
+}
     /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {

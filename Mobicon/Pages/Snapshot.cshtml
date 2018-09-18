@@ -180,7 +180,7 @@
                                     }
                                 }
                             </td>
-                            <td>@entry.Key <sup class="text-black-50">@entry.Version</sup> </td>
+                            <td class="key-cell">@entry.Key <sup class="text-info">ver. @entry.Version</sup> </td>
                             @switch (entry.Type)
                             {
                                 case FieldType.String:
@@ -204,21 +204,41 @@
                             <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
                         </tr>
 
-                        if (Model.Status != SnapshotStatus.Published)
+                        if (Model.Status != SnapshotStatus.Published && diff.EntryVersions.Length > 0)
                         {
-                            foreach (var sub in diff.EntryVersions)
-                            {
-                                <tr class="table-warning">
-                                    <td>@sub.Version</td>
-                                    <td>by <b>@sub.VersionCreatedBy</b> @sub.VersionCreateTime.ToUniversalTime().Humanize()</td>
-                                    <td>@sub.Value</td>
-                                    <td>
-                                        <form asp-page-handler="updateEntry" method="post" asp-route-id="@Model.Id" asp-route-entryId="@sub.EntryId" asp-route-version="@sub.Version">
-                                            <button type="submit">Select</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            }
+                            <tr class="versions-table">
+                                <td colspan="6">
+                                        <table class="table table-hover table-sm table-bordered">
+                                            <thead class="thead-light">
+                                            <tr>
+                                                <th width="150px">Version</th>
+                                                <th width="25%">Changed by</th>
+                                                <th width="25%">Value</th>
+                                                <th width="10%">Type</th>
+                                                <th width="20%">Description</th>
+                                                <th width="10%">Jira</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach (var sub in diff.EntryVersions)
+                                            {
+                                                <tr class="version-row">
+                                                    <td class="select-version-wrapper"><span>@sub.Version</span>
+                                                        <form asp-page-handler="updateEntry" method="post" asp-route-id="@Model.Id" asp-route-entryId="@sub.EntryId" asp-route-version="@sub.Version">
+                                                            <button class="btn btn-primary btn-sm select-version-btn" type="submit"><i class="fas fa-exchange-alt"></i> Select</button>
+                                                        </form>
+                                                    </td>
+                                                    <td>by <b>@sub.VersionCreatedBy</b> @sub.VersionCreateTime.ToUniversalTime().Humanize()</td>
+                                                    <td>@sub.Value</td>
+                                                    <td>@sub.Type</td>
+                                                    <td>@sub.Description</td>
+                                                    <td>@sub.Jira</td>
+                                                </tr>
+                                            }
+                                            </tbody>
+                                        </table>
+                                </td>
+                            </tr>
                         }
                     }
                 }
@@ -236,6 +256,27 @@ else
 <style>
     .table {
         table-layout:fixed;
+    }
+    tr.versions-table td {
+        display: none;
+    }
+
+    tr:not(.versions-table):hover + tr.versions-table td, tr.versions-table:hover td{
+        display: table-cell;
+    }
+    
+    .select-version-btn {
+        display: none;
+        position: absolute;
+        right: 10px;
+        top: 3px;
+    }
+
+    tr.version-row:hover .select-version-btn {
+        display: inline-block;
+    }
+    .select-version-wrapper {
+        position: relative;
     }
 </style>
 
