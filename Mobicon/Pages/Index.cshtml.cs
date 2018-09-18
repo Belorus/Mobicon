@@ -9,7 +9,7 @@ namespace Mobicon.Pages
     {
         public IActionResult OnGet()
         {
-            return RedirectToPage("Segments");
+            return RedirectToPage("Configs");
         }
     }
 }

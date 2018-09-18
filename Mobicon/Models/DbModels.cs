@@ -127,6 +127,8 @@ namespace Mobicon.Models
 
         public DateTime UpdatedAt { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public List<ConfigEntry> Entries { get; set; }
     }
 
