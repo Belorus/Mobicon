@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -24,7 +25,7 @@ namespace Mobicon
         public void ConfigureServices(
             IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(options => options.UseMySql(Configuration.GetConnectionString("MySQL")));
+            services.AddDbContext<DataContext>(options => options.UseMySql(Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING") ?? Configuration.GetConnectionString("MySQL")));
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

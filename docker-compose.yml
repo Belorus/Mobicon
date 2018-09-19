@@ -10,3 +10,10 @@ services:
       - MYSQL_USER=username
       - MYSQL_PASSWORD=1qaz2wsx
   
+  server:
+    image: mobicon-server
+    build:
+      context: ./Mobicon
+    ports: [80:80]
+    environment:
+      - MYSQL_CONNECTION_STRING="Server=localhost;Database=moco;Uid=username;Pwd=1qaz2wsx"
