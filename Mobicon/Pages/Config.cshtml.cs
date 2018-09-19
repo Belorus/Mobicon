@@ -216,7 +216,7 @@ namespace Mobicon.Pages
             _dataContext.Snapshots.Add(snapshot);
             _dataContext.SaveChanges();
 
-            return RedirectToPage("Snapshots");
+            return RedirectToPage("Snapshot", new {id = snapshot.Id});
         }
     }
 }

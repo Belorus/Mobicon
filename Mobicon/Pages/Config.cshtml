@@ -285,7 +285,16 @@
                                 case FieldType.Float:
                                 case FieldType.Bool:
                                     <td>
-                                        <script>document.write(JSON.parse('@Html.Raw(entry.Value)'));</script></td>
+                                        <script>
+                                            try {
+                                                var obj = JSON.parse('@Html.Raw(entry.Value)');
+                                                document.write(obj);
+                                            }
+                                            catch(e) {
+                                                document.write('<i class="fas fa-exclamation-circle"></i> ');
+                                                document.write('<span class="text-danger">@Html.Raw(entry.Value)</span>');
+                                            }
+                                        </script></td>
                                     break;
                                 case FieldType.ListOfBool:
                                 case FieldType.ListOfString:
