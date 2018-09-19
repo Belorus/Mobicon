@@ -20,6 +20,7 @@ namespace Mobicon.Pages
         public ConfigEntry[] Entries { get; set; }
         public FieldType[] FieldTypes { get; set; }
         public SimplePrefix[] SimplePrefixes { get; set; }
+        public Snapshot[] UnpublishedSnapshots { get; set; }
 
         public ConfigModel(DataContext dataContext)
         {
@@ -47,6 +48,9 @@ namespace Mobicon.Pages
             CreatedBy = config.CreatedBy;
             FieldTypes = Enum.GetValues(typeof(FieldType)).Cast<FieldType>().Where(f => f != FieldType.Unknown).ToArray();
 
+            UnpublishedSnapshots = _dataContext.Snapshots
+                .Where(s => s.Status == SnapshotStatus.WaitingForApprove)
+                .ToArray();
             SimplePrefixes = _dataContext.SimplePrefixes.ToArray();
             LastPublished = _dataContext.Snapshots
                 .Include(s => s.Entries)
