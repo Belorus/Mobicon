@@ -12,8 +12,9 @@ services:
   
   server:
     image: mobicon-server
+    depends_on: [mysql]
     build:
       context: ./Mobicon
-    ports: [80:80]
+    ports: ["80:80"]
     environment:
       - MYSQL_CONNECTION_STRING
