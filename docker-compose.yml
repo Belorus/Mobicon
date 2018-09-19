@@ -5,10 +5,10 @@ services:
     ports: ["3306:3306"]
 
     environment:
-      - MYSQL_ROOT_PASSWORD=Sendmore1
-      - MYSQL_DATABASE=moco
-      - MYSQL_USER=username
-      - MYSQL_PASSWORD=1qaz2wsx
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
   
   server:
     image: mobicon-server
@@ -16,4 +16,4 @@ services:
       context: ./Mobicon
     ports: [80:80]
     environment:
-      - MYSQL_CONNECTION_STRING="Server=localhost;Database=moco;Uid=username;Pwd=1qaz2wsx"
+      - MYSQL_CONNECTION_STRING
