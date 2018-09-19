@@ -61,7 +61,7 @@
     }
     .create-snapshot {
         margin-right: 36px;
-        width: 400px;
+        width: 450px;
     }
 </style>
 
@@ -131,12 +131,20 @@
         }
     }
     
+    function onPromoteFocus() {
+        if (!$('.typeahead.dropdown-menu').css('display')) {
+            $(".typeahead").typeahead('lookup');
+        }
+    } 
+    
     document.addEventListener("DOMContentLoaded", function() { 
-        var $input = $(".typeahead");
-        $input.typeahead({
-            source: [],
+        var input = $(".typeahead");
+        input.typeahead({
+            source: [@Html.Raw(string.Join(",", Model.UnpublishedSnapshots.Select(s => "'" + s.Name + "'")))],
             minLength: 0,
-            items: 'all'
+            items: 'all',
+            autoSelect: false,
+            fitToElement: true
         });
     });
 </script>
@@ -254,9 +262,9 @@
     <h2>@Model.Name entries <span class="badge badge-info">@Model.Entries.Length</span></h2>
     <div class="d-flex controls-section">
         <div class="input-group create-snapshot d-none" id="createSnapshot">
-            <input type="text" name="snapshotName" required placeholder="Enter snapshot name" data-provide="typeahead" class="form-control typeahead">
+            <input onfocus="onPromoteFocus()" type="text" name="snapshotName" required placeholder="Enter snapshot name" data-provide="typeahead" class="form-control typeahead">
             <div class="input-group-append">
-                <button class="btn btn-info" type="submit"><i class="fas fa-camera"></i> Create snapshot</button>
+                <button class="btn btn-info" type="submit"><i class="fas fa-camera"></i> Promote to snapshot</button>
             </div>
         </div>
         <buton class="btn btn-primary" onclick="onAddClick()"><i class="fas fa-plus"></i> Create config entry</buton>
