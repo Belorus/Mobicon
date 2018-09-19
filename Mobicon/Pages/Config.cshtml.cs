@@ -16,6 +16,7 @@ namespace Mobicon.Pages
         public int Id { get; set; }
         public string Name { get; set; }
         public string CreatedBy { get; set; }
+        public Snapshot LastPublished { get; set; }
         public ConfigEntry[] Entries { get; set; }
         public FieldType[] FieldTypes { get; set; }
         public SimplePrefix[] SimplePrefixes { get; set; }
@@ -47,6 +48,12 @@ namespace Mobicon.Pages
             FieldTypes = Enum.GetValues(typeof(FieldType)).Cast<FieldType>().Where(f => f != FieldType.Unknown).ToArray();
 
             SimplePrefixes = _dataContext.SimplePrefixes.ToArray();
+            LastPublished = _dataContext.Snapshots
+                .Include(s => s.Entries)
+                .ThenInclude(e => e.Entry)
+                .Where(s => s.Status == SnapshotStatus.Published)
+                .OrderByDescending(s => s.PublishedAt.Value)
+                .First();
 
             return Page();
         }
@@ -162,7 +169,7 @@ namespace Mobicon.Pages
             return RedirectToPage(new {id = id});
         }
 
-        public IActionResult OnPostPromoteKeys(int id, int[] entryIds)
+        public IActionResult OnPostPromoteKeys(int id, string snapshotName, int[] entryIds)
         {
             var lastPublished = _dataContext.Snapshots
                 .Include(s => s.Entries)
@@ -174,14 +181,40 @@ namespace Mobicon.Pages
             var newEntries = _dataContext.Entries.Where(e => entryIds.Contains(e.Id))
                 .ToArray();
 
+            var snapshot = new Snapshot()
+            {
+                Name = snapshotName,
+                CreatedAt = DateTime.Now,
+                CreatedBy = User.Identity.Name,
+                UpdatedAt = DateTime.Now,
+                UpdatedBy = User.Identity.Name
+            };
+
+            snapshot.Entries = lastPublished.Entries.Select(se => new SnapshotToEntry()
+            {
+                EntryId = se.EntryId,
+                Snapshot = snapshot
+            }).ToList();
+            
+
             foreach (var newEntry in newEntries)
             {
-                var existingEntry = lastPublished.Entries.Select(e => e.Entry).FirstOrDefault(x => x.EntryId == newEntry.EntryId);
+                var existingEntry = lastPublished.Entries.FirstOrDefault(x => x.Entry.EntryId == newEntry.EntryId);
                 if (existingEntry != null)
                 {
-
+                    var toRemove = snapshot.Entries.First(x => x.EntryId == existingEntry.EntryId);
+                    snapshot.Entries.Remove(toRemove);
                 }
+
+                snapshot.Entries.Add(new SnapshotToEntry
+                {
+                    SnapshotId = id,
+                    EntryId = newEntry.Id
+                });
             }
+
+            _dataContext.Snapshots.Add(snapshot);
+            _dataContext.SaveChanges();
 
             return RedirectToPage("Snapshots");
         }
