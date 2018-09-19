@@ -47,6 +47,22 @@
         width: 75px;
         justify-content: left!important;
     }
+    .check-entry-label {
+        height: 49px;
+        width: 100%;
+        display: flex;
+        margin-bottom: 0;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 4px;
+    }
+    .check-entry {
+        margin: 0;
+    }
+    .create-snapshot {
+        margin-right: 36px;
+        width: 400px;
+    }
 </style>
 
 <script>
@@ -105,6 +121,14 @@
         $('#simplePrefixSelect').selectpicker();
 
         $('#addEditModal').modal('show');
+    }
+
+    function onCheckEntry() {
+        if ($('.check-entry:checked').length > 0) {
+            $('#createSnapshot').removeClass('d-none');
+        } else {
+            $('#createSnapshot').addClass('d-none');
+        }
     }
 </script>
 
@@ -216,10 +240,16 @@
         </div>
     </form>
 </div>
-
+<form method="post" asp-page-handler="promoteKeys" asp-route-id="@Model.Id">
 <div class="d-flex justify-content-between align-items-center">
     <h2>@Model.Name entries <span class="badge badge-info">@Model.Entries.Length</span></h2>
     <div class="d-flex controls-section">
+        <div class="input-group create-snapshot d-none" id="createSnapshot">
+            <input type="text" name="snapshotName" required placeholder="Enter snapshot name" class="form-control">
+            <div class="input-group-append">
+                <button class="btn btn-info" type="submit"><i class="fas fa-camera"></i> Create snapshot</button>
+            </div>
+        </div>
         <buton class="btn btn-primary" onclick="onAddClick()"><i class="fas fa-plus"></i> Create config entry</buton>
         @if (User.IsInRole(UserRole.Admin.ToString()) || User.Identity.Name == Model.CreatedBy)
         {
@@ -230,13 +260,10 @@
 @if (Model.Entries.Length > 0)
 {
     <div class="items-list">
-        <form method="post" asp-page-handler="promoteKeys" asp-route-id="@Model.Id">
-            <button type="submit">Save</button>
-            <input type="text" name="snapshotName"/>
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <th width="30">#</th>
+                    <th width="30"></th>
                     <th width="10%">Prefixes</th>
                     <th width="25%">Key</th>
                     <th width="25%">Value</th>
@@ -251,12 +278,14 @@
                     foreach (var entry in Model.Entries)
                     {
                         <tr data="@JsonConvert.SerializeObject(entry)">
-                            <td>
+                            <td class="no-padding">
                                 @if (Model.LastPublished != null)
                                 {
                                     if (!Model.LastPublished.Entries.Select(e => e.Entry.Id).Contains(entry.Id))
                                     {
-                                        <input type="checkbox" name="entryIds" value="@entry.Id"/>
+                                        <label class="check-entry-label">
+                                            <input onchange="onCheckEntry()" class="form-check-input check-entry" type="checkbox" name="entryIds" value="@entry.Id"/>
+                                        </label>
                                     }
                                 }
                             </td>
@@ -327,7 +356,6 @@
                 }
                 </tbody>
             </table>
-        </form>
     </div>
 }
 else
@@ -336,3 +364,4 @@ else
         <img src="no_data.png"/>
     </div>
 }
+</form>
