@@ -147,6 +147,123 @@
             fitToElement: true
         });
     });
+    
+    function validateEntryValue() {
+        var entryType = $('#typeSelect')[0].value;
+        var entryValueElement = $('#valueSelect')[0];
+        var entryValue = entryValueElement.value;
+        var invalidText = '';
+        if (!entryValue.length) {
+            return;
+        }
+        switch (parseInt(entryType)) {
+            case 0:
+            case 1:
+                break;
+            case 2:
+            {
+                if (+entryValue !== parseInt(entryValue, 10)) {
+                    invalidText = 'Please enter valid INTEGER number';
+                }
+                break;
+            }
+            case 3:
+            {
+                if (typeof entryValue !== 'number') {
+                    invalidText = 'Please enter valid FLOAT number';
+                }
+                break;
+            }
+            case 4:
+            {
+                if (entryValue.toLowerCase() !== 'true' &&
+                    entryValue.toLowerCase() !== 'false') {
+                    invalidText = "Please enter 'true' or 'false'";
+                }
+                break;
+            }
+            case 5:
+            {    
+                try {
+                    var parsedList = JSON.parse(entryValue);
+                    if (Array.isArray(parsedList)) {
+                        parsedList.forEach(function(el) {
+                            if (typeof el !== 'string') {
+                                throw 'Invalid';
+                            }
+                        })
+                    } else {
+                        throw 'Invalid';
+                    }
+                }
+                catch (e) {
+                    invalidText = "Please enter valid ListOfString value";
+                }
+                break;
+            }
+            case 6:
+            {    
+                try {
+                    var parsedList = JSON.parse(entryValue);
+                    if (Array.isArray(parsedList)) {
+                        parsedList.forEach(function(el) {
+                            if (+el !== parseInt(el, 10)) {
+                                throw 'Invalid';
+                            }
+                        })
+                    } else {
+                        throw 'Invalid';
+                    }
+                }
+                catch (e) {
+                    invalidText = "Please enter valid ListOfInteger value";
+                }
+                break;
+            }
+            case 7:
+            {    
+                try {
+                    var parsedList = JSON.parse(entryValue);
+                    if (Array.isArray(parsedList)) {
+                        parsedList.forEach(function(el) {
+                            if (typeof el !== 'number') {
+                                throw 'Invalid';
+                            }
+                        })
+                    } else {
+                        throw 'Invalid';
+                    }
+                }
+                catch (e) {
+                    invalidText = "Please enter valid ListOfFloat value";
+                }
+                break;
+            }
+            case 8:
+            {    
+                try {
+                    var parsedList = JSON.parse(entryValue);
+                    if (Array.isArray(parsedList)) {
+                        parsedList.forEach(function(el) {
+                            if (typeof el !== 'boolean') {
+                                throw 'Invalid';
+                            }
+                        })
+                    } else {
+                        throw 'Invalid';
+                    }
+                }
+                catch (e) {
+                    invalidText = "Please enter valid ListOfBool value";
+                }
+                break;
+            }
+                
+            default:
+                break;
+        }
+        entryValueElement.setCustomValidity(invalidText);
+    }
 </script>
 
 
@@ -217,8 +334,8 @@
                         <input required type="text" class="form-control fields-row-item w-100" name="key" placeholder="Key">
                     </div>
                     <div class="d-flex fields-row">
-                        <input required type="text" class="form-control fields-row-item w-75" name="value" placeholder="Value">
-                        <select required class="form-control fields-row-item" data-size="8" data-width="25%" title="Value type" name="type" id="typeSelect" >
+                        <input id="valueSelect" required oninput="validateEntryValue()" type="text" class="form-control fields-row-item w-75" name="value" placeholder="Value">
+                        <select onchange="validateEntryValue()" required class="form-control fields-row-item" data-size="8" data-width="25%" title="Value type" name="type" id="typeSelect" >
                             @foreach (var type in Model.FieldTypes)
                             {
                                 <option value="@((int)type)">@type</option>
@@ -301,7 +418,7 @@
                                     if (!Model.LastPublished.Entries.Select(e => e.Entry.Id).Contains(entry.Id))
                                     {
                                         <label class="check-entry-label">
-                                            <input onchange="onCheckEntry()" class="form-check-input check-entry" type="checkbox" name="entryIds" value="@entry.Id"/>
+                                            <input onchange="onCheckEntry()" class="check-entry" type="checkbox" name="entryIds" value="@entry.Id"/>
                                         </label>
                                     }
                                 }
