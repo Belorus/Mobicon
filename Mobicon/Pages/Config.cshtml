@@ -17,9 +17,9 @@
     .row-actions {
         display: none;
         position: absolute;
-        top: 9px;
+        top: 8px;
         right: 5px;
-        width: 145px;
+        width: 70px;
     }
     table tr:hover .row-actions {
         display: flex;
@@ -99,7 +99,7 @@
         $('#deleteModal').modal('show');
     }
 
-    function  onDeleteConfigClick() {
+    function onDeleteConfigClick() {
         $('#deleteConfigModal').modal('show');
     }
 
@@ -404,7 +404,7 @@
                     <th width="120">Type</th>
                     <th width="15%">Description</th>
                     <th width="170">Jira</th>
-                    <th width="160"></th>
+                    <th width="80"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -490,8 +490,8 @@
                             <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
                             <td class="row-actions-td">
                                 <div class="row-actions justify-content-between">
-                                    <button type="button" class="btn btn-outline-info btn-sm" onclick="onEditClick($(this).closest('tr').attr('data'))"><i class="fas fa-edit"></i> Edit</button>
-                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="onDeleteClick($(this).closest('tr').attr('data'))"><i class="fas fa-trash-alt"></i> Delete</button>
+                                    <button type="button" class="btn btn-outline-info btn-sm" onclick="onEditClick($(this).closest('tr').attr('data'))"><i class="fas fa-edit"></i></button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="onDeleteClick($(this).closest('tr').attr('data'))"><i class="fas fa-trash-alt"></i></button>
                                 </div>
                             </td>
                         </tr>

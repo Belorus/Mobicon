@@ -157,7 +157,7 @@ namespace Mobicon.Pages
 
         public IActionResult OnPostDeleteEntry(int id, int entryUniqueId)
         {
-            var snapshot = _dataContext.Snapshots.Find(id);
+            var snapshot = _dataContext.Snapshots.Include(s => s.Entries).First(s => s.Id == id);
 
             if (snapshot.Status != SnapshotStatus.Published)
             {
