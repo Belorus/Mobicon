@@ -47,17 +47,22 @@ namespace Mobicon.Pages
             var user = _authService.Login(username, password);
             if (user != null)
             {
-                var userRole = _dataContext.UserRoles
-                    .FirstOrDefault(u => u.Username == username);
+                var userRoles = _dataContext.UserRoles
+                    .Where(u => u.Username == username)
+                    .ToArray();
 
-                var role = userRole?.Role ?? UserRole.Editor;
 
                 var claims = new List<Claim>
                 {
                     new Claim("Name", user.UserName),
                     new Claim("FullName", user.FullName),
-                    new Claim("Role", role.ToString()),
+                    new Claim("Role", UserRole.Reader.ToString()) // Everyone should be reader by default
                 };
+
+                foreach (var role in userRoles)
+                {
+                    claims.Add(new Claim("Role", role.Role.ToString()));
+                }
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme,
                     "Name", "Role");

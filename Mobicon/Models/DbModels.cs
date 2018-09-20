@@ -8,6 +8,7 @@ namespace Mobicon.Models
 {
     public enum UserRole
     {
+        Reader,
         Editor,
         Approver,
         Admin
@@ -32,6 +33,9 @@ namespace Mobicon.Models
     public class UserToRole
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
         public string Username { get; set; }
 
         public UserRole Role { get; set; }

@@ -262,9 +262,9 @@
                     </td>
                     <td class="key-cell">
                         @entry.Key
-                        <sup onclick="showTableVersions(this)" class="text-info @(Model.Status != SnapshotStatus.Published && diff.EntryVersions.Length > 0 ? "show-versions-trigger" : "")">
+                        <sup onclick="showTableVersions(this)" class="text-info @(User.IsInRole(UserRole.Editor.ToString()) &&Model.Status != SnapshotStatus.Published && diff.EntryVersions.Length > 0 ? "show-versions-trigger" : "")">
                             ver. @entry.Version
-                            @if (Model.Status != SnapshotStatus.Published && diff.EntryVersions.Length > 0)
+                            @if (User.IsInRole(UserRole.Editor.ToString()) && Model.Status != SnapshotStatus.Published && diff.EntryVersions.Length > 0)
                             {<i class="fas fa-angle-down versions-arrow"></i>}
                             
                         </sup>
@@ -317,7 +317,7 @@
                     <td>@entry.Description</td>
                     <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
                     <td class="position-relative">
-                        @if (Model.Status != SnapshotStatus.Published)
+                        @if (User.IsInRole(UserRole.Editor.ToString()) && Model.Status != SnapshotStatus.Published)
                         {
                             <button onclick="onDeleteEntry(@entry.Id)" class="delete-entry-btn btn btn-outline-danger btn-sm"><i onclick="onDeleteEntry(@entry.Id)" class="fas fa-trash-alt"></i></button>
                         }
