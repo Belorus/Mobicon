@@ -3,6 +3,8 @@ services:
   mysql: 
     image: mysql
     ports: ["3306:3306"]
+    volumes:
+      - "/opt/mobicon/db:/var/lib/mysql"
 
     environment:
       - MYSQL_ROOT_PASSWORD
@@ -19,3 +21,4 @@ services:
     ports: ["80:80"]
     environment:
       - MYSQL_CONNECTION_STRING
+      - ASPNETCORE_ENVIRONMENT=Development

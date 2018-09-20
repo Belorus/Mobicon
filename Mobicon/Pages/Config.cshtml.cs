@@ -57,7 +57,7 @@ namespace Mobicon.Pages
                 .ThenInclude(e => e.Entry)
                 .Where(s => s.Status == SnapshotStatus.Published)
                 .OrderByDescending(s => s.PublishedAt.Value)
-                .First();
+                .FirstOrDefault();
 
             return Page();
         }
