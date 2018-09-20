@@ -221,22 +221,18 @@ namespace Mobicon.Migrations
 
             modelBuilder.Entity("Mobicon.Models.UserToRole", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Username")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("Role");
 
-                    b.Property<string>("Username");
-
-                    b.HasKey("Id");
+                    b.HasKey("Username");
 
                     b.ToTable("UserRoles");
 
                     b.HasData(
-                        new { Id = 1, Role = 3, Username = "grigoryp" },
-                        new { Id = 2, Role = 1, Username = "grigoryp" },
-                        new { Id = 3, Role = 3, Username = "yaroslavs" },
-                        new { Id = 4, Role = 1, Username = "yaroslavs" }
+                        new { Username = "grigoryp", Role = 5 },
+                        new { Username = "yaroslavs", Role = 5 }
                     );
                 });
 

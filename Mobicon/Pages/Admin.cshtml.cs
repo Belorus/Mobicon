@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +17,7 @@ namespace Mobicon.Pages
         private readonly DataContext _dataContext;
 
         public SimplePrefix[] Prefixes { get; set; }
+        public Dictionary<string, bool[]> Roles { get; set; }
 
         public AdminModel(
             ImportManager importManager,
@@ -27,6 +30,10 @@ namespace Mobicon.Pages
         public void OnGet()
         {
             Prefixes = _dataContext.SimplePrefixes.ToArray();
+
+            UserRole[] values = Enum.GetValues(typeof(UserRole)).Cast<UserRole>().ToArray();
+            Roles = _dataContext.UserRoles
+                .ToDictionary(r => r.Username, r => values.Select(v => r.Role.HasFlag(v)).ToArray());
         }
 
         public IActionResult OnPostAddPrefix(string prefixName)

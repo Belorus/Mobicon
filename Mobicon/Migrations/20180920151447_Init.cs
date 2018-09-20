@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Mobicon.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -80,7 +80,8 @@ namespace Mobicon.Migrations
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: false),
-                    UpdatedAt = table.Column<DateTime>(nullable: false)
+                    UpdatedAt = table.Column<DateTime>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -224,9 +225,8 @@ namespace Mobicon.Migrations
                 columns: new[] { "Username", "Role" },
                 values: new object[,]
                 {
-                    { "yaroslavs", 3 },
-                    { "grigoryp", 3 },
-                    { "alexeyra", 3 }
+                    { "grigoryp", 5 },
+                    { "yaroslavs", 5 }
                 });
 
             migrationBuilder.CreateIndex(

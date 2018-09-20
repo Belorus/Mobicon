@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -47,18 +48,17 @@ namespace Mobicon.Pages
             var user = _authService.Login(username, password);
             if (user != null)
             {
-                var userRoles = _dataContext.UserRoles
-                    .Where(u => u.Username == username)
-                    .ToArray();
+                var userRole = _dataContext.UserRoles
+                    .FirstOrDefault(u => u.Username == username);
 
-                if (userRoles.All(r => r.Role != UserRole.Reader))
+                if (userRole == null)
                 {
-                    _dataContext.UserRoles.Add(
-                        new UserToRole()
+                    userRole = new UserToRole()
                         {
                             Role = UserRole.Reader,
                             Username = username
-                        });
+                        };
+                    _dataContext.UserRoles.Add(userRole);
                     _dataContext.SaveChanges();
                 }
 
@@ -66,12 +66,13 @@ namespace Mobicon.Pages
                 {
                     new Claim("Name", user.UserName),
                     new Claim("FullName", user.FullName),
-                    new Claim("Role", UserRole.Reader.ToString()) // Everyone should be reader by default
                 };
 
-                foreach (var role in userRoles)
+                foreach (var role in Enum.GetValues(typeof(UserRole)).Cast<UserRole>()
+                    .Where(v => userRole.Role.HasFlag(v))
+                    .Select(r => Enum.GetName(typeof(UserRole), r)))
                 {
-                    claims.Add(new Claim("Role", role.Role.ToString()));
+                    claims.Add(new Claim("Role", role));
                 }
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme,

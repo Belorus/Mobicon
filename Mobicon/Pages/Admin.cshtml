@@ -1,4 +1,5 @@
 ﻿@page
+@using Models
 @model Mobicon.Pages.AdminModel
 @{
     ViewData["Title"] = "Admin";
@@ -24,3 +25,39 @@
     <input name="prefixName" type="text"/>
     <button type="submit">Add prefix</button>
 </form>
+
+<table>
+    <thead>
+    <tr>
+        <th>User</th>
+        @foreach (var name in Enum.GetNames(typeof(UserRole)))
+        {
+            <th>@name</th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var role in Model.Roles)
+    {
+        <tr>
+            <td>
+                @role.Key
+            </td>
+
+            @foreach (var b in role.Value)
+            {
+            <td>
+                @if (b)
+                {
+                    <input type="checkbox" checked disabled="disabled" />
+                }
+                else
+                {
+                    <input type="checkbox" disabled="disabled"/>
+                }
+            </td>
+            }
+        </tr>
+    }
+    </tbody>
+</table>

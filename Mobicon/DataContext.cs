@@ -60,10 +60,8 @@ namespace Mobicon
 
             modelBuilder.Entity<UserToRole>()
                 .HasData(
-                    new UserToRole {Id = 1, Username = "grigoryp", Role = UserRole.Admin},
-                    new UserToRole {Id = 2, Username = "grigoryp", Role = UserRole.Editor},
-                    new UserToRole {Id = 3, Username = "yaroslavs", Role = UserRole.Admin},
-                    new UserToRole {Id = 4, Username = "yaroslavs", Role = UserRole.Editor}
+                    new UserToRole {Username = "grigoryp", Role = UserRole.Editor | UserRole.Admin},
+                    new UserToRole {Username = "yaroslavs", Role = UserRole.Editor | UserRole.Admin}
                 );
         }
     }

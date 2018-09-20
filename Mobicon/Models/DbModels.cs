@@ -6,12 +6,13 @@ using Newtonsoft.Json;
 
 namespace Mobicon.Models
 {
+    [Flags]
     public enum UserRole
     {
-        Reader,
-        Editor,
-        Approver,
-        Admin
+        Reader = 0,
+        Editor = 1,
+        Approver = 2,
+        Admin = 4
     }
 
     public class SnapshotApproval
@@ -33,9 +34,6 @@ namespace Mobicon.Models
     public class UserToRole
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
         public string Username { get; set; }
 
         public UserRole Role { get; set; }
