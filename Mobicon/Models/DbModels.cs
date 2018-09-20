@@ -8,7 +8,6 @@ namespace Mobicon.Models
 {
     public enum UserRole
     {
-        Reader,
         Editor,
         Approver,
         Admin

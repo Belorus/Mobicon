@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Mobicon.Auth;
+using Mobicon.Models;
 
 namespace Mobicon.Pages
 {
@@ -46,16 +47,16 @@ namespace Mobicon.Pages
             var user = _authService.Login(username, password);
             if (user != null)
             {
+                var userRole = _dataContext.UserRoles
+                    .FirstOrDefault(u => u.Username == username);
 
-                var role = _dataContext.UserRoles
-                    .Find(user.UserName)
-                    .Role.ToString();
+                var role = userRole?.Role ?? UserRole.Editor;
 
                 var claims = new List<Claim>
                 {
                     new Claim("Name", user.UserName),
                     new Claim("FullName", user.FullName),
-                    new Claim("Role", role),
+                    new Claim("Role", role.ToString()),
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme,
