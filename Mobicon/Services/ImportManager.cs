@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Mobicon.Models;
 using Newtonsoft.Json;
 using SharpYaml.Serialization;
@@ -16,6 +19,60 @@ namespace Mobicon.Services
         public ImportManager(DataContext dataContext)
         {
             _dataContext = dataContext;
+        }
+
+        public async Task ImportFileStructure(
+            string zipUrl,
+            string importOnBehalf)
+        {
+            HttpClient http = new HttpClient();
+            using (var zipFileStream = await http.GetStreamAsync(zipUrl))
+            {
+                var archive = new ZipArchive(zipFileStream, ZipArchiveMode.Read);
+                foreach (var entry in archive.Entries)
+                {
+                    if (entry.Length > 0)
+                    {
+                        var configName = entry.Name;
+                        var segmentName = entry.FullName.Substring(0, entry.FullName.Length - entry.Name.Length).Trim('/', '\\');
+
+                        var segment = _dataContext.Segments.FirstOrDefault(s => s.Name == segmentName);
+                        if (segment == null)
+                        {
+                            segment = new Segment
+                            {
+                                Name = segmentName,
+                                CreatedAt = DateTime.Now,
+                                CreatedBy = importOnBehalf
+                            };
+                            _dataContext.Segments.Add(segment);
+                        }
+
+                        var config = new Config
+                        {
+                            CreatedBy = importOnBehalf,
+                            CreatedAt = DateTime.Now,
+                            UpdatedAt = DateTime.Now,
+                            UpdatedBy = importOnBehalf,
+                            Name = configName,
+                            Segment = segment
+                        };
+
+                        using (var stream = entry.Open())
+                        using (var reader = new StreamReader(stream))
+                        {
+                            var stringData = reader.ReadToEnd();
+                            var entries = ImportYaml(stringData, importOnBehalf);
+
+                            config.Entries = entries.ToList();
+                        }
+
+                        segment.Configs.Add(config);
+                        _dataContext.SaveChanges();
+                    }
+                }
+
+            }
         }
 
         public ConfigEntry[] ImportYaml(

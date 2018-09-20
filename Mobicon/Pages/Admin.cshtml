@@ -1,0 +1,26 @@
+﻿@page
+@model Mobicon.Pages.AdminModel
+@{
+    ViewData["Title"] = "Admin";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h2>Admin</h2>
+
+<label>Url to zip with directories with .yml</label>
+<form method="post" asp-page-handler="Import">
+    <input type="url" name="zipUrl"/>
+    <button type="submit">Import</button>
+</form>
+
+<h5>Prefixes</h5>
+<ul>
+    @foreach (var prefix in Model.Prefixes)
+    {
+        <li>@prefix.Name</li>
+    }
+</ul>
+<form method="post" asp-page-handler="AddPrefix">
+    <input name="prefixName" type="text"/>
+    <button type="submit">Add prefix</button>
+</form>
