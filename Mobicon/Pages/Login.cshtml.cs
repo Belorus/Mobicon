@@ -51,6 +51,16 @@ namespace Mobicon.Pages
                     .Where(u => u.Username == username)
                     .ToArray();
 
+                if (userRoles.All(r => r.Role != UserRole.Reader))
+                {
+                    _dataContext.UserRoles.Add(
+                        new UserToRole()
+                        {
+                            Role = UserRole.Reader,
+                            Username = username
+                        });
+                    _dataContext.SaveChanges();
+                }
 
                 var claims = new List<Claim>
                 {
