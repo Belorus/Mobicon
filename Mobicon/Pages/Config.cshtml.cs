@@ -117,6 +117,9 @@ namespace Mobicon.Pages
 
         public IActionResult OnPost(int id, int entryId, string key, string value, string description, string jira, FieldType type, string versionFrom, string versionTo, int? segmentFrom, int? segmentTo, int[] simplePrefixes)
         {
+            if (type == FieldType.String && !(value.StartsWith("\"") && value.EndsWith("\"")))
+                value = "\"" + value + "\"";
+
             var newEntry = new ConfigEntry
             {
                 Key = key,

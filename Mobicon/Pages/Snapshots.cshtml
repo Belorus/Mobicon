@@ -114,14 +114,14 @@ else
                     <input class="form-control w-100" type="text" name="name" required placeholder="Snapshot name" />
 
                     <div class="flex-column config-picker">
-                        @foreach (var segment in Model.Segments)
+                        @foreach (var segment in Model.Segments.OrderBy(s => s.Name))
                         {
                            if (@segment.Configs.Any(c => !c.IsDeleted)) 
                            {
                             <div class="d-flex fields-row">
                                 <label class="fields-row-item field-label">@segment.Name</label>
                                 <select class="fields-row-item form-control config-select" name="configId" data-size="8" data-width="60%" title="Select config">
-                                    @foreach (var config in segment.Configs.Where(c => !c.IsDeleted))
+                                    @foreach (var config in segment.Configs.Where(c => !c.IsDeleted).OrderBy(c => c.Name))
                                     {
                                         <option value="@config.Id">@config.Name</option>
                                     }
