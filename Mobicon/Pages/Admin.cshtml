@@ -6,58 +6,106 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<h2>Admin</h2>
-
-<label>Url to zip with directories with .yml</label>
-<form method="post" asp-page-handler="Import">
-    <input type="url" name="zipUrl"/>
-    <button type="submit">Import</button>
-</form>
-
-<h5>Prefixes</h5>
-<ul>
-    @foreach (var prefix in Model.Prefixes)
-    {
-        <li>@prefix.Name</li>
+<style>
+    .users-block {
+        padding-left: 24px;
     }
-</ul>
-<form method="post" asp-page-handler="AddPrefix">
-    <input name="prefixName" type="text"/>
-    <button type="submit">Add prefix</button>
-</form>
-
-<table>
-    <thead>
-    <tr>
-        <th>User</th>
-        @foreach (var name in Enum.GetNames(typeof(UserRole)))
-        {
-            <th>@name</th>
-        }
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var role in Model.Roles)
-    {
-        <tr>
-            <td>
-                @role.Key
-            </td>
-
-            @foreach (var b in role.Value)
-            {
-            <td>
-                @if (b)
-                {
-                    <input type="checkbox" checked disabled="disabled" />
-                }
-                else
-                {
-                    <input type="checkbox" disabled="disabled"/>
-                }
-            </td>
-            }
-        </tr>
+    .prefixes-block {
+        padding-right: 24px;
+        border-right: 2px solid #dee2e6;
     }
-    </tbody>
-</table>
+    .users-block, .prefixes-block {
+        padding-top: 8px; 
+    }
+    .block-header {
+        flex-shrink: 0;
+    }
+    .block-body {
+        margin-top: 16px;
+        overflow: auto;
+    }
+    .table tr th {
+        border-top: 0;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center view-header">
+    <h2>Administration Panel</h2>
+    <form autocomplete="off" method="post" asp-page-handler="Import" class="d-flex justify-content-end controls-section">
+        <div class="input-group add-list-item">
+            <input type="text" name="zipUrl" required placeholder="Url to zip with directories with .yml" class="form-control">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit"><i class="fas fa-file-import"></i> Import</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div class="items-list d-flex justify-content-between w-100">
+    <div class="prefixes-block d-flex w-50 flex-column">
+        <div class="block-header d-flex justify-content-between align-items-center">
+            <h3>Prefixes <span class="badge badge-info">@Model.Prefixes.Length</span></h3>
+            <form autocomplete="off" method="post" asp-page-handler="AddPrefix" class="d-flex justify-content-end controls-section">
+                <div class="input-group input-group-sm">
+                    <input type="text" name="prefixName" required placeholder="Prefix name" class="form-control">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit"><i class="fas fa-plus"></i> Add prefix</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="block-body">
+            <ul class="list-group list-group-flush">
+                @foreach (var prefix in Model.Prefixes)
+                {
+                    <li class="list-group-item">@prefix.Name</li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="users-block d-flex w-50 flex-column">
+        <div class="block-header d-flex justify-content-between align-items-center">
+            <h3>Users <span class="badge badge-info">@Model.Roles.Count</span></h3>
+        </div>
+        <div class="block-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    @foreach (var name in Enum.GetNames(typeof(UserRole)))
+                    {
+                        <th>@name</th>
+                    }
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var role in Model.Roles)
+                {
+                    <tr>
+                        <td>
+                            @role.Key
+                        </td>
+
+                        @foreach (var b in role.Value)
+                        {
+                            <td>
+                                @if (b)
+                                {
+                                    <input type="checkbox" checked disabled="disabled"/>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" disabled="disabled"/>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

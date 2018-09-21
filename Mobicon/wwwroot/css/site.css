@@ -15,7 +15,7 @@ html, body {
     width: 400px;
 }
 
-h2 {
+h2, h3 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -60,6 +60,10 @@ h2 {
     max-height: calc(100% - 65px);
     overflow: auto;
     margin-bottom: 0;
+}
+
+.view-header {
+    flex-shrink: 0;
 }
 
 .accordion .card:not(:last-child) {
