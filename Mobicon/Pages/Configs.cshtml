@@ -117,10 +117,9 @@
 </div>
 
 
-@if (User.IsInRole(UserRole.Admin.ToString()))
-{
-    <div class="d-flex justify-content-between align-items-center">
-        <h2>Configs</h2>
+<div class="d-flex justify-content-between align-items-center view-header">
+    <h2>Configs</h2>
+    @if (User.IsInRole(UserRole.Admin.ToString())) {
         <form autocomplete="off" method="post" class="d-flex justify-content-end controls-section">
             <div class="input-group add-list-item">
                 <input type="text" name="segmentName" required placeholder="Enter segment name" class="form-control">
@@ -129,8 +128,8 @@
                 </div>
             </div>
         </form>
-    </div>
-}
+    }
+</div>
 
 @if (Model.Segments.Length > 0)
 {

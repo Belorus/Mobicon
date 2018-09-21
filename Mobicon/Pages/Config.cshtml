@@ -374,27 +374,27 @@
         </div>
     </form>
 </div>
-<form method="post" asp-page-handler="promoteKeys" asp-route-id="@Model.Id" autocomplete="off">
-    @if (User.IsInRole(UserRole.Editor.ToString()))
-    {
-
-        <div class="d-flex justify-content-between align-items-center">
+<form method="post" asp-page-handler="promoteKeys" asp-route-id="@Model.Id" autocomplete="off" class="height-100">
+        <div class="d-flex justify-content-between align-items-center view-header">
             <h2>@Model.Name entries <span class="badge badge-info">@Model.Entries.Length</span></h2>
-            <div class="d-flex controls-section">
-                <div class="input-group create-snapshot d-none" id="createSnapshot">
-                    <input onfocus="onPromoteFocus()" type="text" name="snapshotName" required placeholder="Enter snapshot name" data-provide="typeahead" class="form-control typeahead">
-                    <div class="input-group-append">
-                        <button class="btn btn-info" type="submit"><i class="fas fa-camera"></i> Promote to snapshot</button>
+            @if (User.IsInRole(UserRole.Editor.ToString()))
+            {
+
+                <div class="d-flex controls-section">
+                    <div class="input-group create-snapshot d-none" id="createSnapshot">
+                        <input onfocus="onPromoteFocus()" type="text" name="snapshotName" required placeholder="Enter snapshot name" data-provide="typeahead" class="form-control typeahead">
+                        <div class="input-group-append">
+                            <button class="btn btn-info" type="submit"><i class="fas fa-camera"></i> Promote to snapshot</button>
+                        </div>
                     </div>
+                    <buton class="btn btn-primary" onclick="onAddClick()"><i class="fas fa-plus"></i> Create config entry</buton>
+                    @if (User.IsInRole(UserRole.Admin.ToString()) || User.Identity.Name == Model.CreatedBy)
+                    {
+                        <buton class="btn btn-danger delete-config-btn" onclick="onDeleteConfigClick()"><i class="fas fa-trash-alt"></i> Delete config</buton>
+                    }
                 </div>
-                <buton class="btn btn-primary" onclick="onAddClick()"><i class="fas fa-plus"></i> Create config entry</buton>
-                @if (User.IsInRole(UserRole.Admin.ToString()) || User.Identity.Name == Model.CreatedBy)
-                {
-                    <buton class="btn btn-danger delete-config-btn" onclick="onDeleteConfigClick()"><i class="fas fa-trash-alt"></i> Delete config</buton>
-                }
-            </div>
+            }
         </div>
-    }
 
 
         @if (Model.Entries.Length > 0)
@@ -409,7 +409,10 @@
                             <th width="25%">Value</th>
                             <th width="15%">Description</th>
                             <th width="170">Jira</th>
-                            <th width="80"></th>
+                            @if (User.IsInRole(UserRole.Editor.ToString()))
+                            {
+                                <th width="80"></th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -492,15 +495,15 @@
                                     }
                                     <td>@entry.Description</td>
                                     <td><a href="https://jira.playtika.com/browse/@entry.Jira">@entry.Jira</a></td>
-                                    <td class="row-actions-td">
-                                        @if (User.IsInRole(UserRole.Editor.ToString()))
-                                        {
+                                    @if (User.IsInRole(UserRole.Editor.ToString())) {
+                                        <td class="row-actions-td">
                                             <div class="row-actions justify-content-between">
                                                 <button type="button" class="btn btn-outline-info btn-sm" onclick="onEditClick($(this).closest('tr').attr('data'))"><i class="fas fa-edit"></i></button>
                                                 <button type="button" class="btn btn-outline-danger btn-sm" onclick="onDeleteClick($(this).closest('tr').attr('data'))"><i class="fas fa-trash-alt"></i></button>
                                             </div>
-                                        }
-                                    </td>
+                                        </td>
+                                    }
+
                                 </tr>
                             }
                         }
