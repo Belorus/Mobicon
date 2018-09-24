@@ -51,6 +51,26 @@ namespace Mobicon.Pages
             return RedirectToPage();
         }
 
+        public IActionResult OnPostChangeRoles()
+        {
+            var map = _dataContext.UserRoles.ToDictionary(ur => ur.Username, ur => ur);
+
+            foreach (var entry in HttpContext.Request.Form)
+            {
+                if (map.TryGetValue(entry.Key, out var userRole))
+                {
+                    userRole.Role = (UserRole) entry.Value
+                        .Select(s => int.Parse(s))
+                        .Aggregate((acc, val) => acc = acc | val);
+
+                }
+            }
+
+            _dataContext.SaveChanges();
+
+            return RedirectToPage();
+        }
+
         public async Task<IActionResult> OnPostImport(string zipUrl)
         {
             await _importManager.ImportFileStructure(zipUrl, User.Identity.Name);

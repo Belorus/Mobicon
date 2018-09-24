@@ -43,13 +43,18 @@ namespace Mobicon.Pages
                 .Where(e => e.IsDeleted == false)
                 .ToList();
 
+            var configIds = _dataContext.Configs.Where(c => configId.Contains(c.Id))
+                .Select(c => c.Id)
+                .ToArray();
+
             var snapshot = new Snapshot
             {
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 CreatedBy = User.Identity.Name,
                 UpdatedBy = User.Identity.Name,
-                Name = name
+                Name = name,
+                CreatedFrom = string.Join(",", configIds)
             };
 
             snapshot.Entries = entries.Select(e => new SnapshotToEntry()
