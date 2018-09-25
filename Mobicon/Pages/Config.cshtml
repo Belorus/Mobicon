@@ -10,8 +10,8 @@
 <style>
     .value-cell {
         font-family: monospace;
-        font-weight: 600;
-        font-size: x-large;
+        font-weight: bold;
+        font-size: 16px;
     }
     .table {
         table-layout:fixed;
@@ -273,7 +273,7 @@
 
 
 <!-- Delete Config Modal -->
-<div class="modal fade" id="deleteConfigModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfig" aria-hidden="true">
+<div class="modal" id="deleteConfigModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfig" aria-hidden="true">
     <form method="post" asp-page-handler="deleteConfig" asp-route-id="@Model.Id" class="form-inline">
         <div class="modal-dialog modal-lg delete-confirmation-modal" role="document">
             <div class="modal-content">
@@ -297,7 +297,7 @@
 </div>
 
 <!-- Delete Entry Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteEntry" aria-hidden="true">
+<div class="modal" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteEntry" aria-hidden="true">
     <form method="post" asp-page-handler="delete" class="form-inline"
           asp-route-id="@Model.Id">
     <div class="modal-dialog modal-lg delete-confirmation-modal" role="document">
@@ -323,7 +323,7 @@
 </div>
 
 <!-- Add/Edit Modal -->
-<div class="modal fade" id="addEditModal" tabindex="-1" role="dialog" aria-labelledby="addEditEntryModal" aria-hidden="true">
+<div class="modal" id="addEditModal" tabindex="-1" role="dialog" aria-labelledby="addEditEntryModal" aria-hidden="true">
     <form method="post" class="form-inline" autocomplete="off">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">

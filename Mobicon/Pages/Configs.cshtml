@@ -64,7 +64,7 @@
 </script>
 
 <!-- Delete Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteSegment" aria-hidden="true">
+<div class="modal" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteSegment" aria-hidden="true">
     <form method="post" asp-page-handler="delete" asp-route-id="" class="form-inline">
         <div class="modal-dialog modal-lg delete-confirmation-modal" role="document">
             <input type="hidden" name="id" id="deleteSegmentId"/>
@@ -89,7 +89,7 @@
     </form>
 </div>
 
-<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importConfig" aria-hidden="true">
+<div class="modal" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importConfig" aria-hidden="true">
     <form autocomplete="off" method="post" asp-page-handler="import" class="form-inline">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
