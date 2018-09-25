@@ -27,7 +27,9 @@ namespace Mobicon.Pages
 
         public void OnGet()
         {
-            Segments = _dataContext.Segments.Include(s => s.Configs).ToArray();
+            Segments = _dataContext.Segments.Include(s => s.Configs)
+                .Where(s => !s.IsDeleted)
+                .ToArray();
         }
 
         public IActionResult OnPost(string segmentName)
@@ -70,7 +72,15 @@ namespace Mobicon.Pages
         {
             if (User.IsInRole(UserRole.Admin.ToString()))
             {
-                _dataContext.Segments.Remove(_dataContext.Segments.Find(id));
+                var segment = _dataContext.Segments
+                        .Include(s => s.Configs)
+                        .First(s => s.Id == id);
+
+                foreach (var cfg in segment.Configs)
+                    cfg.IsDeleted = true;
+
+                segment.IsDeleted = true;
+
                 _dataContext.SaveChanges();
             }
 

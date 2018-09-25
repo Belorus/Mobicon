@@ -103,6 +103,8 @@ namespace Mobicon.Models
         [MinLength(1)]
         public string CreatedBy { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public List<Config> Configs { get; set; } = new List<Config>();
     }
 
