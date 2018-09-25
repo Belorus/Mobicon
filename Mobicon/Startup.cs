@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,6 +41,8 @@ namespace Mobicon
             services.AddSingleton<LdapAuthenticationService>();
             services.AddTransient<ImportManager>();
             services.AddSingleton<ExportManager>();
+            services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Fastest);
+            services.AddResponseCompression();
 
             var appSettings = new AppSettings();
             Configuration.GetSection("settings").Bind(appSettings);
@@ -63,6 +66,7 @@ namespace Mobicon
                 app.UseExceptionHandler("/Error");
             }
 
+            app.UseResponseCompression();
             app.UseAuthentication();
             app.UseStaticFiles();
 

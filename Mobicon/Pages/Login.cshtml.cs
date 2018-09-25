@@ -83,7 +83,7 @@ namespace Mobicon.Pages
                     new ClaimsPrincipal(claimsIdentity),
                     new AuthenticationProperties());
 
-                if (string.IsNullOrEmpty(returnUrl))
+                if (string.IsNullOrEmpty(returnUrl) || returnUrl.Trim() == "/")
                     return RedirectToPage("/Configs");
                 else
                     return RedirectToPage(returnUrl);
