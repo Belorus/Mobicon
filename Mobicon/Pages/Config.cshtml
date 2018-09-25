@@ -8,6 +8,11 @@
 }
 
 <style>
+    .value-cell {
+        font-family: monospace;
+        font-weight: 600;
+        font-size: x-large;
+    }
     .table {
         table-layout:fixed;
     }
@@ -431,7 +436,7 @@
                                             }
                                         }
                                     </td>
-                                    <td>
+                                    <td class="prefixes-cell">
 
                                         <span>
                                             @string.Join(", ", entry.SimplePrefixes.Select(e => e.SimplePrefix.Name))
@@ -448,14 +453,14 @@
                                             }
                                         </span>
                                     </td>
-                                    <td>@entry.Key <sup class="text-info">ver. @entry.Version</sup></td>
+                                    <td class="key-cell">@entry.Key <sup class="text-info">ver. @entry.Version</sup></td>
                                     @switch (entry.Type)
                                     {
                                         case FieldType.String:
                                         case FieldType.Integer:
                                         case FieldType.Float:
                                         case FieldType.Bool:
-                                            <td>
+                                            <td class="value-cell">
                                                 <script>
                                             try {
                                                 var obj = JSON.parse('@Html.Raw(entry.Value)');
@@ -471,11 +476,11 @@
                                         case FieldType.ListOfString:
                                         case FieldType.ListOfInteger:
                                         case FieldType.ListOfFloat:
-                                            <td>
+                                            <td class="value-cell">
                                                 <script>
                                             var list = JSON.parse('@Html.Raw(entry.Value)');
                                             if (list === undefined || list.length === 0) {
-                                                document.write('Empty!!!1');
+                                                document.write('[]');
                                             } else {
                                                 document.write("<ul>");
                                                 for (var item of list) {

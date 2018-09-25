@@ -20,6 +20,7 @@ namespace Mobicon.Pages
         public int ApprovesToPublish { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public int? ComparedWithId { get; set; }
         public Snapshot[] Snapshots { get; set; }
         public EntrySnapshot[] Entries { get; set; }
@@ -76,6 +77,21 @@ namespace Mobicon.Pages
             Status = snapshot.Status;
             Name = snapshot.Name + " compared with " + snapshotToCompareWith.Name;
             ApprovesToPublish = _settings.ApprovalsBeforePublish;
+
+            if (snapshot.CreatedFrom != null)
+            {
+                var configIds = snapshot.CreatedFrom
+                    .Split(',')
+                    .Select(s => int.Parse(s))
+                    .ToArray();
+
+                var configs = _dataContext.Configs
+                    .Where(c => configIds.Contains(c.Id))
+                    .Select(c => c.Name)
+                    .ToArray();
+
+                Description = "[ " + string.Join(" + ", configs) + " ] ";
+            }
 
             return Page();
         }
@@ -205,7 +221,20 @@ namespace Mobicon.Pages
             Status = snapshot.Status;
             Name = snapshot.Name;
             ApprovesToPublish = _settings.ApprovalsBeforePublish;
+            if (snapshot.CreatedFrom != null)
+            {
+                var configIds = snapshot.CreatedFrom
+                    .Split(',')
+                    .Select(s => int.Parse(s))
+                    .ToArray();
 
+                var configs = _dataContext.Configs
+                    .Where(c => configIds.Contains(c.Id))
+                    .Select(c => c.Name)
+                    .ToArray();
+
+                Description = "[ " + string.Join(" + ", configs) + " ] ";
+            }
             return Page();
         }
 

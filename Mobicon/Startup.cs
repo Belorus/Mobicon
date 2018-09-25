@@ -30,7 +30,11 @@ namespace Mobicon
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options => { options.LoginPath = "/Login"; });
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Login";
+                    options.AccessDeniedPath = "/Configs";
+                });
 
             services.Configure<LdapConfig>(Configuration.GetSection("ldap"));
             services.AddSingleton<LdapAuthenticationService>();

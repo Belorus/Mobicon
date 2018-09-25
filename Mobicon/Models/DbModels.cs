@@ -74,6 +74,8 @@ namespace Mobicon.Models
         [Required]
         public string CreatedBy { get; set; }
 
+        public string CreatedFrom { get; set; }
+
         [Required]
         public string UpdatedBy { get; set; }
 

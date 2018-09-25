@@ -8,6 +8,11 @@
 }
 
 <style>
+    .value-cell {
+        font-family: monospace;
+        font-weight: 600;
+        font-size: x-large;
+    }
     .compare-label {
         margin-right: 8px;
         margin-bottom: 0;
@@ -131,6 +136,7 @@
 
 <div class="d-flex justify-content-between align-items-center view-header">
     <h2>@Model.Name</h2>
+    <span>@Model.Description</span>
     <div class="d-flex controls-section">
         <div class="d-flex align-items-center approves-block" data-toggle="tooltip" data-html="true" title="@(string.Join("", Model.Approves.Select(a => $"<p class=\"tooltip-row\">{a.Username} | {a.ApprovedAt}</p>")))">
             <span>Approves: <span class="badge badge-info"> @Model.Approves.Length / @Model.ApprovesToPublish</span></span>
@@ -266,7 +272,6 @@
                             ver. @entry.Version
                             @if (User.IsInRole(UserRole.Editor.ToString()) && Model.Status != SnapshotStatus.Published && diff.EntryVersions.Length > 0)
                             {<i class="fas fa-angle-down versions-arrow"></i>}
-                            
                         </sup>
                     </td>
                     @switch (entry.Type)
@@ -275,7 +280,7 @@
                         case FieldType.Integer:
                         case FieldType.Float:
                         case FieldType.Bool:
-                            <td>
+                            <td class="value-cell">
                                 <script>
                                             try {
                                                 var obj = JSON.parse('@Html.Raw(entry.Value)');
@@ -292,11 +297,11 @@
                         case FieldType.ListOfString:
                         case FieldType.ListOfInteger:
                         case FieldType.ListOfFloat:
-                            <td>
+                            <td class="value-cell">
                                 <script>
                                             var list = JSON.parse('@Html.Raw(entry.Value)');
                                             if (list === undefined || list.length === 0) {
-                                                document.write('Empty!!!1');
+                                                document.write('[]');
                                             } else {
                                                 document.write("<ul>");
                                                 for (var item of list) {

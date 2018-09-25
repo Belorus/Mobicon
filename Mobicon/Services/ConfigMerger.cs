@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Mobicon.Models;
 
-namespace Mobicon.Pages
+namespace Mobicon.Services
 {
     public class ConfigMerger
     {

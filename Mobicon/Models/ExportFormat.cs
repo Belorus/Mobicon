@@ -1,4 +1,4 @@
-﻿namespace Mobicon.Pages
+﻿namespace Mobicon.Models
 {
     public enum ExportFormat
     {

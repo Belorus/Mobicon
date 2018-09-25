@@ -68,43 +68,46 @@
         <div class="block-header d-flex justify-content-between align-items-center">
             <h3>Users <span class="badge badge-info">@Model.Roles.Count</span></h3>
         </div>
-        <div class="block-body">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Username</th>
-                    @foreach (var name in Enum.GetNames(typeof(UserRole)))
-                    {
-                        <th>@name</th>
-                    }
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var role in Model.Roles)
-                {
+        <form method="post" asp-page-handler="ChangeRoles">
+            <div class="block-body">
+                <table class="table">
+                    <thead>
                     <tr>
-                        <td>
-                            @role.Key
-                        </td>
-
-                        @foreach (var b in role.Value)
+                        <th>Username</th>
+                        @foreach (var name in Enum.GetNames(typeof(UserRole)))
                         {
-                            <td>
-                                @if (b)
-                                {
-                                    <input type="checkbox" checked disabled="disabled"/>
-                                }
-                                else
-                                {
-                                    <input type="checkbox" disabled="disabled"/>
-                                }
-                            </td>
+                            <th>@name</th>
                         }
                     </tr>
-                }
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                    @foreach (var role in Model.Roles)
+                    {
+                        <tr>
+                            <td>
+                                @role.Key
+                            </td>
+
+                            @foreach (var a in role.Value.Zip(Enum.GetValues(typeof(UserRole)).Cast<int>(), (b, s) => new { Flag = b, Name = s }))
+                            {
+                                <td>
+                                    @if (a.Flag)
+                                    {
+                                        <input name="@role.Key" value="@a.Name" type="checkbox" checked />
+                                    }
+                                    else
+                                    {
+                                        <input name="@role.Key" value="@a.Name" type="checkbox" />
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit">Save</button>
+        </form>
     </div>
 </div>
 

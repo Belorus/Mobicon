@@ -43,7 +43,7 @@ namespace Mobicon.Pages
             return RedirectToPage();
         }
 
-        public async Task<IActionResult> OnPost(string username, string password)
+        public async Task<IActionResult> OnPost(string username, string password, string returnUrl)
         {
             var user = _authService.Login(username, password);
             if (user != null)
@@ -83,7 +83,10 @@ namespace Mobicon.Pages
                     new ClaimsPrincipal(claimsIdentity),
                     new AuthenticationProperties());
 
-                return RedirectToPage("/Configs");
+                if (string.IsNullOrEmpty(returnUrl))
+                    return RedirectToPage("/Configs");
+                else
+                    return RedirectToPage(returnUrl);
             }
             else
             {
