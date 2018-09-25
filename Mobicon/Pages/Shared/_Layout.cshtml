@@ -25,20 +25,23 @@
     @if (User.Identity.Name != null)
     {
         <header>
-            <nav class="navbar navbar-expand-sm navbar-light bg-light justify-content-center">
-                <div></div>
+            <nav class="navbar navbar-expand-sm navbar-light bg-light justify-content-between align-items-center">
+                <div class="d-flex header-section justify-content-between">
+                    <a class="text-secondary" href="https://join.skype.com/j9pyLdpdPKdO"><i class="fab fa-skype"></i> Q&A chat</a>
+                    <a class="text-secondary" href="http://jira.playtika.com/secure/CreateIssueDetails!init.jspa?pid=17500&issuetype=3&components=25101"><i class="fas fa-plus-circle"></i> Jira ticket</a>
+                </div>
                 <div class="d-flex">
                     <ul class="nav navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Title == "Configs" ? "active" : "")" href="/Configs"><i class="fas fa-cogs"></i> Configs</a>
+                            <a class="nav-link text-primary @(ViewBag.Title == "Configs" ? "active" : "")" href="/Configs"><i class="fas fa-cogs"></i> Configs</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(ViewBag.Title == "Snapshots" ? "active" : "")" href="/Snapshots"><i class="fas fa-camera"></i> Snapshots</a>
+                            <a class="nav-link text-primary @(ViewBag.Title == "Snapshots" ? "active" : "")" href="/Snapshots"><i class="fas fa-camera"></i> Snapshots</a>
                         </li>
                     </ul>
                 </div>
-                <form class="d-flex align-items-center logout-btn" asp-page="Login" asp-page-handler="logout">
-                    <button class="btn btn-link" type="submit"><i class="fas fa-sign-out-alt"></i> Sign Out (@User.Identity.Name)</button>
+                <form class="d-flex align-items-center header-section justify-content-end" asp-page="Login" asp-page-handler="logout">
+                    <button class="btn btn-link text-danger" type="submit"><i class="fas fa-sign-out-alt"></i> Sign Out (@User.Identity.Name)</button>
                 </form>
             </nav>
         </header>
@@ -47,16 +50,16 @@
             header {
                 box-shadow:0px 0px 12px -4px;
             }
-            .logout-btn {
-                position: absolute;
-                right: 0;
-            }
+            
             .nav-item {
                 font-size: 20px;
             }
     
             .nav-item + .nav-item {
                 margin-left: 24px;
+            }
+            .header-section {
+                width: 200px;
             }
         </style>
     }
