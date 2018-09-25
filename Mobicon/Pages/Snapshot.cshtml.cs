@@ -72,6 +72,7 @@ namespace Mobicon.Pages
                 .Where(c => configIds.Contains(c.Id))
                 .Include(c => c.Entries)
                 .ThenInclude(e => e.SimplePrefixes)
+                .ThenInclude(e => e.SimplePrefix)
                 .ToArray();
 
             Description = "[ " + string.Join(" + ", configs.Select(c => c.Name)) + " ] ";
