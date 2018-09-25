@@ -39,6 +39,7 @@ namespace Mobicon.Pages
             var arrayOfArrayOfEntries = _dataContext.Configs.Where(c => configId.Contains(c.Id))
                 .Include(c => c.Entries)
                 .ThenInclude(c => c.SimplePrefixes)
+                .ToArray()
                 .Select(c => 
                     c.Entries
                         .GroupBy(x => x.EntryId)

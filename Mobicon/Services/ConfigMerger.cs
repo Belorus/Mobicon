@@ -8,7 +8,7 @@ namespace Mobicon.Services
     {
         public bool Equals(ConfigEntry x, ConfigEntry y)
         {
-            return x.Key == y.Key &&
+            bool areEqual = x.Key == y.Key &&
                    x.SegmentPrefixFrom == y.SegmentPrefixFrom &&
                    x.SegmentPrefixTo == y.SegmentPrefixTo &&
                    x.VersionPrefixFrom == y.VersionPrefixFrom &&
@@ -17,6 +17,8 @@ namespace Mobicon.Services
                 Enumerable.SequenceEqual(
                     x.SimplePrefixes.Select(sp => sp.SimplePrefixId),
                     y.SimplePrefixes.Select(sp => sp.SimplePrefixId)));
+
+            return areEqual;
         }
 
         public int GetHashCode(ConfigEntry obj)
