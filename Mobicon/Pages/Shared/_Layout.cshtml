@@ -34,15 +34,15 @@
                 <div class="d-flex">
                     <ul class="nav navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-primary @(ViewBag.Title == "Configs" ? "active" : "")" href="/Configs"><i class="fas fa-cogs"></i> Configs</a>
+                            <a class="nav-link text-primary @(ViewBag.Title == "Configs" ? "active" : "")" href="/Configs"><i class="fas fa-cogs"></i>Configs</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-primary @(ViewBag.Title == "Snapshots" ? "active" : "")" href="/Snapshots"><i class="fas fa-camera"></i> Snapshots</a>
+                            <a class="nav-link text-primary @(ViewBag.Title == "Snapshots" ? "active" : "")" href="/Snapshots"><i class="fas fa-camera"></i>Snapshots</a>
                         </li>
                         @if (User.IsInRole(UserRole.Admin.ToString()))
                         {
                             <li class="nav-item">
-                                <a class="nav-link @(ViewBag.Title == "Admin" ? "active" : "")" href="/Admin"><i class="fas fa-toolbox"></i> Admin</a>
+                                <a class="nav-link text-primary @(ViewBag.Title == "Admin" ? "active" : "")" href="/Admin"><i class="fas fa-toolbox"></i>Admin</a>
                             </li>
                         }
                     </ul>
@@ -67,6 +67,12 @@
             }
             .header-section {
                 width: 200px;
+            }
+            .nav-link.active {
+                text-decoration: underline;
+            }
+            .nav-link i {
+                margin-right: 6px;
             }
         </style>
     }
