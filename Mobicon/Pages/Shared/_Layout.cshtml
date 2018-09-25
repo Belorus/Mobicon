@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Mobicon.Models
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8"/>
@@ -35,6 +36,12 @@
                         <li class="nav-item">
                             <a class="nav-link @(ViewBag.Title == "Snapshots" ? "active" : "")" href="/Snapshots"><i class="fas fa-camera"></i> Snapshots</a>
                         </li>
+                        @if (User.IsInRole(UserRole.Admin.ToString()))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewBag.Title == "Admin" ? "active" : "")" href="/Admin"><i class="fas fa-toolbox"></i> Admin</a>
+                            </li>
+                        }
                     </ul>
                 </div>
                 <form class="d-flex align-items-center logout-btn" asp-page="Login" asp-page-handler="logout">
