@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Mobicon.Models;
+using Mobicon.Services;
 
 namespace Mobicon.Pages
 {
@@ -35,12 +36,18 @@ namespace Mobicon.Pages
 
         public IActionResult OnPost(string name, int[] configId)
         {
-            var entries = _dataContext.Configs.Where(c => configId.Contains(c.Id))
+            var arrayOfArrayOfEntries = _dataContext.Configs.Where(c => configId.Contains(c.Id))
                 .Include(c => c.Entries)
-                .SelectMany(c => c.Entries)
-                .GroupBy(x => x.EntryId)
-                .Select(g => g.OrderByDescending(x => x.Version).First())
-                .Where(e => e.IsDeleted == false)
+                .ThenInclude(c => c.SimplePrefixes)
+                .Select(c => 
+                    c.Entries
+                        .GroupBy(x => x.EntryId)
+                        .Select(g => g.OrderByDescending(x => x.Version)
+                                      .First())
+                        .Where(e => e.IsDeleted == false))
+                .ToArray();
+
+            var mergedEntries = ConfigMerger.MergeEntries(arrayOfArrayOfEntries)
                 .ToList();
 
             var configIds = _dataContext.Configs.Where(c => configId.Contains(c.Id))
@@ -57,7 +64,7 @@ namespace Mobicon.Pages
                 CreatedFrom = string.Join(",", configIds)
             };
 
-            snapshot.Entries = entries.Select(e => new SnapshotToEntry()
+            snapshot.Entries = mergedEntries.Select(e => new SnapshotToEntry()
             {
                 EntryId = e.Id,
                 Snapshot = snapshot

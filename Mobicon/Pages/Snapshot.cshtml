@@ -229,25 +229,13 @@
             <label class="compare-label">Compare with: </label>
             <form asp-route-id="@Model.Id" asp-page-handler="Compared">
                 <select class="form-control compare-select" name="compareWithId" data-size="8" data-width="200px" id="compareSelect" title="Snapshot to compare" onchange="this.form.submit()">
-                    @if (Model.ComparedWithId == null)
-                    {
-                        <option selected>—</option>
-                    }
-                    else
-                    {
-                        <option>—</option>
-                    }
+                   
+                    <option>don't compare</option>
+                    <option value="-1">with current configs</option>
 
                     @foreach (var snapshot in Model.Snapshots)
                     {
-                        if (Model.ComparedWithId == snapshot.Id)
-                        {
-                            <option selected value="@snapshot.Id">@snapshot.Name</option>
-                        }
-                        else
-                        {
-                            <option value="@snapshot.Id">@snapshot.Name</option>
-                        }
+                        <option value="@snapshot.Id">@snapshot.Name</option>
                     }
                 </select>
             </form>

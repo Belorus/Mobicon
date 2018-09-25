@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,8 @@ namespace Mobicon.Pages
     [Authorize]
     public class SnapshotModel : PageModel
     {
+        public const int CompareWithConfigs = -1;
+
         private readonly DataContext _dataContext;
         private readonly ExportManager _exportManager;
         private readonly AppSettings _settings;
@@ -60,9 +63,46 @@ namespace Mobicon.Pages
 
             var snapshot = LoadSnapshot(id);
 
-            var snapshotToCompareWith = LoadSnapshot(compareWithId.Value);
+            var configIds = snapshot.CreatedFrom
+                .Split(',')
+                .Select(s => int.Parse(s))
+                .ToArray();
 
-            var diff = Compare(snapshot, snapshotToCompareWith);
+            var configs = _dataContext.Configs
+                .Where(c => configIds.Contains(c.Id))
+                .Include(c => c.Entries)
+                .ThenInclude(e => e.SimplePrefixes)
+                .ToArray();
+
+            Description = "[ " + string.Join(" + ", configs.Select(c => c.Name)) + " ] ";
+
+            EntrySnapshot[] diff;
+            if (compareWithId == SnapshotModel.CompareWithConfigs)
+            {
+                var currentEntriesInConfigs = ConfigMerger.MergeEntries(configs.Select(c =>
+                            c.Entries
+                                .GroupBy(x => x.EntryId)
+                                .Select(g => g.OrderByDescending(x => x.Version)
+                                    .First())
+                                .Where(e => e.IsDeleted == false))
+                        .ToArray())
+                    .ToArray();
+
+                diff = Compare(
+                    snapshot.Entries.Select(e => e.Entry).ToArray(),
+                    currentEntriesInConfigs);
+
+                Name = snapshot.Name + " compared with base configs";
+            }
+            else
+            {
+                var snapshotToCompareWith = LoadSnapshot(compareWithId.Value);
+                diff = Compare(
+                    snapshot.Entries.Select(e => e.Entry).ToArray(),
+                    snapshotToCompareWith.Entries.Select(e => e.Entry).ToArray());
+
+                Name = snapshot.Name + " compared with " + snapshotToCompareWith.Name;
+            }
 
             ComparedWithId = compareWithId;
             Id = id;
@@ -75,23 +115,9 @@ namespace Mobicon.Pages
                 .Where(a => a.SnapshotId == id)
                 .ToArray();
             Status = snapshot.Status;
-            Name = snapshot.Name + " compared with " + snapshotToCompareWith.Name;
             ApprovesToPublish = _settings.ApprovalsBeforePublish;
 
-            if (snapshot.CreatedFrom != null)
-            {
-                var configIds = snapshot.CreatedFrom
-                    .Split(',')
-                    .Select(s => int.Parse(s))
-                    .ToArray();
-
-                var configs = _dataContext.Configs
-                    .Where(c => configIds.Contains(c.Id))
-                    .Select(c => c.Name)
-                    .ToArray();
-
-                Description = "[ " + string.Join(" + ", configs) + " ] ";
-            }
+             
 
             return Page();
         }
@@ -119,16 +145,15 @@ namespace Mobicon.Pages
             return RedirectToPage(new {id = id});
         }
 
-        private EntrySnapshot[] Compare(Snapshot snapshot, Snapshot snapshotToCompareWith)
+        private EntrySnapshot[] Compare(ConfigEntry[] curr, ConfigEntry[] old)
         {
-            var curr = snapshot.Entries.Select(x => x.Entry).ToArray();
-            var old = snapshotToCompareWith.Entries.Select(x => x.Entry).ToArray();
+            IEqualityComparer<ConfigEntry> comparer = Pages.Compare.By<ConfigEntry, int>(x => x.Id);
 
-            var added = curr.Except(old, Pages.Compare.By<ConfigEntry, int>(x => x.Id))
+            var added = curr.Except(old, comparer)
                 .Select(x => new EntrySnapshot(x, Difference.Added, new ConfigEntry[0]));
-            var deleted = old.Except(curr, Pages.Compare.By<ConfigEntry, int>(x => x.Id))
+            var deleted = old.Except(curr, comparer)
                 .Select(x => new EntrySnapshot(x, Difference.Removed, new ConfigEntry[0]));
-            var unchanged = curr.ToHashSet().Intersect(old, Pages.Compare.By<ConfigEntry, int>(x => x.Id))
+            var unchanged = curr.ToHashSet().Intersect(old, comparer)
                 .Select(x => new EntrySnapshot(x, Difference.None, new ConfigEntry[0]));
 
             return added.Concat(deleted).Concat(unchanged).ToArray();

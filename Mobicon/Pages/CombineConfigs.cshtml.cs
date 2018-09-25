@@ -58,8 +58,8 @@ namespace Mobicon.Pages
                 list.Add(config);
             }
 
-            var configMerger = new ConfigMerger();
-            var entries = configMerger.MergeEntries(list);
+            var entries = ConfigMerger.MergeEntries(list.Select(c => c.Entries));
+
             return entries;
         }
     }
