@@ -45,7 +45,13 @@ namespace Mobicon.Pages
 
         public async Task<IActionResult> OnPost(string username, string password, string returnUrl)
         {
-            var user = _authService.Login(username, password);
+            //var user = _authService.Login(username, password);
+            var user = new ApplicationUser()
+            {
+                FullName = "Grigory",
+                UserName = "Grigory"
+            };
+
             if (user != null)
             {
                 var userRole = _dataContext.UserRoles
